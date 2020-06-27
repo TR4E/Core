@@ -58,7 +58,7 @@ public class ConnectionListener extends CoreListener {
             client.setFirstJoined(System.currentTimeMillis());
             getInstance().getClientRepository().saveClient(client);
             if (client.getRank() == Rank.OWNER) {
-                getInstance().getClientUtilities().messageStaff(ChatColor.GREEN + "New> " + ChatColor.GRAY + player.getName(), Rank.OWNER, null);
+                getInstance().getClientUtilities().messageStaff(ChatColor.GREEN + "New> " + ChatColor.GRAY + player.getName() + "(" + ChatColor.AQUA + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
             } else {
                 UtilMessage.broadcast(ChatColor.GREEN + "New> " + ChatColor.GRAY + player.getName());
             }
@@ -74,7 +74,7 @@ public class ConnectionListener extends CoreListener {
                 getInstance().getClientRepository().updateIP(client);
             }
             if (client.getRank() == Rank.OWNER) {
-                getInstance().getClientUtilities().messageStaff(ChatColor.GREEN + "Join> " + ChatColor.GRAY + player.getName(), Rank.OWNER, null);
+                getInstance().getClientUtilities().messageStaff(ChatColor.GREEN + "Join> " + ChatColor.GRAY + player.getName() + "(" + ChatColor.AQUA + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
             } else {
                 UtilMessage.broadcast(ChatColor.GREEN + "Join> " + ChatColor.GRAY + player.getName());
             }
@@ -105,7 +105,7 @@ public class ConnectionListener extends CoreListener {
             client.setObserverLocation(null);
         }
         if (client.getRank() == Rank.OWNER) {
-            getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName(), Rank.OWNER, null);
+            getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + "(" + ChatColor.AQUA + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
         } else {
             UtilMessage.broadcast(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName());
         }
