@@ -4,6 +4,7 @@ import me.trae.core.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -74,5 +75,14 @@ public final class ClientUtilities {
 
     public void soundAdmins(final Sound sound) {
         instance.getClientUtilities().getOnlineClients().stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && c.isAdministrating())).forEach(c -> Bukkit.getPlayer(c.getUUID()).playSound(Bukkit.getPlayer(c.getUUID()).getLocation(), sound, 1.0F, 1.0F));
+    }
+
+    public void setVanished(final Player player, final boolean vanished) {
+        getOnlineClient(player.getUniqueId()).setVanished(vanished);
+        if (vanished) {
+            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId().equals(player.getUniqueId()) && (o.isOp() || getOnlineClient(o.getUniqueId()).hasRank(Rank.ADMIN, false)))).forEach(o -> o.hidePlayer(player));
+        } else {
+            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId()).equals(player.getUniqueId())).forEach(o -> o.showPlayer(player));
+        }
     }
 }
