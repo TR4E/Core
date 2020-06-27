@@ -1,0 +1,6 @@
+name: Core
+author: Trae
+main: me.trae.core.Main
+version: 1.0
+startup: POSTWORLD
+description: Core is a standalone Minecraft Plugin made by Trae with the Spigot API
