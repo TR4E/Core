@@ -96,7 +96,7 @@ public final class Client {
         this.observer = observer;
     }
 
-    public final boolean isObserver() {
+    public final boolean isObserving() {
         return observer != null;
     }
 
