@@ -8,10 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class CommandCenter extends CoreListener implements Listener {
+public class CommandCenter extends CoreListener {
 
     public CommandCenter(final Main instance) {
         super(instance);

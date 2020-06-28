@@ -13,7 +13,6 @@ import me.trae.core.database.Repository;
 import me.trae.core.database.commands.ReloadCommand;
 import me.trae.core.gamer.GamerRepository;
 import me.trae.core.gamer.GamerUtilities;
-import me.trae.core.module.CoreListener;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.world.ChatListener;
 import me.trae.core.world.ServerListener;
@@ -44,7 +43,6 @@ public class Main extends JavaPlugin {
         this.clientUtilities = new ClientUtilities(this);
         this.gamerUtilities = new GamerUtilities(this);
         this.commandManager = new CommandManager(this);
-        new CoreListener(this);
         registerEvents();
         registerCommands();
         new BukkitRunnable() {

@@ -10,10 +10,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-public final class ChatListener extends CoreListener implements Listener {
+public final class ChatListener extends CoreListener {
 
     public ChatListener(final Main instance) {
         super(instance);

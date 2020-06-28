@@ -11,12 +11,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class ConnectionListener extends CoreListener implements Listener {
+public class ConnectionListener extends CoreListener {
 
     public ConnectionListener(final Main instance) {
         super(instance);

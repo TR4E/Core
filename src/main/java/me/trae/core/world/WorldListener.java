@@ -14,7 +14,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -23,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 import java.util.UUID;
 
-public final class WorldListener extends CoreListener implements Listener {
+public final class WorldListener extends CoreListener {
 
     public WorldListener(final Main instance) {
         super(instance);
