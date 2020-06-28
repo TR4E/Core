@@ -164,6 +164,7 @@ public class ClientCommand extends Command {
             target.setAdministrating(false);
             target.setVanished(false);
             target.setGodMode(false);
+        } else if (target.getRank() == Rank.MOD) {
             if (target.isObserving()) {
                 if (Bukkit.getPlayer(target.getUUID()) != null) {
                     Bukkit.getPlayer(target.getUUID()).teleport(target.getObserverLocation());
