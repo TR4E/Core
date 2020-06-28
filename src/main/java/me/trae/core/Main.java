@@ -2,9 +2,8 @@ package me.trae.core;
 
 import me.trae.core.client.ClientRepository;
 import me.trae.core.client.ClientUtilities;
-import me.trae.core.client.commands.ClientCommand;
-import me.trae.core.client.commands.ObserverCommand;
-import me.trae.core.client.commands.StaffChatCommand;
+import me.trae.core.client.commands.IgnoreCommand;
+import me.trae.core.client.commands.staff.*;
 import me.trae.core.client.listeners.ConnectionListener;
 import me.trae.core.command.CommandCenter;
 import me.trae.core.command.CommandManager;
@@ -69,8 +68,11 @@ public class Main extends JavaPlugin {
 
     private void registerCommands() {
         getCommandManager().addCommand(new ClientCommand(this));
+        getCommandManager().addCommand(new FlyCommand(this));
+        getCommandManager().addCommand(new GodCommand(this));
         getCommandManager().addCommand(new ObserverCommand(this));
         getCommandManager().addCommand(new StaffChatCommand(this));
+        getCommandManager().addCommand(new IgnoreCommand(this));
         getCommandManager().addCommand(new ReloadCommand(this));
     }
 

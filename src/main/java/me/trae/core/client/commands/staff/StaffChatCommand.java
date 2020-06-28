@@ -1,4 +1,4 @@
-package me.trae.core.client.commands;
+package me.trae.core.client.commands.staff;
 
 import me.trae.core.Main;
 import me.trae.core.client.Client;

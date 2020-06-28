@@ -2,6 +2,7 @@ package me.trae.core.command;
 
 import me.trae.core.Main;
 import me.trae.core.client.Client;
+import me.trae.core.client.Rank;
 import me.trae.core.module.CoreListener;
 import me.trae.core.utility.UtilMessage;
 import org.bukkit.ChatColor;
@@ -61,6 +62,9 @@ public class CommandCenter extends CoreListener {
             }
             e.setCancelled(true);
         } else {
+            if (player.isOp() || client.hasRank(Rank.OWNER, false)) {
+                return;
+            }
             e.setCancelled(true);
             UtilMessage.message(player, ChatColor.WHITE + "Unknown command. Type \"/help\" for help.");
         }

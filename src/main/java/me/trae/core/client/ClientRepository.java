@@ -46,7 +46,7 @@ public final class ClientRepository {
 
     public void updateIP(final Client client) {
         config.loadFile();
-        config.getConfig().set(client.getUUID().toString() + ".IP", new HashSet<>(client.getIPAddresses()));
+        config.getConfig().set(client.getUUID().toString() + ".IP", new ArrayList<>(client.getIPAddresses()));
         config.saveFile();
     }
 

@@ -1,4 +1,4 @@
-package me.trae.core.client.commands;
+package me.trae.core.client.commands.staff;
 
 import me.trae.core.Main;
 import me.trae.core.client.Client;
@@ -33,7 +33,7 @@ public class ObserverCommand extends Command {
                 client.setObserverLocation(player.getLocation());
                 player.setGameMode(GameMode.SPECTATOR);
             }
-            UtilMessage.message(player, "Client", "Observer Mode: " + (client.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
+            UtilMessage.message(player, "Observer", "Observer Mode: " + (client.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
             getInstance().getClientUtilities().messageStaff("Observer", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (client.isObserving() ? " is now Observing." : "is no longer Observing.") + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId()});
             return;
         }
@@ -47,6 +47,16 @@ public class ObserverCommand extends Command {
                 return;
             }
             if (target == player) {
+                if (client.isObserving()) {
+                    player.teleport(client.getObserverLocation());
+                    client.setObserverLocation(null);
+                    player.setGameMode(GameMode.SURVIVAL);
+                } else {
+                    client.setObserverLocation(player.getLocation());
+                    player.setGameMode(GameMode.SPECTATOR);
+                }
+                UtilMessage.message(player, "Observer", "Observer Mode: " + (client.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
+                getInstance().getClientUtilities().messageStaff("Observer", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (client.isObserving() ? " is now Observing." : "is no longer Observing.") + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId()});
                 return;
             }
             if (!(player.isOp())) {
@@ -60,11 +70,11 @@ public class ObserverCommand extends Command {
                 targetC.setObserverLocation(null);
                 target.setGameMode(GameMode.SURVIVAL);
             } else {
-                targetC.setObserverLocation(player.getLocation());
+                targetC.setObserverLocation(target.getLocation());
                 target.setGameMode(GameMode.SPECTATOR);
             }
-            UtilMessage.message(target, "Client", "Observer Mode: " + (client.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
-            getInstance().getClientUtilities().messageStaff("Observer", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (client.isObserving() ? " is now Observing" : "is no longer Observing") + ChatColor.GRAY + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});
+            UtilMessage.message(target, "Observer", "Observer Mode: " + (targetC.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
+            getInstance().getClientUtilities().messageStaff("Observer", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (targetC.isObserving() ? " is now Observing" : "is no longer Observing") + ChatColor.GRAY + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});
         }
     }
 

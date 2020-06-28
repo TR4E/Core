@@ -54,27 +54,67 @@ public final class ClientUtilities {
     }
 
     public void messageStaff(final String prefix, final String message, final Rank minimumRank, final UUID[] ignore) {
-        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && Arrays.stream(ignore).noneMatch(i -> i.equals(c.getUUID())) && c.hasRank(minimumRank, false))).forEach(c -> Bukkit.getPlayer(c.getUUID()).sendMessage(ChatColor.BLUE + prefix + "> " + ChatColor.GRAY + message));
+        for (final Client client : onlineclients) {
+            if (client.hasRank(minimumRank, false)) {
+                final Player player = Bukkit.getPlayer(client.getUUID());
+                if (player != null) {
+                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                        continue;
+                    }
+                    UtilMessage.message(player, prefix, message);
+                }
+            }
+        }
     }
 
     public void messageStaff(final String message, final Rank minimumRank, final UUID[] ignore) {
-        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && Arrays.stream(ignore).noneMatch(i -> i.equals(c.getUUID()) && c.hasRank(minimumRank, false)))).forEach(c -> Bukkit.getPlayer(c.getUUID()).sendMessage(message));
+        for (final Client client : onlineclients) {
+            if (client.hasRank(minimumRank, false)) {
+                final Player player = Bukkit.getPlayer(client.getUUID());
+                if (player != null) {
+                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                        continue;
+                    }
+                    UtilMessage.message(player, message);
+                }
+            }
+        }
     }
 
     public void messageAdmins(final String prefix, final String message, final UUID[] ignore) {
-        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && Arrays.stream(ignore).noneMatch(i -> i.equals(c.getUUID())) && c.isAdministrating())).forEach(c -> Bukkit.getPlayer(c.getUUID()).sendMessage(ChatColor.BLUE + prefix + "> " + ChatColor.GRAY + message));
+        for (final Client client : onlineclients) {
+            if (client.isAdministrating()) {
+                final Player player = Bukkit.getPlayer(client.getUUID());
+                if (player != null) {
+                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                        continue;
+                    }
+                    UtilMessage.message(player, prefix, message);
+                }
+            }
+        }
     }
 
     public void messageAdmins(final String message, final UUID[] ignore) {
-        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && Arrays.stream(ignore).noneMatch(i -> i.equals(c.getUUID()) && c.isAdministrating()))).forEach(c -> Bukkit.getPlayer(c.getUUID()).sendMessage(message));
+        for (final Client client : onlineclients) {
+            if (client.isAdministrating()) {
+                final Player player = Bukkit.getPlayer(client.getUUID());
+                if (player != null) {
+                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                        continue;
+                    }
+                    UtilMessage.message(player, message);
+                }
+            }
+        }
     }
 
     public void soundStaff(final Sound sound, final Rank minimumRank) {
-        instance.getClientUtilities().getOnlineClients().stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && c.hasRank(minimumRank, false))).forEach(c -> Bukkit.getPlayer(c.getUUID()).playSound(Bukkit.getPlayer(c.getUUID()).getLocation(), sound, 1.0F, 1.0F));
+        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && c.hasRank(minimumRank, false))).forEach(c -> Bukkit.getPlayer(c.getUUID()).playSound(Bukkit.getPlayer(c.getUUID()).getLocation(), sound, 1.0F, 1.0F));
     }
 
     public void soundAdmins(final Sound sound) {
-        instance.getClientUtilities().getOnlineClients().stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && c.isAdministrating())).forEach(c -> Bukkit.getPlayer(c.getUUID()).playSound(Bukkit.getPlayer(c.getUUID()).getLocation(), sound, 1.0F, 1.0F));
+        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && c.isAdministrating())).forEach(c -> Bukkit.getPlayer(c.getUUID()).playSound(Bukkit.getPlayer(c.getUUID()).getLocation(), sound, 1.0F, 1.0F));
     }
 
     public void setVanished(final Player player, final boolean vanished) {
