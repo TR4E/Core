@@ -108,7 +108,7 @@ public class ClientCommand extends Command {
             UtilMessage.message(player, ChatColor.GREEN + "IP Alias: " + ChatColor.WHITE + ips);
         }
         UtilMessage.message(player, ChatColor.GREEN + "Rank: " + ChatColor.WHITE + UtilFormat.cleanString(target.getRank().getPrefix()));
-        UtilMessage.message(player, ChatColor.GREEN + "First Joined: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - target.getFirstJoined(), UtilTime.TimeUnit.BEST, 1));
+        UtilMessage.message(player, ChatColor.GREEN + "First Joined: " + ChatColor.WHITE + (target.getFirstJoined() == 0 ? "Never" : UtilTime.getTime(System.currentTimeMillis() - target.getFirstJoined(), UtilTime.TimeUnit.BEST, 1)));
         if (Bukkit.getPlayer(target.getUUID()) == null) {
             UtilMessage.message(player, ChatColor.GREEN + "Last Online: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - target.getLastOnline(), UtilTime.TimeUnit.BEST, 1));
         }

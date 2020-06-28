@@ -40,6 +40,7 @@ public class ConnectionListener extends CoreListener implements Listener {
                 final Client client = new Client(player.getUniqueId());
                 client.setName(player.getName());
                 client.getIPAddresses().add(e.getAddress().getHostAddress());
+                client.setFirstJoined(0);
                 getInstance().getClientUtilities().addClient(client);
                 getInstance().getClientRepository().saveClient(client);
             }

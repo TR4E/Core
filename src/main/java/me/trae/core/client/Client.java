@@ -26,6 +26,7 @@ public final class Client {
         this.administrating = false;
         this.staffchat = false;
         this.vanished = false;
+        this.god = false;
     }
 
     public final UUID getUUID() {
