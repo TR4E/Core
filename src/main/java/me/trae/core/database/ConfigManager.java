@@ -34,7 +34,8 @@ public final class ConfigManager {
 
     public enum ConfigType {
         MAIN_CONFIG("config"),
-        CLIENTS_DATA("clients");
+        CLIENTS_DATA("clients"),
+        GAMERS_DATA("gamers");
         String name;
 
         ConfigType(final String name) {

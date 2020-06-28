@@ -17,7 +17,7 @@ public final class Client {
     private Rank rank;
     private long firstJoined, lastOnline;
     private Location observer;
-    private boolean administrating, staffchat, vanished;
+    private boolean administrating, staffchat, vanished, god;
 
     public Client(final UUID uuid) {
         this.uuid = uuid;
@@ -122,5 +122,13 @@ public final class Client {
 
     public void setVanished(final boolean vanished) {
         this.vanished = vanished;
+    }
+
+    public final boolean isGodMode() {
+        return god;
+    }
+
+    public void setGodMode(final boolean god) {
+        this.god = god;
     }
 }

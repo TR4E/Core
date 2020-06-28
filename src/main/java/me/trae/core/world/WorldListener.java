@@ -14,6 +14,8 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 import java.util.UUID;
 
-public class WorldListener extends CoreListener {
+public final class WorldListener extends CoreListener implements Listener {
 
     public WorldListener(final Main instance) {
         super(instance);
@@ -74,7 +76,7 @@ public class WorldListener extends CoreListener {
                 e.setCancelled(true);
                 player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_TRAPDOOR, player.getInventory().getItemInHand().getAmount())));
                 UtilMessage.message(player, "Game", "Please use " + ChatColor.YELLOW + "Iron Trap Doors" + ChatColor.GRAY + " (You can right click to open them).");
-            } else if (block.getType() == Material.BEDROCK || block.getType() == Material.OBSIDIAN || block.getType() == Material.BARRIER) {
+            } else if (block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) {
                 e.setCancelled(true);
                 if (!(player.isOp() || client.hasRank(Rank.ADMIN, false))) {
                     player.getInventory().remove(block.getType());
@@ -91,6 +93,25 @@ public class WorldListener extends CoreListener {
                     e.setCancelled(true);
                     UtilMessage.message(player, "Game", ChatColor.YELLOW + "Mob Spawners" + ChatColor.GRAY + " is currently disabled.");
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockBreak(final BlockBreakEvent e) {
+        final Player player = e.getPlayer();
+        final Block block = e.getBlock();
+        if (block == null) {
+            return;
+        }
+        final Client client = getInstance().getClientUtilities().getOnlineClient(player.getUniqueId());
+        if (client == null) {
+            return;
+        }
+        if (!(client.isAdministrating())) {
+            if (block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) {
+                e.setCancelled(true);
+                UtilMessage.message(player, "Game", "You cannot break " + ChatColor.YELLOW + UtilFormat.cleanString(block.getType().name()) + ChatColor.GRAY + ".");
             }
         }
     }

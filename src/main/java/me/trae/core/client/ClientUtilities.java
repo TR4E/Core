@@ -1,15 +1,15 @@
 package me.trae.core.client;
 
 import me.trae.core.Main;
+import me.trae.core.utility.UtilMessage;
+import me.trae.core.utility.UtilPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public final class ClientUtilities {
 
@@ -84,5 +84,25 @@ public final class ClientUtilities {
         } else {
             Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId()).equals(player.getUniqueId())).forEach(o -> o.showPlayer(player));
         }
+    }
+
+    public final Client searchClient(final Player player, final String name, final boolean inform) {
+        if (clients.stream().anyMatch(client -> client.getName().toLowerCase().equals(name.toLowerCase()))) {
+            return clients.stream().filter(client -> client.getName().toLowerCase().equals(name.toLowerCase())).findFirst().get();
+        }
+        final List<Client> clientList = clients.parallelStream().filter(client -> client.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
+        if (UtilPlayer.searchPlayer(player, name, false) != null) {
+            if (getClient(Objects.requireNonNull(UtilPlayer.searchPlayer(player, name, false)).getUniqueId()) != null) {
+                if (!clientList.contains(getClient(Objects.requireNonNull(UtilPlayer.searchPlayer(player, name, false)).getUniqueId()))) {
+                    clientList.add(getClient(Objects.requireNonNull(UtilPlayer.searchPlayer(player, name, false)).getUniqueId()));
+                }
+            }
+        }
+        if (clientList.size() == 1) {
+            return clientList.get(0);
+        } else if (inform) {
+            UtilMessage.message(player, "Client Search", ChatColor.YELLOW.toString() + clientList.size() + ChatColor.GRAY + " matches found [" + ((clientList.size() == 0) ? ChatColor.YELLOW + name : clientList.stream().map(client -> ChatColor.YELLOW + client.getName()).collect(Collectors.joining(ChatColor.GRAY + ", "))) + ChatColor.GRAY + "]");
+        }
+        return null;
     }
 }

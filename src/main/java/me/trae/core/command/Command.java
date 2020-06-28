@@ -2,9 +2,11 @@ package me.trae.core.command;
 
 import me.trae.core.Main;
 import me.trae.core.client.Rank;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
-public abstract class Command {
+public abstract class Command implements Listener {
 
     private final Main instance;
     private final String commandName;
@@ -16,6 +18,7 @@ public abstract class Command {
         this.commandName = commandName;
         this.aliases = aliases;
         this.requiredRank = requiredRank;
+        Bukkit.getPluginManager().registerEvents(this, instance);
     }
 
     public final Main getInstance() {

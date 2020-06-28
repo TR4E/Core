@@ -11,11 +11,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class ConnectionListener extends CoreListener {
+public class ConnectionListener extends CoreListener implements Listener {
 
     public ConnectionListener(final Main instance) {
         super(instance);
@@ -23,7 +24,7 @@ public class ConnectionListener extends CoreListener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerLogin(final PlayerLoginEvent e) {
-        if (getInstance().hasStarted()) {
+        if (!(getInstance().hasStarted())) {
             e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.WHITE + "Server has not finished starting up.");
             return;
         }
@@ -53,7 +54,7 @@ public class ConnectionListener extends CoreListener {
         Client client = getInstance().getClientUtilities().getClient(player.getUniqueId());
         if (client == null) {
             client = new Client(player.getUniqueId());
-            client.setName(client.getName());
+            client.setName(player.getName());
             client.getIPAddresses().add(UtilPlayer.getIP(player));
             client.setFirstJoined(System.currentTimeMillis());
             getInstance().getClientRepository().saveClient(client);

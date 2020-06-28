@@ -10,10 +10,10 @@ public class CoreListener implements Listener {
 
     public CoreListener(final Main instance) {
         this.instance = instance;
-        Bukkit.getServer().getPluginManager().registerEvents(this, instance);
+        Bukkit.getPluginManager().registerEvents(this, instance);
     }
 
-    public final Main getInstance() {
+    protected final Main getInstance() {
         return instance;
     }
 }
