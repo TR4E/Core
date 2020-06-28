@@ -111,8 +111,8 @@ public class ConnectionListener extends CoreListener {
         }
         client.setLastOnline(System.currentTimeMillis());
         getInstance().getClientRepository().updateLastOnline(client);
-        getInstance().getClientUtilities().removeOnlineClient(client);
         UtilMessage.log("Clients", "Removed Online Client: " + ChatColor.YELLOW + client.getName());
+        getInstance().getClientUtilities().removeOnlineClient(client);
         getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (c.isVanished() && Bukkit.getPlayer(c.getUUID()) != null)).forEach(c -> player.showPlayer(Bukkit.getPlayer(c.getUUID())));
     }
 }

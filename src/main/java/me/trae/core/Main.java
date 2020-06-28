@@ -31,7 +31,6 @@ public class Main extends JavaPlugin {
         this.clientRepository = new ClientRepository(this);
         this.clientUtilities = new ClientUtilities(this);
         this.commandManager = new CommandManager(this);
-        initialize();
         registerEvents();
         registerCommands();
         new BukkitRunnable() {
@@ -46,12 +45,6 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         UtilMessage.log("Core", ChatColor.RED + "Plugin Disabled!");
-    }
-
-    private void initialize() {
-        new ConfigManager(this);
-        new Repository(this);
-        new ClientRepository(this);
     }
 
     private void registerEvents() {
