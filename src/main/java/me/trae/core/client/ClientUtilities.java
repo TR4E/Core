@@ -55,10 +55,10 @@ public final class ClientUtilities {
 
     public void messageStaff(final String prefix, final String message, final Rank minimumRank, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (client.hasRank(minimumRank, false)) {
+            if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
                 final Player player = Bukkit.getPlayer(client.getUUID());
                 if (player != null) {
-                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
                         continue;
                     }
                     UtilMessage.message(player, prefix, message);
@@ -69,10 +69,10 @@ public final class ClientUtilities {
 
     public void messageStaff(final String message, final Rank minimumRank, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (client.hasRank(minimumRank, false)) {
+            if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
                 final Player player = Bukkit.getPlayer(client.getUUID());
                 if (player != null) {
-                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
                         continue;
                     }
                     UtilMessage.message(player, message);
@@ -86,7 +86,7 @@ public final class ClientUtilities {
             if (client.isAdministrating()) {
                 final Player player = Bukkit.getPlayer(client.getUUID());
                 if (player != null) {
-                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
                         continue;
                     }
                     UtilMessage.message(player, prefix, message);
@@ -100,7 +100,7 @@ public final class ClientUtilities {
             if (client.isAdministrating()) {
                 final Player player = Bukkit.getPlayer(client.getUUID());
                 if (player != null) {
-                    if (Arrays.asList(ignore).contains(player.getUniqueId())) {
+                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
                         continue;
                     }
                     UtilMessage.message(player, message);
@@ -109,12 +109,32 @@ public final class ClientUtilities {
         }
     }
 
-    public void soundStaff(final Sound sound, final Rank minimumRank) {
-        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && c.hasRank(minimumRank, false))).forEach(c -> Bukkit.getPlayer(c.getUUID()).playSound(Bukkit.getPlayer(c.getUUID()).getLocation(), sound, 1.0F, 1.0F));
+    public void soundStaff(final Sound sound, final Rank minimumRank, final UUID[] ignore) {
+        for (final Client client : onlineclients) {
+            if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
+                final Player player = Bukkit.getPlayer(client.getUUID());
+                if (player != null) {
+                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                        continue;
+                    }
+                    UtilPlayer.sound(player, sound);
+                }
+            }
+        }
     }
 
-    public void soundAdmins(final Sound sound) {
-        onlineclients.stream().filter(c -> (Bukkit.getPlayer(c.getUUID()) != null && c.isAdministrating())).forEach(c -> Bukkit.getPlayer(c.getUUID()).playSound(Bukkit.getPlayer(c.getUUID()).getLocation(), sound, 1.0F, 1.0F));
+    public void soundAdmins(final Sound sound, final UUID[] ignore) {
+        for (final Client client : onlineclients) {
+            if (client.isAdministrating()) {
+                final Player player = Bukkit.getPlayer(client.getUUID());
+                if (player != null) {
+                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                        continue;
+                    }
+                    UtilPlayer.sound(player, sound);
+                }
+            }
+        }
     }
 
     public void setVanished(final Player player, final boolean vanished) {
@@ -144,5 +164,17 @@ public final class ClientUtilities {
             UtilMessage.message(player, "Client Search", ChatColor.YELLOW.toString() + clientList.size() + ChatColor.GRAY + " matches found [" + ((clientList.size() == 0) ? ChatColor.YELLOW + name : clientList.stream().map(client -> ChatColor.YELLOW + client.getName()).collect(Collectors.joining(ChatColor.GRAY + ", "))) + ChatColor.GRAY + "]");
         }
         return null;
+    }
+
+    public final boolean isStaffOnline() {
+        return (onlineclients.stream().anyMatch(c -> c.hasRank(Rank.HELPER, false)) || Bukkit.getOnlinePlayers().stream().anyMatch(Player::isOp));
+    }
+
+    public final Set<Client> getAltsOfClient(final Client client) {
+        return clients.stream().filter(a -> !(a.getUUID().equals(client.getUUID())) && a.getIPAddresses().stream().anyMatch(i -> client.getIPAddresses().contains(i))).collect(Collectors.toSet());
+    }
+
+    public final Set<String> getIgnoredNames(final Client client) {
+        return instance.getGamerUtilities().getGamer(client.getUUID()).getIgnored().stream().map(i -> getClient(i).getName()).collect(Collectors.toSet());
     }
 }

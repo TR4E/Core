@@ -7,6 +7,7 @@ public final class Repository {
 
     private final Config config;
     private boolean disableTNT, disableMobSpawners;
+    private int maxPlayerSlots;
     private String serverName, serverWebsite, serverMOTD;
 
     public Repository(final Main instance) {
@@ -31,6 +32,7 @@ public final class Repository {
             public void run() {
                 disableTNT = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.TNT");
                 disableMobSpawners = config.getConfig().getBoolean("Booleans.Settings.Disable-Blocks.Mob-Spawners");
+                maxPlayerSlots = config.getConfig().getInt("Integers.Server.Max-Player-Slots");
                 serverName = config.getConfig().getString("Strings.Server.Name");
                 serverWebsite = config.getConfig().getString("Strings.Server.Website");
                 serverMOTD = config.getConfig().getString("Strings.Server.MOTD");
@@ -44,6 +46,10 @@ public final class Repository {
 
     public final boolean isDisableMobSpawners() {
         return disableMobSpawners;
+    }
+
+    public final int getMaxPlayerSlots() {
+        return maxPlayerSlots;
     }
 
     public final String getServerName() {

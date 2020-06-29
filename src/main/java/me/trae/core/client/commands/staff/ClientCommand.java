@@ -95,9 +95,13 @@ public class ClientCommand extends Command {
             return;
         }
         UtilMessage.message(player, "Client", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " Information:");
+        UtilMessage.message(player, ChatColor.GREEN + "Profile: " + ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "https://mine.ly/" + target.getName());
         UtilMessage.message(player, ChatColor.GREEN + "UUID: " + ChatColor.WHITE + target.getUUID());
         if (target.getOldName() != null) {
             UtilMessage.message(player, ChatColor.GREEN + "Previous Name: " + ChatColor.WHITE + target.getOldName());
+        }
+        if (!(getInstance().getGamerUtilities().getGamer(target.getUUID()).getIgnored().isEmpty())) {
+            UtilMessage.message(player, ChatColor.GREEN + "Ignored: " + ChatColor.WHITE + getInstance().getClientUtilities().getIgnoredNames(target));
         }
         final List<String> ips = new ArrayList<>(target.getIPAddresses());
         if (Bukkit.getPlayer(target.getUUID()) != null) {
@@ -105,7 +109,7 @@ public class ClientCommand extends Command {
             ips.remove(UtilPlayer.getIP(Bukkit.getPlayer(target.getUUID())));
         }
         if (!(ips.isEmpty())) {
-            UtilMessage.message(player, ChatColor.GREEN + "IP Alias: " + ChatColor.WHITE + ips);
+            UtilMessage.message(player, ChatColor.GREEN + "IP Aliases: " + ChatColor.WHITE + ips);
         }
         UtilMessage.message(player, ChatColor.GREEN + "Rank: " + ChatColor.WHITE + UtilFormat.cleanString(target.getRank().getPrefix()));
         UtilMessage.message(player, ChatColor.GREEN + "First Joined: " + ChatColor.WHITE + (target.getFirstJoined() == 0 ? "Never" : UtilTime.getTime(System.currentTimeMillis() - target.getFirstJoined(), UtilTime.TimeUnit.BEST, 1)));
@@ -113,9 +117,20 @@ public class ClientCommand extends Command {
             UtilMessage.message(player, ChatColor.GREEN + "Last Online: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - target.getLastOnline(), UtilTime.TimeUnit.BEST, 1));
         }
         if (Bukkit.getPlayer(target.getUUID()) != null) {
-            UtilMessage.message(player, ChatColor.GREEN + "Admin Mode: " + ChatColor.WHITE + (target.isAdministrating() ? "Enabled" : "Disabled"));
-            UtilMessage.message(player, ChatColor.GREEN + "Vanish Mode: " + ChatColor.WHITE + (target.isVanished() ? "Enabled" : "Disabled"));
-            UtilMessage.message(player, ChatColor.GREEN + "God Mode: " + ChatColor.WHITE + (target.isGodMode() ? "Enabled" : "Disabled"));
+            if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.ADMIN, false)) {
+                UtilMessage.message(player, ChatColor.GREEN + "Admin Mode: " + ChatColor.WHITE + (target.isAdministrating() ? "Enabled" : "Disabled"));
+            }
+            if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.ADMIN, false) || target.isGodMode()) {
+                UtilMessage.message(player, ChatColor.GREEN + "God Mode: " + ChatColor.WHITE + (target.isGodMode() ? "Enabled" : "Disabled"));
+            }
+            if (Bukkit.getPlayer(target.getUUID()).isOp() | target.hasRank(Rank.HEADMOD, false)) {
+                UtilMessage.message(player, ChatColor.GREEN + "Observer Mode: " + ChatColor.WHITE + (target.isObserving() ? "Enabled" : "Disabled"));
+            }
+            if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.MOD, false)) {
+                UtilMessage.message(player, ChatColor.GREEN + "Vanish Mode: " + ChatColor.WHITE + (target.isVanished() ? "Enabled" : "Disabled"));
+            }
+            UtilMessage.message(player, ChatColor.GREEN + "Fly Mode: " + ChatColor.WHITE + (Bukkit.getPlayer(target.getUUID()).getAllowFlight() ? "Enabled" + (Bukkit.getPlayer(target.getUUID()).isFlying() ? " (Flying)" : "") : "Disabled"));
+            UtilMessage.message(player, ChatColor.GREEN + "Gamemode: " + ChatColor.WHITE + UtilFormat.cleanString(Bukkit.getPlayer(target.getUUID()).getGameMode().name()));
         }
     }
 

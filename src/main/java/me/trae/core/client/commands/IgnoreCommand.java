@@ -18,16 +18,16 @@ public class IgnoreCommand extends Command {
 
     @Override
     public void execute(final Player player, final String[] args) {
+        if (args == null || args.length == 0) {
+            help(player);
+            return;
+        }
         final Client client = getInstance().getClientUtilities().getOnlineClient(player.getUniqueId());
         if (client == null) {
             return;
         }
         final Gamer gamer = getInstance().getGamerUtilities().getGamer(player.getUniqueId());
         if (gamer == null) {
-            return;
-        }
-        if (args == null || args.length == 0) {
-            help(player);
             return;
         }
         if (args.length == 1) {

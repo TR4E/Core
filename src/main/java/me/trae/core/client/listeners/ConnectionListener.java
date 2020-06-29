@@ -3,6 +3,7 @@ package me.trae.core.client.listeners;
 import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
+import me.trae.core.gamer.Gamer;
 import me.trae.core.module.CoreListener;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
@@ -43,6 +44,10 @@ public class ConnectionListener extends CoreListener {
                 client.setFirstJoined(0);
                 getInstance().getClientUtilities().addClient(client);
                 getInstance().getClientRepository().saveClient(client);
+                final Gamer gamer = new Gamer(player.getUniqueId());
+                getInstance().getGamerUtilities().addGamer(gamer);
+                getInstance().getGamerRepository().saveGamer(gamer);
+                getInstance().getGamerUtilities().removeGamer(gamer);
             }
         }
     }
@@ -59,6 +64,9 @@ public class ConnectionListener extends CoreListener {
             client.getIPAddresses().add(UtilPlayer.getIP(player));
             client.setFirstJoined(System.currentTimeMillis());
             getInstance().getClientRepository().saveClient(client);
+            final Gamer gamer = new Gamer(player.getUniqueId());
+            getInstance().getGamerUtilities().addGamer(gamer);
+            getInstance().getGamerRepository().saveGamer(gamer);
             if (client.getRank() == Rank.OWNER) {
                 getInstance().getClientUtilities().messageStaff(ChatColor.GREEN + "New> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.AQUA + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
             } else {
@@ -80,12 +88,11 @@ public class ConnectionListener extends CoreListener {
             } else {
                 UtilMessage.broadcast(ChatColor.GREEN + "Join> " + ChatColor.GRAY + player.getName());
             }
+            getInstance().getGamerRepository().loadGamer(player.getUniqueId(), getInstance());
         }
         getInstance().getClientUtilities().addClient(client);
-        if (e.getPlayer() != null) {
-            getInstance().getClientUtilities().addOnlineClient(client);
-            UtilMessage.log("Clients", "Added Online Client: " + ChatColor.YELLOW + client.getName());
-        }
+        getInstance().getClientUtilities().addOnlineClient(client);
+        UtilMessage.log("Clients", "Added Online Client: " + ChatColor.YELLOW + client.getName());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -114,8 +121,9 @@ public class ConnectionListener extends CoreListener {
         }
         client.setLastOnline(System.currentTimeMillis());
         getInstance().getClientRepository().updateLastOnline(client);
-        UtilMessage.log("Clients", "Removed Online Client: " + ChatColor.YELLOW + client.getName());
         getInstance().getClientUtilities().removeOnlineClient(client);
         getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (c.isVanished() && Bukkit.getPlayer(c.getUUID()) != null)).forEach(c -> player.showPlayer(Bukkit.getPlayer(c.getUUID())));
+        getInstance().getGamerUtilities().removeGamer(getInstance().getGamerUtilities().getGamer(player.getUniqueId()));
+        UtilMessage.log("Clients", "Removed Online Client: " + ChatColor.YELLOW + player.getName());
     }
 }

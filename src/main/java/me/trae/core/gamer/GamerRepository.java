@@ -3,8 +3,6 @@ package me.trae.core.gamer;
 import me.trae.core.Main;
 import me.trae.core.database.Config;
 import me.trae.core.database.ConfigManager;
-import me.trae.core.utility.UtilMessage;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -54,13 +52,15 @@ public final class GamerRepository {
             @Override
             public void run() {
                 for (final String str : yml.getKeys(false)) {
+                    if (!(str.equals(uuid.toString()))) {
+                        continue;
+                    }
                     final Gamer gamer = new Gamer(UUID.fromString(str));
                     yml.getStringList(str + ".Ignored").forEach(i -> gamer.getIgnored().add(UUID.fromString(i)));
                     gamer.setKills(yml.getInt(str + ".Kills"));
                     gamer.setDeaths(yml.getInt(str + ".Deaths"));
                     instance.getGamerUtilities().addGamer(gamer);
                 }
-                UtilMessage.log("Gamers", "Loaded Gamer: " + ChatColor.YELLOW + instance.getClientUtilities().getOnlineClient(uuid).getName());
             }
         }.runTaskAsynchronously(instance);
     }
