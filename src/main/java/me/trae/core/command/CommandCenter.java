@@ -30,6 +30,7 @@ public class CommandCenter extends CoreListener {
         if (!(player.isOp())) {
             if (e.getMessage().startsWith("/?")) {
                 e.setMessage("/help");
+                return;
             }
             if (e.getMessage().startsWith("/") && e.getMessage().contains(":") && !(e.getMessage().contains(" "))) {
                 e.setCancelled(true);

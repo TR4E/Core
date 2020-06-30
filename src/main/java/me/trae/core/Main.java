@@ -2,10 +2,11 @@ package me.trae.core;
 
 import me.trae.core.client.ClientRepository;
 import me.trae.core.client.ClientUtilities;
-import me.trae.core.client.commands.IgnoreCommand;
-import me.trae.core.client.commands.ReportCommand;
-import me.trae.core.client.commands.SupportCommand;
+import me.trae.core.client.commands.*;
+import me.trae.core.client.commands.help.HelpCommand;
 import me.trae.core.client.commands.staff.*;
+import me.trae.core.client.commands.teleport.SetSpawnCommand;
+import me.trae.core.client.commands.teleport.SpawnCommand;
 import me.trae.core.client.listeners.ConnectionListener;
 import me.trae.core.command.CommandCenter;
 import me.trae.core.command.CommandManager;
@@ -15,6 +16,7 @@ import me.trae.core.database.commands.ReloadCommand;
 import me.trae.core.gamer.GamerManager;
 import me.trae.core.gamer.GamerRepository;
 import me.trae.core.gamer.GamerUtilities;
+import me.trae.core.utility.TitleManager;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.world.ChatListener;
 import me.trae.core.world.ServerListener;
@@ -34,6 +36,7 @@ public class Main extends JavaPlugin {
     private ClientUtilities clientUtilities;
     private GamerUtilities gamerUtilities;
     private CommandManager commandManager;
+    private TitleManager titleManager;
 
     @Override
     public void onEnable() {
@@ -45,6 +48,7 @@ public class Main extends JavaPlugin {
         this.clientUtilities = new ClientUtilities(this);
         this.gamerUtilities = new GamerUtilities(this);
         this.commandManager = new CommandManager(this);
+        this.titleManager = new TitleManager(this);
         registerEvents();
         registerCommands();
         new BukkitRunnable() {
@@ -71,15 +75,22 @@ public class Main extends JavaPlugin {
     }
 
     private void registerCommands() {
+        getCommandManager().addCommand(new HelpCommand(this));
+        getCommandManager().addCommand(new AnnounceCommand(this));
         getCommandManager().addCommand(new CheckAltsCommand(this));
         getCommandManager().addCommand(new ClientCommand(this));
         getCommandManager().addCommand(new FlyCommand(this));
         getCommandManager().addCommand(new GodCommand(this));
         getCommandManager().addCommand(new ObserverCommand(this));
+        getCommandManager().addCommand(new OpenInvCommand(this));
         getCommandManager().addCommand(new PlayerCountCommand(this));
         getCommandManager().addCommand(new StaffChatCommand(this));
         getCommandManager().addCommand(new VanishCommand(this));
+        getCommandManager().addCommand(new SpawnCommand(this));
+        getCommandManager().addCommand(new SetSpawnCommand(this));
+        getCommandManager().addCommand(new ClearInvCommand(this));
         getCommandManager().addCommand(new IgnoreCommand(this));
+        getCommandManager().addCommand(new ListCommand(this));
         getCommandManager().addCommand(new ReportCommand(this));
         getCommandManager().addCommand(new SupportCommand(this));
         getCommandManager().addCommand(new ReloadCommand(this));
@@ -115,5 +126,9 @@ public class Main extends JavaPlugin {
 
     public final CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public final TitleManager getTitleManager() {
+        return titleManager;
     }
 }

@@ -13,10 +13,13 @@ public final class ConfigManager {
             final Config config = new Config(instance.getDataFolder(), configType.name);
             if (!(config.fileExists())) {
                 if (configType.equals(ConfigType.MAIN_CONFIG)) {
+                    config.getConfig().set("Booleans.Settings.Admin-Commands.Spawn", true);
+                    config.getConfig().set("Booleans.Settings.Admin-Commands.Clear-Inventory", true);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.TNT", false);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.Mob-Spawners", false);
                     config.getConfig().set("Integers.Server.Max-Player-Slots", 100);
                     config.getConfig().set("Strings.Server.Name", "Trae's Server");
+                    config.getConfig().set("Strings.Server.World", "world");
                     config.getConfig().set("Strings.Server.Website", "https://example.com");
                     config.getConfig().set("Strings.Server.MOTD", "&6&lTrae's Server &8» &aAustralian Minecraft Server &7[1.8.9]\n&fVisit our Website at &ehttps://example.com");
                 }

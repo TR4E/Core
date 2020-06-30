@@ -2,10 +2,15 @@ name: Core
 author: Trae
 main: me.trae.core.Main
 version: 1.0
-startup: POSTWORLD
+startup: STARTUP
 description: Core is a standalone Minecraft Plugin made by Trae with the Spigot API
 commands:
   ignore:
+  list:
+    aliases: [onlineplayers, playersonline, online, players]
   report:
+  spawn:
+  clearinventory:
+    aliases: [cleaninventory, clearinv, cleaninv, clear, ci]
   support:
     aliases: [adminchat, a, helpop]

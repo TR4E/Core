@@ -11,12 +11,14 @@ public final class Gamer {
     private final Set<UUID> ignored;
     private int kills;
     private int deaths;
+    private UUID invInspecting;
 
     public Gamer(final UUID uuid) {
         this.uuid = uuid;
         this.ignored = new HashSet<>();
         this.kills = 0;
         this.deaths = 0;
+        this.invInspecting = null;
     }
 
     public final UUID getUUID() {
@@ -41,5 +43,13 @@ public final class Gamer {
 
     public void setDeaths(final int deaths) {
         this.deaths = deaths;
+    }
+
+    public final UUID getInvInspecting() {
+        return invInspecting;
+    }
+
+    public void setInvInspecting(final UUID invInspecting) {
+        this.invInspecting = invInspecting;
     }
 }
