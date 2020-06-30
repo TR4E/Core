@@ -78,6 +78,7 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new ObserverCommand(this));
         getCommandManager().addCommand(new PlayerCountCommand(this));
         getCommandManager().addCommand(new StaffChatCommand(this));
+        getCommandManager().addCommand(new VanishCommand(this));
         getCommandManager().addCommand(new IgnoreCommand(this));
         getCommandManager().addCommand(new ReportCommand(this));
         getCommandManager().addCommand(new SupportCommand(this));
