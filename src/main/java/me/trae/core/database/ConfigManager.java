@@ -13,11 +13,23 @@ public final class ConfigManager {
             final Config config = new Config(instance.getDataFolder(), configType.name);
             if (!(config.fileExists())) {
                 if (configType.equals(ConfigType.MAIN_CONFIG)) {
+                    config.getConfig().set("Booleans.Settings.Game.Enchantments", true);
+                    config.getConfig().set("Booleans.Settings.Game.Portals", true);
+                    config.getConfig().set("Booleans.Settings.Game.Mobs", true);
+                    config.getConfig().set("Booleans.Settings.Game.Always-Day", false);
+                    config.getConfig().set("Booleans.Settings.Game.Always-Night", false);
+                    config.getConfig().set("Booleans.Settings.Game.Weather", true);
+                    config.getConfig().set("Booleans.Settings.Game.Saturation", true);
+                    config.getConfig().set("Booleans.Settings.Game.Break-Crops", true);
                     config.getConfig().set("Booleans.Settings.Admin-Commands.Spawn", true);
                     config.getConfig().set("Booleans.Settings.Admin-Commands.Clear-Inventory", true);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.TNT", false);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.Mob-Spawners", false);
                     config.getConfig().set("Integers.Server.Max-Player-Slots", 100);
+                    config.getConfig().set("Integers.Cooldowns.Spawn-Command", 300);
+                    config.getConfig().set("Integers.Cooldowns.Announce-Command", 300);
+                    config.getConfig().set("Integers.Cooldowns.Support-Command", 120);
+                    config.getConfig().set("Integers.Countdowns.Spawn-Command", 10);
                     config.getConfig().set("Strings.Server.Name", "Trae's Server");
                     config.getConfig().set("Strings.Server.World", "world");
                     config.getConfig().set("Strings.Server.Website", "https://example.com");

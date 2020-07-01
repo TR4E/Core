@@ -1,0 +1,58 @@
+package me.trae.core.client.commands;
+
+import me.trae.core.Main;
+import me.trae.core.client.Rank;
+import me.trae.core.command.Command;
+import me.trae.core.gamer.Gamer;
+import me.trae.core.utility.UtilMessage;
+import me.trae.core.utility.UtilPlayer;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+public class KDRCommand extends Command {
+
+    public KDRCommand(final Main instance) {
+        super(instance, "kdr", new String[]{"kills", "deaths", "ratio"}, Rank.PLAYER);
+    }
+
+    @Override
+    public void execute(final Player player, final String[] args) {
+        if (args == null || args.length == 0) {
+            final Gamer gamer = getInstance().getGamerUtilities().getGamer(player.getUniqueId());
+            if (gamer == null) {
+                return;
+            }
+            UtilMessage.message(player, "KDR", "Your Statistics:");
+            UtilMessage.message(player, ChatColor.GREEN + "Kills: " + ChatColor.WHITE + gamer.getKills());
+            UtilMessage.message(player, ChatColor.GREEN + "Deaths: " + ChatColor.WHITE + gamer.getDeaths());
+            UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getKDR());
+            return;
+        }
+        if (args.length == 1) {
+            final Player target = UtilPlayer.searchPlayer(player, args[0], true);
+            if (target == null) {
+                return;
+            }
+            final Gamer gamer = getInstance().getGamerUtilities().getGamer(target.getUniqueId());
+            if (gamer == null) {
+                return;
+            }
+            if (target == player) {
+                UtilMessage.message(player, "KDR", "Your Statistics:");
+                UtilMessage.message(player, ChatColor.GREEN + "Kills: " + ChatColor.WHITE + gamer.getKills());
+                UtilMessage.message(player, ChatColor.GREEN + "Deaths: " + ChatColor.WHITE + gamer.getDeaths());
+                UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getKDR());
+                return;
+            }
+            UtilMessage.message(player, "KDR", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + "'s Statistics:");
+            UtilMessage.message(player, ChatColor.GREEN + "Kills: " + ChatColor.WHITE + gamer.getKills());
+            UtilMessage.message(player, ChatColor.GREEN + "Deaths: " + ChatColor.WHITE + gamer.getDeaths());
+            UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getKDR());
+        }
+    }
+
+    @Override
+    public void help(final Player player) {
+
+    }
+}

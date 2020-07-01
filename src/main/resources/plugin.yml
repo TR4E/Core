@@ -5,7 +5,12 @@ version: 1.0
 startup: STARTUP
 description: Core is a standalone Minecraft Plugin made by Trae with the Spigot API
 commands:
+  gamemode:
+    aliases: [gm, gms, gmc, gma, gmsp]
+  help:
   ignore:
+  kdr:
+    aliases: [kills, deaths, ratio]
   list:
     aliases: [onlineplayers, playersonline, online, players]
   report:

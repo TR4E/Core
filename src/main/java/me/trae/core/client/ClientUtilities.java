@@ -53,6 +53,19 @@ public final class ClientUtilities {
         return onlineclients;
     }
 
+    public final Set<Client> getOnlineStaffClients(final boolean showVanishPlayers) {
+        final Set<Client> result = new HashSet<>();
+        for (final Client client : onlineclients) {
+            if (client.hasRank(Rank.HELPER, false)) {
+                if (client.isVanished() && !(showVanishPlayers)) {
+                    continue;
+                }
+                result.add(client);
+            }
+        }
+        return result;
+    }
+
     public void messageStaff(final String prefix, final String message, final Rank minimumRank, final UUID[] ignore) {
         for (final Client client : onlineclients) {
             if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
@@ -166,8 +179,8 @@ public final class ClientUtilities {
         return null;
     }
 
-    public final boolean isStaffOnline() {
-        return (onlineclients.stream().anyMatch(c -> c.hasRank(Rank.HELPER, false)) || Bukkit.getOnlinePlayers().stream().anyMatch(Player::isOp));
+    public final boolean isStaffOnline(final boolean includeOps) {
+        return (onlineclients.stream().anyMatch(c -> c.hasRank(Rank.HELPER, false)) || (includeOps && Bukkit.getOnlinePlayers().stream().anyMatch(Player::isOp)));
     }
 
     public final Set<Client> getAltsOfClient(final Client client) {

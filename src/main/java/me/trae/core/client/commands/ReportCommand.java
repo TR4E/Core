@@ -28,11 +28,15 @@ public class ReportCommand extends Command {
         if (target == null) {
             return;
         }
+        if (target == player) {
+            UtilMessage.message(player, "Report", "You cannot report yourself.");
+            return;
+        }
         if (args.length == 1) {
             help(player);
             return;
         }
-        if (!(getInstance().getClientUtilities().isStaffOnline())) {
+        if (!(getInstance().getClientUtilities().isStaffOnline(true))) {
             UtilMessage.message(player, "Report", "There are currently no staff online to receive this message.");
             return;
         }

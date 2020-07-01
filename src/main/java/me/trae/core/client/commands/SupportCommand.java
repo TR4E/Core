@@ -23,13 +23,15 @@ public class SupportCommand extends Command {
             help(player);
             return;
         }
-        if (!(getInstance().getClientUtilities().isStaffOnline())) {
+        if (!(getInstance().getClientUtilities().isStaffOnline(true))) {
             UtilMessage.message(player, "Support", "There are currently no staff online to receive this message.");
             return;
         }
-        UtilMessage.message(player, ChatColor.GOLD.toString() + ChatColor.BOLD + player.getName() + "> " + ChatColor.YELLOW.toString() + ChatColor.BOLD + UtilFormat.getFinalArg(args, 0));
-        getInstance().getClientUtilities().messageStaff(ChatColor.GOLD.toString() + ChatColor.BOLD + player.getName() + "> " + ChatColor.YELLOW.toString() + ChatColor.BOLD + UtilFormat.getFinalArg(args, 0), Rank.HELPER, new UUID[]{player.getUniqueId()});
-        getInstance().getClientUtilities().soundStaff(Sound.NOTE_PLING, Rank.HELPER, new UUID[]{player.getUniqueId()});
+        if (getInstance().getRechargeManager().add(player, "Support Command", (getInstance().getRepository().getSupportCommandCooldown() * 1000L), true)) {
+            UtilMessage.message(player, ChatColor.GOLD.toString() + ChatColor.BOLD + player.getName() + "> " + ChatColor.YELLOW.toString() + ChatColor.BOLD + UtilFormat.getFinalArg(args, 0));
+            getInstance().getClientUtilities().messageStaff(ChatColor.GOLD.toString() + ChatColor.BOLD + player.getName() + "> " + ChatColor.YELLOW.toString() + ChatColor.BOLD + UtilFormat.getFinalArg(args, 0), Rank.HELPER, new UUID[]{player.getUniqueId()});
+            getInstance().getClientUtilities().soundStaff(Sound.NOTE_PLING, Rank.HELPER, new UUID[]{player.getUniqueId()});
+        }
     }
 
     @Override

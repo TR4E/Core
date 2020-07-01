@@ -16,7 +16,9 @@ import me.trae.core.database.commands.ReloadCommand;
 import me.trae.core.gamer.GamerManager;
 import me.trae.core.gamer.GamerRepository;
 import me.trae.core.gamer.GamerUtilities;
-import me.trae.core.utility.TitleManager;
+import me.trae.core.module.TitleManager;
+import me.trae.core.module.recharge.RechargeManager;
+import me.trae.core.module.update.Updater;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.world.ChatListener;
 import me.trae.core.world.ServerListener;
@@ -36,6 +38,7 @@ public class Main extends JavaPlugin {
     private ClientUtilities clientUtilities;
     private GamerUtilities gamerUtilities;
     private CommandManager commandManager;
+    private RechargeManager rechargeManager;
     private TitleManager titleManager;
 
     @Override
@@ -48,7 +51,9 @@ public class Main extends JavaPlugin {
         this.clientUtilities = new ClientUtilities(this);
         this.gamerUtilities = new GamerUtilities(this);
         this.commandManager = new CommandManager(this);
+        this.rechargeManager = new RechargeManager(this);
         this.titleManager = new TitleManager(this);
+        new Updater(this);
         registerEvents();
         registerCommands();
         new BukkitRunnable() {
@@ -75,6 +80,7 @@ public class Main extends JavaPlugin {
     }
 
     private void registerCommands() {
+        getCommand("gamemode").setExecutor(new GamemodeCommand(this));
         getCommandManager().addCommand(new HelpCommand(this));
         getCommandManager().addCommand(new AnnounceCommand(this));
         getCommandManager().addCommand(new CheckAltsCommand(this));
@@ -90,6 +96,7 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new SetSpawnCommand(this));
         getCommandManager().addCommand(new ClearInvCommand(this));
         getCommandManager().addCommand(new IgnoreCommand(this));
+        getCommandManager().addCommand(new KDRCommand(this));
         getCommandManager().addCommand(new ListCommand(this));
         getCommandManager().addCommand(new ReportCommand(this));
         getCommandManager().addCommand(new SupportCommand(this));
@@ -126,6 +133,10 @@ public class Main extends JavaPlugin {
 
     public final CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public final RechargeManager getRechargeManager() {
+        return rechargeManager;
     }
 
     public final TitleManager getTitleManager() {

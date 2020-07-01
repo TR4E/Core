@@ -1,4 +1,4 @@
-package me.trae.core.utility;
+package me.trae.core.module;
 
 import me.trae.core.Main;
 import me.trae.core.client.Rank;
@@ -10,9 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.UUID;
 
 public final class TitleManager {
 
@@ -30,15 +28,8 @@ public final class TitleManager {
         Bukkit.getOnlinePlayers().forEach(online -> sendTitle(online, 10, (seconds * 20), 10, title, subTitle));
     }
 
-    public void sendStaff(final String title, final String subTitle, final int seconds, final Rank minimumRank, final UUID[] ignore) {
-        for (final Player online : Bukkit.getOnlinePlayers()) {
-            if (Arrays.asList(ignore).contains(online.getUniqueId())) {
-                continue;
-            }
-            if (online.isOp() || instance.getClientUtilities().getOnlineClient(online.getUniqueId()).hasRank(minimumRank, false)) {
-                sendTitle(online, 10, (seconds * 20), 10, title, subTitle);
-            }
-        }
+    public void sendStaff(final String title, final String subTitle, final int seconds, final Rank minimumRank) {
+        Bukkit.getOnlinePlayers().stream().filter(o -> instance.getClientUtilities().getOnlineClient(o.getUniqueId()).hasRank(minimumRank, false)).forEach(online -> sendTitle(online, 10, (seconds * 20), 10, title, subTitle));
     }
 
     public void sendActionBar(final Player player, final String message, int duration) {
@@ -72,7 +63,7 @@ public final class TitleManager {
             final Class<?> c5 = Class.forName("net.minecraft.server." + nmsver + ".Packet");
             final Class<?> c2 = Class.forName("net.minecraft.server." + nmsver + ".ChatComponentText");
             final Class<?> c3 = Class.forName("net.minecraft.server." + nmsver + ".IChatBaseComponent");
-            final Object[] o = (Object[]) c2.getConstructor(new Class<?>[]{String.class}).newInstance(msg);
+            final Object o = c2.getConstructor(new Class<?>[]{String.class}).newInstance(msg);
             ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(o, (byte) 2);
             final Method m1 = craftPlayerClass.getDeclaredMethod("getHandle");
             final Object h = m1.invoke(craftPlayer);

@@ -59,15 +59,15 @@ public class ClientCommand extends Command {
     @Override
     public void help(final Player player) {
         UtilMessage.message(player, "Client", "Command List:");
-        if (player.isOp() || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.ADMIN, false)) {
-            UtilMessage.message(player, ChatColor.AQUA + "/client admin" + ChatColor.GRAY + " - " + "Toggle Client Admin.");
-        }
         if (player.isOp() || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.MOD, false)) {
             UtilMessage.message(player, ChatColor.AQUA + "/client search <client>" + ChatColor.GRAY + " - " + "Search a Client.");
         }
         if (player.isOp() || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.OWNER, false)) {
             UtilMessage.message(player, ChatColor.AQUA + "/client promote <client>" + ChatColor.GRAY + " - " + "Promote a Client.");
             UtilMessage.message(player, ChatColor.AQUA + "/client demote <client>" + ChatColor.GRAY + " - " + "Demote a Client.");
+        }
+        if (player.isOp() || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.ADMIN, false)) {
+            UtilMessage.message(player, ChatColor.AQUA + "/client admin" + ChatColor.GRAY + " - " + "Toggle Client Admin.");
         }
     }
 
@@ -120,16 +120,18 @@ public class ClientCommand extends Command {
             if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.ADMIN, false)) {
                 UtilMessage.message(player, ChatColor.GREEN + "Admin Mode: " + ChatColor.WHITE + (target.isAdministrating() ? "Enabled" : "Disabled"));
             }
-            if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.ADMIN, false) || target.isGodMode()) {
-                UtilMessage.message(player, ChatColor.GREEN + "God Mode: " + ChatColor.WHITE + (target.isGodMode() ? "Enabled" : "Disabled"));
+            if (client.isAdministrating()) {
+                if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.ADMIN, false) || target.isGodMode()) {
+                    UtilMessage.message(player, ChatColor.GREEN + "God Mode: " + ChatColor.WHITE + (target.isGodMode() ? "Enabled" : "Disabled"));
+                }
+                if (Bukkit.getPlayer(target.getUUID()).isOp() | target.hasRank(Rank.HEADMOD, false)) {
+                    UtilMessage.message(player, ChatColor.GREEN + "Observer Mode: " + ChatColor.WHITE + (target.isObserving() ? "Enabled" : "Disabled"));
+                }
+                if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.MOD, false)) {
+                    UtilMessage.message(player, ChatColor.GREEN + "Vanish Mode: " + ChatColor.WHITE + (target.isVanished() ? "Enabled" : "Disabled"));
+                }
+                UtilMessage.message(player, ChatColor.GREEN + "Fly Mode: " + ChatColor.WHITE + (Bukkit.getPlayer(target.getUUID()).getAllowFlight() ? "Enabled" + (Bukkit.getPlayer(target.getUUID()).isFlying() ? " (Flying)" : "") : "Disabled"));
             }
-            if (Bukkit.getPlayer(target.getUUID()).isOp() | target.hasRank(Rank.HEADMOD, false)) {
-                UtilMessage.message(player, ChatColor.GREEN + "Observer Mode: " + ChatColor.WHITE + (target.isObserving() ? "Enabled" : "Disabled"));
-            }
-            if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.MOD, false)) {
-                UtilMessage.message(player, ChatColor.GREEN + "Vanish Mode: " + ChatColor.WHITE + (target.isVanished() ? "Enabled" : "Disabled"));
-            }
-            UtilMessage.message(player, ChatColor.GREEN + "Fly Mode: " + ChatColor.WHITE + (Bukkit.getPlayer(target.getUUID()).getAllowFlight() ? "Enabled" + (Bukkit.getPlayer(target.getUUID()).isFlying() ? " (Flying)" : "") : "Disabled"));
             UtilMessage.message(player, ChatColor.GREEN + "Gamemode: " + ChatColor.WHITE + UtilFormat.cleanString(Bukkit.getPlayer(target.getUUID()).getGameMode().name()));
         }
     }

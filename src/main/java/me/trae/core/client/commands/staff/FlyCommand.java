@@ -9,6 +9,8 @@ import me.trae.core.utility.UtilPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class FlyCommand extends Command {
 
     public FlyCommand(final Main instance) {
@@ -24,7 +26,7 @@ public class FlyCommand extends Command {
         if (args == null || args.length == 0) {
             player.setAllowFlight(!(player.getAllowFlight()));
             UtilMessage.message(player, "Fly", "Fly Mode: " + (player.getAllowFlight() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
-            getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (player.getAllowFlight() ? " is now Flying." : " is no longer Flying."), Rank.ADMIN, null);
+            getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (player.getAllowFlight() ? " is now Flying." : " is no longer Flying."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
             return;
         }
         if (args.length == 1) {
@@ -35,7 +37,7 @@ public class FlyCommand extends Command {
             if (target == player) {
                 player.setAllowFlight(!(player.getAllowFlight()));
                 UtilMessage.message(player, "Fly", "Fly Mode: " + (player.getAllowFlight() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
-                getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (player.getAllowFlight() ? " is now Flying." : " is no longer Flying."), Rank.ADMIN, null);
+                getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (player.getAllowFlight() ? " is now Flying." : " is no longer Flying."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
                 return;
             }
             final Client targetC = getInstance().getClientUtilities().getOnlineClient(target.getUniqueId());
@@ -50,7 +52,7 @@ public class FlyCommand extends Command {
             }
             target.setAllowFlight(!(target.getAllowFlight()));
             UtilMessage.message(target, "Fly", "Fly Mode: " + (target.getAllowFlight() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
-            getInstance().getClientUtilities().messageStaff("God", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + (targetC.isGodMode() ? " is now Flying " : " is no longer Flying ") + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, null);
+            getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + (target.getAllowFlight() ? " is now Flying" : " is no longer Flying") + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});
         }
     }
 

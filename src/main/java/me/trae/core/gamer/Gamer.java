@@ -45,6 +45,10 @@ public final class Gamer {
         this.deaths = deaths;
     }
 
+    public final String getKDR() {
+        return (kills == 0 && deaths == 0 ? "0.0" : (float) kills / deaths + "");
+    }
+
     public final UUID getInvInspecting() {
         return invInspecting;
     }
