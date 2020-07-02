@@ -6,9 +6,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public final class Repository {
 
-    private final Config config;
     private static boolean gameEnchantments;
-    private boolean gamePortals, gameMobs, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, spawnCommandAdminOnly, clearInventoryCommandAdminOnly, disableTNT, disableMobSpawners;
+    private final Config config;
+    private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, spawnCommandAdminOnly, clearInventoryCommandAdminOnly, disableTNT, disableMobSpawners;
     private int maxPlayerSlots, spawnCommandCooldown, announceCommandCooldown, supportCommandCooldown, spawnCommandCountdown;
     private String serverName, serverWorld, serverWebsite, serverMOTD;
 
@@ -41,6 +41,9 @@ public final class Repository {
             @Override
             public void run() {
                 gameEnchantments = config.getConfig().getBoolean("Booleans.Settings.Game.Enchantments");
+                funThrowingTNT = config.getConfig().getBoolean("Booleans.Settings.Fun-Features.Throwing-TNT");
+                funThrowingWeb = config.getConfig().getBoolean("Booleans.Settings.Fun-Features.Throwing-Web");
+                funThrowingPearl = config.getConfig().getBoolean("Booleans.Settings.Fun-Features.Throwing-Pearl");
                 gamePortals = config.getConfig().getBoolean("Booleans.Settings.Game.Portals");
                 gameMobs = config.getConfig().getBoolean("Booleans.Settings.Game.Mobs");
                 gameAlwaysDay = config.getConfig().getBoolean("Booleans.Settings.Game.Always-Day");
@@ -63,6 +66,18 @@ public final class Repository {
                 serverMOTD = config.getConfig().getString("Strings.Server.MOTD");
             }
         }.runTaskAsynchronously(instance);
+    }
+
+    public final boolean isFunThrowingTNT() {
+        return funThrowingTNT;
+    }
+
+    public final boolean isFunThrowingWeb() {
+        return funThrowingWeb;
+    }
+
+    public final boolean isFunThrowingPearl() {
+        return funThrowingPearl;
     }
 
     public final boolean isGamePortals() {

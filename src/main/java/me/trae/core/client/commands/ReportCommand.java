@@ -32,6 +32,16 @@ public class ReportCommand extends Command {
             UtilMessage.message(player, "Report", "You cannot report yourself.");
             return;
         }
+        if (!(player.isOp())) {
+            if (getInstance().getClientUtilities().getOnlineClient(target.getUniqueId()).hasRank(Rank.ADMIN, false)) {
+                UtilMessage.message(player, "Report", "You cannot report this Player!");
+                return;
+            }
+            if (getInstance().getClientUtilities().getOnlineClient(target.getUniqueId()).isVanished()) {
+                UtilMessage.message(player, "Player Search", ChatColor.YELLOW + "0" + ChatColor.GRAY + " matches found [" + ChatColor.YELLOW + args[0] + ChatColor.GRAY + "]");
+                return;
+            }
+        }
         if (args.length == 1) {
             help(player);
             return;

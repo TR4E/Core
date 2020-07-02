@@ -62,7 +62,7 @@ public class ClearInvCommand extends Command {
             }
             if (!(player.isOp())) {
                 if (targetC.getRank().ordinal() >= client.getRank().ordinal()) {
-                    UtilMessage.message(player, "Inventory", "You cannot clear this player's Inventory.");
+                    UtilMessage.message(player, "Inventory", "You cannot clear Inventory for " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
                     return;
                 }
             }

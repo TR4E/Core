@@ -25,12 +25,14 @@ public class ClientCommand extends Command {
 
     @Override
     public void execute(final Player player, final String[] args) {
-        if (args == null || args.length == 0) {
-            help(player);
-            return;
-        }
         final Client client = getInstance().getClientUtilities().getOnlineClient(player.getUniqueId());
         if (client == null) {
+            return;
+        }
+        if (args == null || args.length == 0) {
+            if (player.isOp() || client.hasRank(Rank.MOD, true)) {
+                help(player);
+            }
             return;
         }
         if (args[0].equalsIgnoreCase("admin")) {
@@ -105,10 +107,10 @@ public class ClientCommand extends Command {
         }
         final List<String> ips = new ArrayList<>(target.getIPAddresses());
         if (Bukkit.getPlayer(target.getUUID()) != null) {
-            UtilMessage.message(player, ChatColor.GREEN + "IP Address: " + ChatColor.WHITE + UtilPlayer.getIP(Bukkit.getPlayer(target.getUUID())));
+            UtilMessage.message(player, ChatColor.GREEN + "IP Address: " + ChatColor.WHITE + ((player.isOp() || client.hasRank(Rank.ADMIN, false)) ? UtilPlayer.getIP(Bukkit.getPlayer(target.getUUID())) : ChatColor.RED + "N/A"));
             ips.remove(UtilPlayer.getIP(Bukkit.getPlayer(target.getUUID())));
         }
-        if (!(ips.isEmpty())) {
+        if (!(ips.isEmpty()) && (player.isOp() || client.hasRank(Rank.ADMIN, false))) {
             UtilMessage.message(player, ChatColor.GREEN + "IP Aliases: " + ChatColor.WHITE + ips);
         }
         UtilMessage.message(player, ChatColor.GREEN + "Rank: " + ChatColor.WHITE + UtilFormat.cleanString(target.getRank().getPrefix()));

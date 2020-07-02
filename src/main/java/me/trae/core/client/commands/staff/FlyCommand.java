@@ -46,7 +46,7 @@ public class FlyCommand extends Command {
             }
             if (!(player.isOp())) {
                 if (targetC.getRank().ordinal() >= client.getRank().ordinal()) {
-                    UtilMessage.message(player, "Client", "You do not outrank " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+                    UtilMessage.message(player, "Fly", "You cannot toggle Fly mode for this Player!");
                     return;
                 }
             }

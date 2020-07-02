@@ -13,6 +13,9 @@ public final class ConfigManager {
             final Config config = new Config(instance.getDataFolder(), configType.name);
             if (!(config.fileExists())) {
                 if (configType.equals(ConfigType.MAIN_CONFIG)) {
+                    config.getConfig().set("Booleans.Settings.Fun-Features.Throwing-TNT", true);
+                    config.getConfig().set("Booleans.Settings.Fun-Features.Throwing-Web", true);
+                    config.getConfig().set("Booleans.Settings.Fun-Features.Throwing-Pearl", true);
                     config.getConfig().set("Booleans.Settings.Game.Enchantments", true);
                     config.getConfig().set("Booleans.Settings.Game.Portals", true);
                     config.getConfig().set("Booleans.Settings.Game.Mobs", true);

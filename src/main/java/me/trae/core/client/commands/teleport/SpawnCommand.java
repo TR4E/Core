@@ -8,11 +8,13 @@ import me.trae.core.module.update.UpdateEvent;
 import me.trae.core.module.update.Updater;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
+import me.trae.core.utility.UtilTime;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,16 +36,20 @@ public class SpawnCommand extends Command {
             return;
         }
         if (args == null || args.length == 0) {
-            if (client.isAdministrating()) {
+            if (client.isAdministrating() || getInstance().getRepository().getSpawnCommandCountdown() == 0) {
                 player.teleport(Bukkit.getWorld(getInstance().getRepository().getServerWorld()).getSpawnLocation());
                 UtilPlayer.sound(player, Sound.ENDERMAN_TELEPORT);
                 UtilMessage.message(player, "Spawn", "You teleported to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + ".");
                 getInstance().getClientUtilities().messageAdmins("Spawn", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + ".", new UUID[]{player.getUniqueId()});
                 return;
             }
+            if (timer.containsKey(player.getUniqueId())) {
+                UtilMessage.message(player, "Spawn", "You are already teleporting to spawn.");
+                return;
+            }
             if (!(getInstance().getRechargeManager().isCooling(player, "Spawn Command", true))) {
                 timer.put(player.getUniqueId(), System.currentTimeMillis() + (getInstance().getRepository().getSpawnCommandCountdown() * 1000L));
-                UtilMessage.message(player, "Spawn", "You will be teleported to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " in " + ChatColor.GREEN + "10.0" + " Seconds" + ChatColor.GRAY + ".");
+                UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " in " + ChatColor.GREEN + UtilTime.getTime(getInstance().getRepository().getSpawnCommandCountdown() * 1000L, UtilTime.TimeUnit.BEST, 1) + ChatColor.GRAY + ", do not move!");
                 return;
             }
             return;
@@ -88,6 +94,24 @@ public class SpawnCommand extends Command {
                         getInstance().getClientUtilities().messageAdmins("Spawn", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + ".", new UUID[]{player.getUniqueId()});
                     }
                 }
+                if (timer.containsKey(player.getUniqueId())) {
+                    if (timer.get(player.getUniqueId()) > System.currentTimeMillis()) {
+                        if (timer.get(player.getUniqueId()) == ((getInstance().getRepository().getSpawnCommandCountdown() * 1000L) / 2)) {
+                            UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " in " + ChatColor.GREEN + UtilTime.getTime(getInstance().getRepository().getSpawnCommandCountdown() * 1000L, UtilTime.TimeUnit.BEST, 1) + ChatColor.GRAY + ", do not move!");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(final PlayerMoveEvent e) {
+        final Player player = e.getPlayer();
+        if ((e.getTo().getX() != e.getFrom().getX()) || (e.getTo().getZ() != e.getFrom().getZ())) {
+            if (timer.containsKey(player.getUniqueId())) {
+                timer.remove(player.getUniqueId());
+                UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to moving.");
             }
         }
     }

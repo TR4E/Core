@@ -40,7 +40,7 @@ public final class RechargeManager {
         }.runTaskTimer(instance, 0L, 2L);
     }
 
-    public final boolean add(final Player player, final String ability, final long seconds, boolean inform) {
+    public final boolean add(final Player player, final String ability, final long duration, boolean inform) {
         if (player == null) {
             return false;
         }
@@ -52,14 +52,14 @@ public final class RechargeManager {
         }
         if (!(cooldown.containsKey(player.getUniqueId()))) {
             cooldown.put(player.getUniqueId(), new ArrayList<>());
-            cooldown.get(player.getUniqueId()).add(new Recharge(ability, seconds));
+            cooldown.get(player.getUniqueId()).add(new Recharge(ability, duration));
             return true;
         }
         if (cooldown.get(player.getUniqueId()).stream().noneMatch(recharge -> recharge.getAbility().equals(ability))) {
-            cooldown.get(player.getUniqueId()).add(new Recharge(ability, seconds));
+            cooldown.get(player.getUniqueId()).add(new Recharge(ability, duration));
             return true;
         }
-        if (seconds == 0) {
+        if (duration == 0) {
             inform = false;
         }
         if (cooldown.get(player.getUniqueId()).stream().filter(recharge -> recharge.getAbility().equals(ability)).anyMatch(recharge -> (recharge.getSeconds() + recharge.getSystime() - System.currentTimeMillis()) > 0)) {

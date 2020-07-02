@@ -45,7 +45,11 @@ public class IgnoreCommand extends Command {
             }
             if (!(player.isOp())) {
                 if (targetC.getRank().ordinal() >= client.getRank().ordinal()) {
-                    UtilMessage.message(player, "Ignore", "You cannot ignore this player!");
+                    UtilMessage.message(player, "Ignore", "You cannot ignore this Player!");
+                    return;
+                }
+                if (targetC.isVanished()) {
+                    UtilMessage.message(player, "Player Search", ChatColor.YELLOW + "0" + ChatColor.GRAY + " matches found [" + ChatColor.YELLOW + args[0] + ChatColor.GRAY + "]");
                     return;
                 }
             }

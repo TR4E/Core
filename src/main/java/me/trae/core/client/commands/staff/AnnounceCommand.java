@@ -22,6 +22,11 @@ public class AnnounceCommand extends Command {
             help(player);
             return;
         }
+        if (!(player.isOp() || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.ADMIN, false))) {
+            if (!(getInstance().getRechargeManager().add(player, "Announce Command", (getInstance().getRepository().getAnnounceCommandCooldown() * 1000), true))) {
+                return;
+            }
+        }
         UtilPlayer.sound(Sound.NOTE_PLING);
         UtilMessage.broadcast(ChatColor.AQUA.toString() + ChatColor.BOLD + player.getName() + "> " + ChatColor.WHITE.toString() + ChatColor.BOLD + UtilFormat.getFinalArg(args, 0));
         getInstance().getTitleManager().sendBroadcast(ChatColor.AQUA.toString() + ChatColor.BOLD + "Announcement", ChatColor.WHITE + "Look in Chat", 2);

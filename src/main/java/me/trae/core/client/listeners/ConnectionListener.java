@@ -131,6 +131,9 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerQuit(final PlayerQuitEvent e) {
         e.setQuitMessage(null);
         final Player player = e.getPlayer();
+        if (player.isInsideVehicle()) {
+            player.leaveVehicle();
+        }
         final Client client = getInstance().getClientUtilities().getOnlineClient(player.getUniqueId());
         if (client == null) {
             return;

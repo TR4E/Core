@@ -27,5 +27,6 @@ public class HelpCommand extends Command {
         UtilMessage.message(player, ChatColor.AQUA + "/list" + ChatColor.GRAY + " - " + "List Online Players.");
         UtilMessage.message(player, ChatColor.AQUA + "/clearinv" + ChatColor.GRAY + " - " + "Clear Inventory.");
         UtilMessage.message(player, ChatColor.AQUA + "/spawn" + ChatColor.GRAY + " - " + "Teleport to Spawn.");
+        UtilMessage.message(player, ChatColor.AQUA + "/kdr <player>" + ChatColor.GRAY + " - " + "View Kill Death Ratio.");
     }
 }

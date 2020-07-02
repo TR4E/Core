@@ -3,6 +3,7 @@ package me.trae.core.utility;
 import me.trae.core.database.Repository;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -26,8 +27,15 @@ public final class UtilItem {
         if (item.getType() == Material.LAPIS_BLOCK) {
             meta.setDisplayName(ChatColor.YELLOW + "Water Block");
             lore.add(ChatColor.WHITE + "This Block will turn into Water when placed.");
+        } else if (item.getType() == Material.ENDER_PEARL) {
+            meta.setDisplayName(ChatColor.YELLOW + "Ethereal Pearl");
+            lore.add(ChatColor.WHITE + "Left Click to ride the Ethereal Pearl.");
+        } else if (item.getType() == Material.WEB) {
+            meta.setDisplayName(ChatColor.YELLOW + "Throwing Web");
+            lore.add(ChatColor.WHITE + "Left Click to throw the Web.");
         } else if (item.getType() == Material.TNT) {
-            meta.setDisplayName(ChatColor.YELLOW + "TNT");
+            meta.setDisplayName(ChatColor.YELLOW + "Throwing TNT");
+            lore.add(ChatColor.WHITE + "Left Click to throw the TNT.");
         } else if (item.getType() == Material.POTATO_ITEM) {
             meta.setDisplayName(ChatColor.YELLOW + "Potato");
         } else if (item.getType() == Material.CARROT_ITEM) {
@@ -70,5 +78,22 @@ public final class UtilItem {
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
+    }
+
+    public static void remove(final Player player, final Material item, final byte data, final int amount) {
+        if (player.getInventory().contains(item)) {
+            for (final ItemStack c : player.getInventory().getContents()) {
+                if (c != null) {
+                    if (c.getType() == item && c.getData().getData() == data) {
+                        if (c.getAmount() == 1) {
+                            player.getInventory().remove(c);
+                            return;
+                        }
+                        c.setAmount(c.getAmount() - amount);
+                    }
+                }
+            }
+        }
+        player.updateInventory();
     }
 }

@@ -33,6 +33,10 @@ public class KDRCommand extends Command {
             if (target == null) {
                 return;
             }
+            if (getInstance().getClientUtilities().getOnlineClient(target.getUniqueId()).isVanished()) {
+                UtilMessage.message(player, "Player Search", ChatColor.YELLOW + "0" + ChatColor.GRAY + " matches found [" + ChatColor.YELLOW + args[0] + ChatColor.GRAY + "]");
+                return;
+            }
             final Gamer gamer = getInstance().getGamerUtilities().getGamer(target.getUniqueId());
             if (gamer == null) {
                 return;

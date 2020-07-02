@@ -3,7 +3,7 @@ package me.trae.core;
 import me.trae.core.client.ClientRepository;
 import me.trae.core.client.ClientUtilities;
 import me.trae.core.client.commands.*;
-import me.trae.core.client.commands.help.HelpCommand;
+import me.trae.core.client.commands.help.*;
 import me.trae.core.client.commands.staff.*;
 import me.trae.core.client.commands.teleport.SetSpawnCommand;
 import me.trae.core.client.commands.teleport.SpawnCommand;
@@ -21,15 +21,17 @@ import me.trae.core.module.recharge.RechargeManager;
 import me.trae.core.module.update.Updater;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.world.ChatListener;
+import me.trae.core.world.ItemListener;
 import me.trae.core.world.ServerListener;
 import me.trae.core.world.WorldListener;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin {
 
-    private boolean started;
+    private boolean started, chat;
 
     private ConfigManager configManager;
     private Repository repository;
@@ -67,6 +69,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        Bukkit.getOnlinePlayers().forEach(o -> o.kickPlayer(ChatColor.WHITE + "Server might be restarting or stopping!"));
         UtilMessage.log("Core", ChatColor.RED + "Plugin Disabled!");
     }
 
@@ -75,13 +78,18 @@ public class Main extends JavaPlugin {
         new CommandCenter(this);
         new GamerManager(this);
         new ChatListener(this);
+        new ItemListener(this);
         new ServerListener(this);
         new WorldListener(this);
     }
 
     private void registerCommands() {
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
+        getCommandManager().addCommand(new DiscordCommand(this));
         getCommandManager().addCommand(new HelpCommand(this));
+        getCommandManager().addCommand(new StoreCommand(this));
+        getCommandManager().addCommand(new VoteCommand(this));
+        getCommandManager().addCommand(new WebsiteCommand(this));
         getCommandManager().addCommand(new AnnounceCommand(this));
         getCommandManager().addCommand(new CheckAltsCommand(this));
         getCommandManager().addCommand(new ClientCommand(this));
@@ -105,6 +113,10 @@ public class Main extends JavaPlugin {
 
     public final boolean hasStarted() {
         return started;
+    }
+
+    public final boolean isChat() {
+        return chat;
     }
 
     public final ConfigManager getConfigManager() {

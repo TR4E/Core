@@ -5,6 +5,7 @@ import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
 import me.trae.core.gamer.Gamer;
 import me.trae.core.module.CoreListener;
+import me.trae.core.utility.UtilMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -29,6 +30,12 @@ public final class ChatListener extends CoreListener {
         if (client.isStaffChat()) {
             getInstance().getClientUtilities().messageStaff(ChatColor.RED.toString() + ChatColor.BOLD + player.getName() + "> " + ChatColor.WHITE.toString() + ChatColor.BOLD + e.getMessage(), Rank.HELPER, null);
             return;
+        }
+        if (!(player.isOp() || client.hasRank(Rank.HEADMOD, false))) {
+            if (!(getInstance().isChat())) {
+                UtilMessage.message(player, "Server", "The Chat is currently disabled.");
+                return;
+            }
         }
         final String rank = (client.getRank() != Rank.PLAYER ? client.getRank().getTag(true) + " " : "");
         final String message = (client.isAdministrating() ? ChatColor.translateAlternateColorCodes('&', e.getMessage()) : e.getMessage());

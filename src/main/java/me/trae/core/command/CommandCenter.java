@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.FieldAccessException;
 import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
@@ -108,7 +107,7 @@ public class CommandCenter extends CoreListener {
                             }
                             e.setCancelled(true);
                         }
-                    } catch (final FieldAccessException ex) {
+                    } catch (final Exception ex) {
                         System.out.println("[Packet Error]: Tab Completion");
                     }
                 }

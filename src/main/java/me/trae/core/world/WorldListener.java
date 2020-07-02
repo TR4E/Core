@@ -23,10 +23,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -262,6 +259,15 @@ public final class WorldListener extends CoreListener {
                 if (UtilBlock.getBlockUnder(player.getLocation()).getType() == Material.SPONGE || UtilBlock.getBlockUnder(player.getLocation()).getType() == Material.WOOL) {
                     e.setCancelled(true);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(final PlayerTeleportEvent e) {
+        if (getInstance().getRepository().isFunThrowingPearl()) {
+            if (e.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+                e.setCancelled(true);
             }
         }
     }

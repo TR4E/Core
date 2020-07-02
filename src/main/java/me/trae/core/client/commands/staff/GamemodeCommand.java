@@ -160,9 +160,11 @@ public final class GamemodeCommand implements CommandExecutor {
                 if (targetC == null) {
                     return false;
                 }
-                if (targetC.getRank().ordinal() >= client.getRank().ordinal()) {
-                    UtilMessage.message(player, "Client", "You do not outrank " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
-                    return false;
+                if (!(player.isOp())) {
+                    if (targetC.getRank().ordinal() >= client.getRank().ordinal()) {
+                        UtilMessage.message(player, "Gamemode", "You cannot update game mode for " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+                        return false;
+                    }
                 }
                 target.setGameMode(GameMode.ADVENTURE);
                 if (target == player) {
