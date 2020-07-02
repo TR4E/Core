@@ -111,4 +111,13 @@ public final class RechargeManager {
         }
         return false;
     }
+
+    public final List<Recharge> getRecharges(final Player player) {
+        if (!(cooldown.isEmpty())) {
+            if (cooldown.containsKey(player.getUniqueId())) {
+                return cooldown.get(player.getUniqueId());
+            }
+        }
+        return null;
+    }
 }

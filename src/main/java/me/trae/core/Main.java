@@ -46,6 +46,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         started = false;
+        chat = true;
         this.configManager = new ConfigManager(this);
         this.repository = new Repository(this);
         this.clientRepository = new ClientRepository(this);
@@ -99,6 +100,7 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new OpenInvCommand(this));
         getCommandManager().addCommand(new PlayerCountCommand(this));
         getCommandManager().addCommand(new StaffChatCommand(this));
+        getCommandManager().addCommand(new ToggleChatCommand(this));
         getCommandManager().addCommand(new VanishCommand(this));
         getCommandManager().addCommand(new SpawnCommand(this));
         getCommandManager().addCommand(new SetSpawnCommand(this));
@@ -117,6 +119,10 @@ public class Main extends JavaPlugin {
 
     public final boolean isChat() {
         return chat;
+    }
+
+    public void setChat(final boolean chat) {
+        this.chat = chat;
     }
 
     public final ConfigManager getConfigManager() {
