@@ -26,6 +26,11 @@ import me.trae.core.world.ServerListener;
 import me.trae.core.world.WorldListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -45,8 +50,8 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        started = false;
-        chat = true;
+        this.started = false;
+        this.chat = true;
         this.configManager = new ConfigManager(this);
         this.repository = new Repository(this);
         this.clientRepository = new ClientRepository(this);
@@ -57,6 +62,7 @@ public class Main extends JavaPlugin {
         this.rechargeManager = new RechargeManager(this);
         this.titleManager = new TitleManager(this);
         new Updater(this);
+        setupServer();
         registerEvents();
         registerCommands();
         new BukkitRunnable() {
@@ -72,6 +78,17 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         Bukkit.getOnlinePlayers().forEach(o -> o.kickPlayer(ChatColor.WHITE + "Server might be restarting or stopping!"));
         UtilMessage.log("Core", ChatColor.RED + "Plugin Disabled!");
+    }
+
+    private void setupServer() {
+        for (final World world : Bukkit.getWorlds()) {
+            for (final Entity entity : world.getEntities()) {
+                if (entity instanceof Player || entity instanceof ArmorStand || entity instanceof ItemFrame) {
+                    continue;
+                }
+                entity.remove();
+            }
+        }
     }
 
     private void registerEvents() {
@@ -92,7 +109,9 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new VoteCommand(this));
         getCommandManager().addCommand(new WebsiteCommand(this));
         getCommandManager().addCommand(new AnnounceCommand(this));
+        getCommandManager().addCommand(new BroadcastCommand(this));
         getCommandManager().addCommand(new CheckAltsCommand(this));
+        getCommandManager().addCommand(new ClearChatCommand(this));
         getCommandManager().addCommand(new ClientCommand(this));
         getCommandManager().addCommand(new FlyCommand(this));
         getCommandManager().addCommand(new GodCommand(this));

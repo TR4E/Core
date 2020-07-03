@@ -34,8 +34,7 @@ public final class UtilItem {
             meta.setDisplayName(ChatColor.YELLOW + "Throwing Web");
             lore.add(ChatColor.WHITE + "Left Click to throw the Web.");
         } else if (item.getType() == Material.TNT) {
-            meta.setDisplayName(ChatColor.YELLOW + "Throwing TNT");
-            lore.add(ChatColor.WHITE + "Left Click to throw the TNT.");
+            meta.setDisplayName(ChatColor.YELLOW + "TNT");
         } else if (item.getType() == Material.POTATO_ITEM) {
             meta.setDisplayName(ChatColor.YELLOW + "Potato");
         } else if (item.getType() == Material.CARROT_ITEM) {

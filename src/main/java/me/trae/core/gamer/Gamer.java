@@ -46,7 +46,7 @@ public final class Gamer {
     }
 
     public final String getKDR() {
-        return (kills == 0 && deaths == 0 ? "0.0" : (float) kills / deaths + "");
+        return (kills == 0 && deaths == 0 ? "0.0" : (double) kills / deaths + "");
     }
 
     public final UUID getInvInspecting() {

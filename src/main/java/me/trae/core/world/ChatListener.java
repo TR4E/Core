@@ -31,7 +31,7 @@ public final class ChatListener extends CoreListener {
             getInstance().getClientUtilities().messageStaff(ChatColor.RED.toString() + ChatColor.BOLD + player.getName() + "> " + ChatColor.WHITE.toString() + ChatColor.BOLD + e.getMessage(), Rank.HELPER, null);
             return;
         }
-        if (!(player.isOp() || client.hasRank(Rank.HEADMOD, false))) {
+        if (!(player.isOp() || client.hasRank(Rank.MOD, false))) {
             if (!(getInstance().isChat())) {
                 UtilMessage.message(player, "Server", "The Chat is currently disabled.");
                 return;
@@ -46,5 +46,6 @@ public final class ChatListener extends CoreListener {
             }
             online.sendMessage(rank + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + ": " + message);
         }
+        UtilMessage.log(rank + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + ": " + message);
     }
 }

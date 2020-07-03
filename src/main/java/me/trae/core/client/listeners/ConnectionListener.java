@@ -6,6 +6,7 @@ import me.trae.core.client.Rank;
 import me.trae.core.database.Repository;
 import me.trae.core.gamer.Gamer;
 import me.trae.core.module.CoreListener;
+import me.trae.core.utility.UtilItem;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class ConnectionListener extends CoreListener {
@@ -41,7 +43,7 @@ public class ConnectionListener extends CoreListener {
         }
         if (Bukkit.hasWhitelist() && !(player.isWhitelisted())) {
             e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Server is currently Whitelisted" + "\n\n" + ChatColor.WHITE + "Join our Discord for more Information!" + "\n" + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + getInstance().getRepository().getServerWebsite() + "/discord");
-            getInstance().getClientUtilities().messageStaff(ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " tried to join, but is not whitelisted.", Rank.ADMIN, null);
+            getInstance().getClientUtilities().messageStaff("Whitelist", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " tried to join, but is not whitelisted.", Rank.ADMIN, null);
             if (getInstance().getClientUtilities().getClient(player.getUniqueId()) == null) {
                 final Client client = new Client(player.getUniqueId());
                 client.setName(player.getName());
@@ -61,6 +63,7 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerJoin(final PlayerJoinEvent e) {
         e.setJoinMessage(null);
         final Player player = e.getPlayer();
+        Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
         if (!(getInstance().getRepository().isGameSaturation())) {
             player.setFoodLevel(20);
         }
@@ -131,6 +134,7 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerQuit(final PlayerQuitEvent e) {
         e.setQuitMessage(null);
         final Player player = e.getPlayer();
+        Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
         if (player.isInsideVehicle()) {
             player.leaveVehicle();
         }

@@ -51,6 +51,7 @@ public class CommandCenter extends CoreListener {
             }
             if (e.getMessage().startsWith("/") && e.getMessage().contains(":") && !(e.getMessage().contains(" "))) {
                 e.setCancelled(true);
+                UtilMessage.message(player, ChatColor.WHITE + "Unknown command. Type \"/help\" for help.");
                 return;
             }
             if (e.getMessage().equalsIgnoreCase("/pl") || e.getMessage().toLowerCase().startsWith("/plugins")) {

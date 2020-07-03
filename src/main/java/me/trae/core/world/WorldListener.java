@@ -327,4 +327,24 @@ public final class WorldListener extends CoreListener {
             }
         }
     }
+
+    @EventHandler
+    public void onBucketFill(final PlayerBucketFillEvent e) {
+        final Player player = e.getPlayer();
+        if (!(getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating())) {
+            e.setCancelled(true);
+            player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_INGOT, player.getInventory().getItemInHand().getAmount() * 3)));
+            UtilMessage.message(player, "Game", "Your " + ChatColor.YELLOW + "Bucket" + ChatColor.GRAY + " broke!");
+        }
+    }
+
+    @EventHandler
+    public void onBucketEmpty(final PlayerBucketEmptyEvent e) {
+        final Player player = e.getPlayer();
+        if (!(getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating())) {
+            e.setCancelled(true);
+            player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_INGOT, player.getInventory().getItemInHand().getAmount() * 3)));
+            UtilMessage.message(player, "Game", "Your " + ChatColor.YELLOW + "Bucket" + ChatColor.GRAY + " broke!");
+        }
+    }
 }

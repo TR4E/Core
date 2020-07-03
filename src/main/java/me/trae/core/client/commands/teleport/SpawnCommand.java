@@ -14,6 +14,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
@@ -103,15 +107,83 @@ public class SpawnCommand extends Command {
                 }
             }
         }
+        if (e.getUpdateType() == Updater.UpdateType.SEC_01) {
+            for (final Player player : Bukkit.getOnlinePlayers()) {
+                if (timer.containsKey(player.getUniqueId())) {
+                    if (timer.get(player.getUniqueId()) > System.currentTimeMillis()) {
+                        getInstance().getTitleManager().sendPlayer(player, "", ChatColor.GREEN + UtilTime.getTime(timer.get(player.getUniqueId()) - System.currentTimeMillis(), UtilTime.TimeUnit.BEST, 1), 20);
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler
     public void onPlayerMove(final PlayerMoveEvent e) {
         final Player player = e.getPlayer();
-        if ((e.getTo().getX() != e.getFrom().getX()) || (e.getTo().getZ() != e.getFrom().getZ())) {
+        if ((e.getFrom().getBlock().getX() != e.getTo().getBlock().getX()) || (e.getFrom().getBlock().getZ() != e.getTo().getBlock().getZ())) {
             if (timer.containsKey(player.getUniqueId())) {
                 timer.remove(player.getUniqueId());
                 UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to moving.");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(final BlockPlaceEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        final Player player = e.getPlayer();
+        if (timer.containsKey(player.getUniqueId())) {
+            timer.remove(player.getUniqueId());
+            UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to block interaction.");
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(final BlockBreakEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        final Player player = e.getPlayer();
+        if (timer.containsKey(player.getUniqueId())) {
+            timer.remove(player.getUniqueId());
+            UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to block interaction.");
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamage(final EntityDamageEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        if (e.getEntity() instanceof Player) {
+            final Player player = (Player) e.getEntity();
+            if (timer.containsKey(player.getUniqueId())) {
+                timer.remove(player.getUniqueId());
+                UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to taking damage.");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamage(final EntityDamageByEntityEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        if (e.getEntity() instanceof Player) {
+            final Player player = (Player) e.getEntity();
+            if (timer.containsKey(player.getUniqueId())) {
+                timer.remove(player.getUniqueId());
+                UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to taking damage.");
+            }
+        }
+        if (e.getDamager() instanceof Player) {
+            final Player player = (Player) e.getDamager();
+            if (timer.containsKey(player.getUniqueId())) {
+                timer.remove(player.getUniqueId());
+                UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to dealing damage.");
             }
         }
     }

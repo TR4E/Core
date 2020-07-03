@@ -36,7 +36,7 @@ public final class ConfigManager {
                     config.getConfig().set("Strings.Server.Name", "Trae's Server");
                     config.getConfig().set("Strings.Server.World", "world");
                     config.getConfig().set("Strings.Server.Website", "https://example.com");
-                    config.getConfig().set("Strings.Server.MOTD", "&6&lTrae's Server &8» &aAustralian Minecraft Server &7[1.8.9]\n&fVisit our Website at &ehttps://example.com");
+                    config.getConfig().set("Strings.Server.MOTD", "&6&lTrae's Server &8» &aAustralian Minecraft Server &7[1.8]\n&fVisit our Website at &ehttps://example.com");
                 }
                 config.getConfig().options().copyDefaults(true);
                 config.createFile();
