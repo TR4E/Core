@@ -13,6 +13,8 @@ import me.trae.core.command.CommandManager;
 import me.trae.core.database.ConfigManager;
 import me.trae.core.database.Repository;
 import me.trae.core.database.commands.ReloadCommand;
+import me.trae.core.effect.EffectManager;
+import me.trae.core.effect.commands.ProtectionCommand;
 import me.trae.core.gamer.GamerManager;
 import me.trae.core.gamer.GamerRepository;
 import me.trae.core.gamer.GamerUtilities;
@@ -46,6 +48,7 @@ public class Main extends JavaPlugin {
     private GamerUtilities gamerUtilities;
     private CommandManager commandManager;
     private RechargeManager rechargeManager;
+    private EffectManager effectManager;
     private TitleManager titleManager;
 
     @Override
@@ -60,6 +63,7 @@ public class Main extends JavaPlugin {
         this.gamerUtilities = new GamerUtilities(this);
         this.commandManager = new CommandManager(this);
         this.rechargeManager = new RechargeManager(this);
+        this.effectManager = new EffectManager(this);
         this.titleManager = new TitleManager(this);
         new Updater(this);
         setupServer();
@@ -105,6 +109,7 @@ public class Main extends JavaPlugin {
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
         getCommandManager().addCommand(new DiscordCommand(this));
         getCommandManager().addCommand(new HelpCommand(this));
+        getCommandManager().addCommand(new PingCommand(this));
         getCommandManager().addCommand(new StoreCommand(this));
         getCommandManager().addCommand(new VoteCommand(this));
         getCommandManager().addCommand(new WebsiteCommand(this));
@@ -113,8 +118,10 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new CheckAltsCommand(this));
         getCommandManager().addCommand(new ClearChatCommand(this));
         getCommandManager().addCommand(new ClientCommand(this));
+        getCommandManager().addCommand(new FeedCommand(this));
         getCommandManager().addCommand(new FlyCommand(this));
         getCommandManager().addCommand(new GodCommand(this));
+        getCommandManager().addCommand(new HealCommand(this));
         getCommandManager().addCommand(new ObserverCommand(this));
         getCommandManager().addCommand(new OpenInvCommand(this));
         getCommandManager().addCommand(new PlayerCountCommand(this));
@@ -124,12 +131,15 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new SpawnCommand(this));
         getCommandManager().addCommand(new SetSpawnCommand(this));
         getCommandManager().addCommand(new ClearInvCommand(this));
+        getCommandManager().addCommand(new DyeCommand(this));
         getCommandManager().addCommand(new IgnoreCommand(this));
         getCommandManager().addCommand(new KDRCommand(this));
         getCommandManager().addCommand(new ListCommand(this));
         getCommandManager().addCommand(new ReportCommand(this));
         getCommandManager().addCommand(new SupportCommand(this));
+        getCommandManager().addCommand(new TrackCommand(this));
         getCommandManager().addCommand(new ReloadCommand(this));
+        getCommandManager().addCommand(new ProtectionCommand(this));
     }
 
     public final boolean hasStarted() {
@@ -174,6 +184,10 @@ public class Main extends JavaPlugin {
 
     public final RechargeManager getRechargeManager() {
         return rechargeManager;
+    }
+
+    public final EffectManager getEffectManager() {
+        return effectManager;
     }
 
     public final TitleManager getTitleManager() {

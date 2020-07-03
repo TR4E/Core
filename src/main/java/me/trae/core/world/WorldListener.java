@@ -39,7 +39,7 @@ public final class WorldListener extends CoreListener {
     @EventHandler
     public void onUpdate(final UpdateEvent e) {
         if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
-            Bukkit.getOnlinePlayers().stream().filter(o -> getInstance().getClientUtilities().getOnlineClient(o.getUniqueId()).isVanished()).forEach(o -> getInstance().getTitleManager().sendActionBar(o, ChatColor.GREEN + "You are invisible to other players!"));
+            Bukkit.getOnlinePlayers().stream().filter(o -> getInstance().getEffectManager().isVanished(o)).forEach(o -> getInstance().getTitleManager().sendActionBar(o, ChatColor.GREEN + "You are invisible to other players!"));
             final World world = Bukkit.getWorld(getInstance().getRepository().getServerWorld());
             if (world != null) {
                 if (world.hasStorm()) {

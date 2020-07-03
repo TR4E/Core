@@ -8,7 +8,7 @@ commands:
   gamemode:
     aliases: [gm, gms, gmc, gma, gmsp]
   help:
-    aliases: [discord, vote, website, store]
+    aliases: [discord, vote, website, store, ping]
   ignore:
   kdr:
     aliases: [kills, deaths, ratio]
@@ -18,5 +18,9 @@ commands:
   spawn:
   clearinventory:
     aliases: [cleaninventory, clearinv, cleaninv, clear, ci]
+  dye:
+    aliases: [color, colour, changecolor, changecolour]
   support:
     aliases: [adminchat, a, helpop]
+  track:
+    aliases: [find, locate]

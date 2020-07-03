@@ -40,7 +40,9 @@ public final class UtilItem {
         } else if (item.getType() == Material.CARROT_ITEM) {
             meta.setDisplayName(ChatColor.YELLOW + "Carrot");
         } else if (item.getType() == Material.INK_SACK) {
-            if (item.getDurability() == 1) {
+            if (item.getDurability() == 0) {
+                meta.setDisplayName(ChatColor.YELLOW + "Ink Sack");
+            } else if (item.getDurability() == 1) {
                 meta.setDisplayName(ChatColor.YELLOW + "Rose Red");
             } else if (item.getDurability() == 2) {
                 meta.setDisplayName(ChatColor.YELLOW + "Cactus Green");

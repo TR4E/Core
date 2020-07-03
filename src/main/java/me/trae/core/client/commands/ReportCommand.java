@@ -37,7 +37,7 @@ public class ReportCommand extends Command {
                 UtilMessage.message(player, "Report", "You cannot report this Player!");
                 return;
             }
-            if (getInstance().getClientUtilities().getOnlineClient(target.getUniqueId()).isVanished()) {
+            if (getInstance().getEffectManager().isVanished(player)) {
                 UtilMessage.message(player, "Player Search", ChatColor.YELLOW + "0" + ChatColor.GRAY + " matches found [" + ChatColor.YELLOW + args[0] + ChatColor.GRAY + "]");
                 return;
             }

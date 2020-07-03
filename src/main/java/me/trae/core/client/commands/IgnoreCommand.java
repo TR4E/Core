@@ -48,7 +48,7 @@ public class IgnoreCommand extends Command {
                     UtilMessage.message(player, "Ignore", "You cannot ignore this Player!");
                     return;
                 }
-                if (targetC.isVanished()) {
+                if (getInstance().getEffectManager().isVanished(target)) {
                     UtilMessage.message(player, "Player Search", ChatColor.YELLOW + "0" + ChatColor.GRAY + " matches found [" + ChatColor.YELLOW + args[0] + ChatColor.GRAY + "]");
                     return;
                 }

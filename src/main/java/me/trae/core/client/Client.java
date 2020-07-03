@@ -17,16 +17,15 @@ public final class Client {
     private Rank rank;
     private long firstJoined, lastOnline;
     private Location observer;
-    private boolean administrating, staffchat, vanished, god;
+    private boolean administrating, staffchat;
 
     public Client(final UUID uuid) {
         this.uuid = uuid;
         this.ipAddresses = new HashSet<>();
         this.rank = Rank.PLAYER;
+        this.firstJoined = 0;
         this.administrating = false;
         this.staffchat = false;
-        this.vanished = false;
-        this.god = false;
     }
 
     public final UUID getUUID() {
@@ -115,21 +114,5 @@ public final class Client {
 
     public void setStaffChat(final boolean staffchat) {
         this.staffchat = staffchat;
-    }
-
-    public final boolean isVanished() {
-        return vanished;
-    }
-
-    public void setVanished(final boolean vanished) {
-        this.vanished = vanished;
-    }
-
-    public final boolean isGodMode() {
-        return god;
-    }
-
-    public void setGodMode(final boolean god) {
-        this.god = god;
     }
 }

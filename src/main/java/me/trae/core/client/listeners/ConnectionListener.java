@@ -1,14 +1,19 @@
 package me.trae.core.client.listeners;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
 import me.trae.core.database.Repository;
+import me.trae.core.effect.Effect;
 import me.trae.core.gamer.Gamer;
 import me.trae.core.module.CoreListener;
-import me.trae.core.utility.UtilItem;
-import me.trae.core.utility.UtilMessage;
-import me.trae.core.utility.UtilPlayer;
+import me.trae.core.module.update.UpdateEvent;
+import me.trae.core.module.update.Updater;
+import me.trae.core.utility.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -20,7 +25,9 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -48,7 +55,6 @@ public class ConnectionListener extends CoreListener {
                 final Client client = new Client(player.getUniqueId());
                 client.setName(player.getName());
                 client.getIPAddresses().add(e.getAddress().getHostAddress());
-                client.setFirstJoined(0);
                 getInstance().getClientUtilities().addClient(client);
                 getInstance().getClientRepository().saveClient(client);
                 final Gamer gamer = new Gamer(player.getUniqueId());
@@ -91,13 +97,11 @@ public class ConnectionListener extends CoreListener {
                 }
             }
         }
-        getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (c.isVanished() && Bukkit.getPlayer(c.getUUID()) != null) && !(player.isOp() || getInstance().getClientUtilities().getClient(player.getUniqueId()).getRank().ordinal() >= c.getRank().ordinal())).forEach(c -> player.hidePlayer(Bukkit.getPlayer(c.getUUID())));
         Client client = getInstance().getClientUtilities().getClient(player.getUniqueId());
         if (client == null) {
             client = new Client(player.getUniqueId());
             client.setName(player.getName());
             client.getIPAddresses().add(UtilPlayer.getIP(player));
-            client.setFirstJoined(System.currentTimeMillis());
             getInstance().getClientRepository().saveClient(client);
             final Gamer gamer = new Gamer(player.getUniqueId());
             getInstance().getGamerUtilities().addGamer(gamer);
@@ -128,6 +132,23 @@ public class ConnectionListener extends CoreListener {
         getInstance().getClientUtilities().addClient(client);
         getInstance().getClientUtilities().addOnlineClient(client);
         UtilMessage.log("Clients", "Added Online Client: " + ChatColor.YELLOW + client.getName());
+        getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (getInstance().getEffectManager().isVanished(player) && Bukkit.getPlayer(c.getUUID()) != null) && !(player.isOp() || getInstance().getClientUtilities().getClient(player.getUniqueId()).getRank().ordinal() >= c.getRank().ordinal())).forEach(c -> player.hidePlayer(Bukkit.getPlayer(c.getUUID())));
+        updateTab(player);
+        if (client.getFirstJoined() == 0) {
+            client.setFirstJoined(System.currentTimeMillis());
+            getInstance().getClientRepository().updateFirstJoined(client);
+            getInstance().getEffectManager().addEffect(player, Effect.EffectType.PROTECTION, (getInstance().getRepository().getGamePvPProtection() * 60000L));
+            UtilMessage.broadcast(getInstance().getEffectManager().hasProtection(player) + "");
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (getInstance().getEffectManager().hasProtection(player)) {
+                        UtilMessage.message(player, "Protection", "You have received " + ChatColor.GREEN + UtilTime.getTime(getInstance().getRepository().getGamePvPProtection() * 60000L, UtilTime.TimeUnit.BEST, 1) + ChatColor.GRAY + " of pvp protection.");
+                        UtilMessage.message(player, "Protection", "If you want to pvp, type '" + ChatColor.AQUA + "/protection" + ChatColor.GRAY + "' to remove your pvp protection.");
+                    }
+                }
+            }.runTaskLater(getInstance(), 10L);
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -142,15 +163,11 @@ public class ConnectionListener extends CoreListener {
         if (client == null) {
             return;
         }
-        if (client.isAdministrating()) {
-            client.setAdministrating(false);
-        } else if (client.isStaffChat()) {
-            client.setStaffChat(false);
-        } else if (client.isVanished()) {
-            getInstance().getClientUtilities().setVanished(player, false);
-        } else if (client.isGodMode()) {
-            client.setGodMode(false);
-        } else if (client.isObserving()) {
+        client.setAdministrating(false);
+        client.setStaffChat(false);
+        getInstance().getClientUtilities().setVanished(player, false);
+        getInstance().getEffectManager().removeEffect(player, Effect.EffectType.GOD_MODE);
+        if (client.isObserving()) {
             player.teleport(client.getObserverLocation());
             client.setObserverLocation(null);
             player.setGameMode(GameMode.SURVIVAL);
@@ -163,8 +180,28 @@ public class ConnectionListener extends CoreListener {
         client.setLastOnline(System.currentTimeMillis());
         getInstance().getClientRepository().updateLastOnline(client);
         getInstance().getClientUtilities().removeOnlineClient(client);
-        getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (c.isVanished() && Bukkit.getPlayer(c.getUUID()) != null)).forEach(c -> player.showPlayer(Bukkit.getPlayer(c.getUUID())));
+        getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (getInstance().getEffectManager().isVanished(player) && Bukkit.getPlayer(c.getUUID()) != null)).forEach(c -> player.showPlayer(Bukkit.getPlayer(c.getUUID())));
         getInstance().getGamerUtilities().removeGamer(getInstance().getGamerUtilities().getGamer(player.getUniqueId()));
         UtilMessage.log("Clients", "Removed Online Client: " + ChatColor.YELLOW + player.getName());
+    }
+
+    private void updateTab(final Player player) {
+        final PacketContainer pc = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
+        pc.getChatComponents().write(0, WrappedChatComponent.fromText(ChatColor.RED + "" + ChatColor.BOLD + "Welcome to " + getInstance().getRepository().getServerName() + "!" + "\n"
+                + ChatColor.RED + "" + ChatColor.BOLD + "Visit our website at: " + ChatColor.YELLOW + ChatColor.BOLD + getInstance().getRepository().getServerWebsite()))
+                .write(1, WrappedChatComponent.fromText(ChatColor.GOLD.toString() + ChatColor.BOLD + "Ping: " + ChatColor.YELLOW + UtilPlayer.getPing(player) + " "
+                        + ChatColor.GOLD.toString() + ChatColor.BOLD + "TPS: " + ChatColor.YELLOW + UtilServer.getTPS() + ChatColor.GOLD.toString() + ChatColor.BOLD + " Online: " + ChatColor.YELLOW + Bukkit.getOnlinePlayers().stream().filter(player::canSee).count()));
+        try {
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, pc);
+        } catch (final InvocationTargetException e1) {
+            System.out.println("[Error]: Failed sending tablist to " + player.getName());
+        }
+    }
+
+    @EventHandler
+    public void onUpdate(final UpdateEvent e) {
+        if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
+            Bukkit.getOnlinePlayers().forEach(this::updateTab);
+        }
     }
 }

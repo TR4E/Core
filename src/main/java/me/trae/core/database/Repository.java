@@ -9,7 +9,7 @@ public final class Repository {
     private static boolean gameEnchantments;
     private final Config config;
     private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, spawnCommandAdminOnly, clearInventoryCommandAdminOnly, disableTNT, disableMobSpawners;
-    private int maxPlayerSlots, spawnCommandCooldown, announceCommandCooldown, supportCommandCooldown, spawnCommandCountdown;
+    private int gamePvPProtection, maxPlayerSlots, spawnCommandCooldown, announceCommandCooldown, supportCommandCooldown, spawnCommandCountdown;
     private String serverName, serverWorld, serverWebsite, serverMOTD;
 
     public Repository(final Main instance) {
@@ -55,6 +55,7 @@ public final class Repository {
                 clearInventoryCommandAdminOnly = config.getConfig().getBoolean("Booleans.Settings.Admin-Commands.Clear-Inventory");
                 disableTNT = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.TNT");
                 disableMobSpawners = config.getConfig().getBoolean("Booleans.Settings.Disable-Blocks.Mob-Spawners");
+                gamePvPProtection = config.getConfig().getInt("Integers.Game.PvP-Protection");
                 maxPlayerSlots = config.getConfig().getInt("Integers.Server.Max-Player-Slots");
                 spawnCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Spawn-Command");
                 announceCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Announce-Command");
@@ -122,6 +123,10 @@ public final class Repository {
 
     public final boolean isDisableMobSpawners() {
         return disableMobSpawners;
+    }
+
+    public final int getGamePvPProtection() {
+        return gamePvPProtection;
     }
 
     public final int getMaxPlayerSlots() {

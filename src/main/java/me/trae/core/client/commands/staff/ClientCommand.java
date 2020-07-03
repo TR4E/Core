@@ -4,6 +4,7 @@ import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
 import me.trae.core.command.Command;
+import me.trae.core.effect.Effect;
 import me.trae.core.utility.UtilFormat;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
@@ -123,14 +124,14 @@ public class ClientCommand extends Command {
                 UtilMessage.message(player, ChatColor.GREEN + "Admin Mode: " + ChatColor.WHITE + (target.isAdministrating() ? "Enabled" : "Disabled"));
             }
             if (client.isAdministrating()) {
-                if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.ADMIN, false) || target.isGodMode()) {
-                    UtilMessage.message(player, ChatColor.GREEN + "God Mode: " + ChatColor.WHITE + (target.isGodMode() ? "Enabled" : "Disabled"));
+                if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.ADMIN, false) || getInstance().getEffectManager().hasGodMode(Bukkit.getPlayer(target.getUUID()))) {
+                    UtilMessage.message(player, ChatColor.GREEN + "God Mode: " + ChatColor.WHITE + (getInstance().getEffectManager().hasGodMode(Bukkit.getPlayer(target.getUUID())) ? "Enabled" : "Disabled"));
                 }
                 if (Bukkit.getPlayer(target.getUUID()).isOp() | target.hasRank(Rank.HEADMOD, false)) {
                     UtilMessage.message(player, ChatColor.GREEN + "Observer Mode: " + ChatColor.WHITE + (target.isObserving() ? "Enabled" : "Disabled"));
                 }
                 if (Bukkit.getPlayer(target.getUUID()).isOp() || target.hasRank(Rank.MOD, false)) {
-                    UtilMessage.message(player, ChatColor.GREEN + "Vanish Mode: " + ChatColor.WHITE + (target.isVanished() ? "Enabled" : "Disabled"));
+                    UtilMessage.message(player, ChatColor.GREEN + "Vanish Mode: " + ChatColor.WHITE + (getInstance().getEffectManager().isVanished(Bukkit.getPlayer(target.getUUID())) ? "Enabled" : "Disabled"));
                 }
                 UtilMessage.message(player, ChatColor.GREEN + "Fly Mode: " + ChatColor.WHITE + (Bukkit.getPlayer(target.getUUID()).getAllowFlight() ? "Enabled" + (Bukkit.getPlayer(target.getUUID()).isFlying() ? " (Flying)" : "") : "Disabled"));
             }
@@ -181,8 +182,10 @@ public class ClientCommand extends Command {
         getInstance().getClientRepository().updateRank(target);
         if (target.getRank() == Rank.HEADMOD) {
             target.setAdministrating(false);
-            target.setVanished(false);
-            target.setGodMode(false);
+            if (Bukkit.getPlayer(target.getUUID()) != null) {
+                getInstance().getClientUtilities().setVanished(Bukkit.getPlayer(target.getUUID()), false);
+                getInstance().getEffectManager().removeEffect(Bukkit.getPlayer(target.getUUID()), Effect.EffectType.GOD_MODE);
+            }
         } else if (target.getRank() == Rank.MOD) {
             if (target.isObserving()) {
                 if (Bukkit.getPlayer(target.getUUID()) != null) {

@@ -1,6 +1,7 @@
 package me.trae.core.client;
 
 import me.trae.core.Main;
+import me.trae.core.effect.Effect;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
 import org.bukkit.Bukkit;
@@ -56,11 +57,13 @@ public final class ClientUtilities {
     public final Set<Client> getOnlineStaffClients(final boolean showVanishPlayers) {
         final Set<Client> result = new HashSet<>();
         for (final Client client : onlineclients) {
-            if (client.hasRank(Rank.HELPER, false)) {
-                if (client.isVanished() && !(showVanishPlayers)) {
-                    continue;
+            if (Bukkit.getPlayer(client.getUUID()) != null) {
+                if (client.hasRank(Rank.HELPER, false)) {
+                    if (instance.getEffectManager().isVanished(Bukkit.getPlayer(client.getUUID())) && !(showVanishPlayers)) {
+                        continue;
+                    }
+                    result.add(client);
                 }
-                result.add(client);
             }
         }
         return result;
@@ -151,10 +154,11 @@ public final class ClientUtilities {
     }
 
     public void setVanished(final Player player, final boolean vanished) {
-        getOnlineClient(player.getUniqueId()).setVanished(vanished);
         if (vanished) {
+            instance.getEffectManager().addEffect(player, Effect.EffectType.VANISHED);
             Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId().equals(player.getUniqueId()) && (o.isOp() || getOnlineClient(o.getUniqueId()).hasRank(Rank.ADMIN, false)))).forEach(o -> o.hidePlayer(player));
         } else {
+            instance.getEffectManager().removeEffect(player, Effect.EffectType.VANISHED);
             Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId()).equals(player.getUniqueId())).forEach(o -> o.showPlayer(player));
         }
     }

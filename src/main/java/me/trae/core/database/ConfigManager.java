@@ -29,6 +29,7 @@ public final class ConfigManager {
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.TNT", false);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.Mob-Spawners", false);
                     config.getConfig().set("Integers.Server.Max-Player-Slots", 100);
+                    config.getConfig().set("Integers.Game.PvP-Protection", 60);
                     config.getConfig().set("Integers.Cooldowns.Spawn-Command", 300);
                     config.getConfig().set("Integers.Cooldowns.Announce-Command", 300);
                     config.getConfig().set("Integers.Cooldowns.Support-Command", 120);
