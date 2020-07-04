@@ -22,6 +22,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -59,6 +60,35 @@ public final class WorldListener extends CoreListener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(final PlayerDeathEvent e) {
+        e.setDeathMessage(null);
+        final Player player = e.getEntity().getPlayer();
+        if (player == null) {
+            return;
+        }
+        if (player.getLastDamageCause() == null) {
+            return;
+        }
+        if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.SUICIDE || player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
+            return;
+        }
+        final Entity killer = player.getLastDamageCause().getEntity();
+        if (killer == null) {
+            return;
+        }
+        if (killer instanceof Player) {
+            final Player k = player.getKiller();
+            UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " was killed by " + ChatColor.YELLOW + k.getName() + ChatColor.GRAY + " with " + ChatColor.GREEN + ChatColor.stripColor(k.getInventory().getItemInHand().getType() == Material.AIR ? "Air" : UtilItem.updateNames(k.getInventory().getItemInHand()).getItemMeta().getDisplayName()) + ChatColor.GRAY + ".");
+            return;
+        }
+        boolean text = false;
+        if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            text = true;
+        }
+        UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + "was killed by " + (text ? "a " : "") + ChatColor.YELLOW + killer.getName() + ChatColor.GRAY + ".");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -112,7 +142,9 @@ public final class WorldListener extends CoreListener {
                 e.setCancelled(true);
                 if (!(player.isOp() || client.hasRank(Rank.ADMIN, false))) {
                     player.getInventory().remove(block.getType());
-                    getInstance().getClientUtilities().messageAdmins("Admin Spy", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " tried to place " + ChatColor.GREEN + UtilFormat.cleanString(block.getType().name()) + ChatColor.GRAY + ".", new UUID[]{player.getUniqueId()});
+                    getInstance().getClientUtilities().messageStaff("Staff Spy", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " tried to place " + ChatColor.GREEN + UtilFormat.cleanString(block.getType().name()) + ChatColor.GRAY + ".", Rank.MOD, new UUID[]{player.getUniqueId()});
+                    getInstance().getClientUtilities().soundStaff(Sound.NOTE_PLING, Rank.MOD, new UUID[]{player.getUniqueId()});
+                    getInstance().getClientUtilities().soundStaff(Sound.NOTE_PLING, Rank.MOD, new UUID[]{player.getUniqueId()});
                 }
                 UtilMessage.message(player, "Game", "You cannot place " + ChatColor.YELLOW + UtilFormat.cleanString(block.getType().name()) + ChatColor.GRAY + ".");
             } else if (block.getType() == Material.TNT) {
@@ -225,6 +257,11 @@ public final class WorldListener extends CoreListener {
     @EventHandler
     public void onFoodLevelChange(final FoodLevelChangeEvent e) {
         if (e.getEntity() instanceof Player) {
+            final Player player = (Player) e.getEntity();
+            final int num = UtilMath.randomInt(0, 100);
+            if (num < 75) {
+                e.setCancelled(true);
+            }
             if (!(getInstance().getRepository().isGameSaturation())) {
                 e.setCancelled(true);
                 e.setFoodLevel(20);
@@ -346,5 +383,10 @@ public final class WorldListener extends CoreListener {
             player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_INGOT, player.getInventory().getItemInHand().getAmount() * 3)));
             UtilMessage.message(player, "Game", "Your " + ChatColor.YELLOW + "Bucket" + ChatColor.GRAY + " broke!");
         }
+    }
+
+    @EventHandler
+    public void onItemSmelt(final FurnaceSmeltEvent e) {
+        e.setResult(UtilItem.updateNames(e.getResult()));
     }
 }

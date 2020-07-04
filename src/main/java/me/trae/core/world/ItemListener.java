@@ -1,13 +1,17 @@
 package me.trae.core.world;
 
 import me.trae.core.Main;
+import me.trae.core.effect.Effect;
 import me.trae.core.module.CoreListener;
 import me.trae.core.module.update.UpdateEvent;
 import me.trae.core.module.update.Updater;
+import me.trae.core.utility.UtilBlock;
 import me.trae.core.utility.UtilItem;
 import me.trae.core.utility.UtilMessage;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -16,6 +20,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,12 +44,27 @@ public final class ItemListener extends CoreListener {
                 if (!(getInstance().getRepository().isFunThrowingPearl())) {
                     return;
                 }
-                e.setCancelled(true);
-                if (e.getAction() == Action.RIGHT_CLICK_AIR) {
-                    UtilMessage.message(player, "Ethereal Pearl", "You need to left click to use " + ChatColor.YELLOW + "Ethereal Pearl" + ChatColor.GRAY + ".");
+                if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    e.setCancelled(true);
+                    if (getInstance().getRechargeManager().add(player, "Consume Ethereal Pearl", 500L, false)) {
+                        for (final PotionEffect effect : player.getActivePotionEffects()) {
+                            if (effect != null) {
+                                if (effect.getType() == PotionEffectType.POISON || effect.getType() == PotionEffectType.BLINDNESS || effect.getType() == PotionEffectType.SLOW || effect.getType() == PotionEffectType.CONFUSION || effect.getType() == PotionEffectType.WEAKNESS || effect.getType() == PotionEffectType.WITHER) {
+                                    player.removePotionEffect(effect.getType());
+                                }
+                            }
+                        }
+                        player.getWorld().playSound(player.getLocation(), Sound.EAT, 2.0F, 1.0F);
+                        UtilItem.remove(player, Material.ENDER_PEARL, (byte) 0, 1);
+                        UtilMessage.message(player, "Ethereal Pearl", "You removed all negative effects!");
+                    }
                     return;
                 }
                 if (e.getAction() == Action.LEFT_CLICK_AIR) {
+                    if (UtilBlock.isInLiquid(player)) {
+                        UtilMessage.message(player, "Item", "You cannot use " + ChatColor.GREEN + "Ethereal Pearl" + ChatColor.GRAY + " while in liquid.");
+                        return;
+                    }
                     if (player.getVehicle() == null) {
                         if (getInstance().getRechargeManager().add(player, "Ethereal Pearl", 15000, true)) {
                             final Item item = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(Material.ENDER_PEARL));
@@ -52,36 +73,13 @@ public final class ItemListener extends CoreListener {
                             item.setVelocity(player.getLocation().getDirection().multiply(1.8D));
                             item.setPassenger(player);
                             items.add(item);
-                            // TODO: 3/07/2020 - getInstance().getEffectManager().addEffect(player, EffectType.NO_FALL, 5000);
-
+                            getInstance().getEffectManager().addEffect(player, Effect.EffectType.NO_FALL, 5000);
                         }
                     }
                 }
-            } else if (player.getInventory().getItemInHand().getType() == Material.WEB) {
-                if (!(getInstance().getRepository().isFunThrowingWeb())) {
-                    return;
-                }
-                e.setCancelled(true);
-                if (e.getAction() == Action.RIGHT_CLICK_AIR) {
-                    UtilMessage.message(player, "Throwing Web", "You need to left click to use " + ChatColor.YELLOW + "Throwing Web" + ChatColor.GRAY + ".");
-                    return;
-                }
-                if (e.getAction() == Action.LEFT_CLICK_AIR) {
-                    if (getInstance().getRechargeManager().add(player, "Throwing Web", 10000, true)) {
-                        final Item item = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(Material.WEB));
-                        UtilItem.remove(player, Material.WEB, (byte) 0, 1);
-                        item.setPickupDelay(Integer.MAX_VALUE);
-                        item.setVelocity(player.getLocation().getDirection().multiply(1.8D));
-                        items.add(item);
-                    }
                 }
             } else if (player.getInventory().getItemInHand().getType() == Material.TNT) {
                 if (!(getInstance().getRepository().isFunThrowingTNT())) {
-                    return;
-                }
-                e.setCancelled(true);
-                if (e.getAction() == Action.RIGHT_CLICK_AIR) {
-                    UtilMessage.message(player, "Throwing TNT", "You need to left click to use " + ChatColor.YELLOW + "Throwing TNT" + ChatColor.GRAY + ".");
                     return;
                 }
                 if (getInstance().getRechargeManager().add(player, "Throwing TNT", 20000, true)) {
@@ -92,7 +90,6 @@ public final class ItemListener extends CoreListener {
                 }
             }
         }
-    }
 
     @EventHandler
     public void onUpdate(final UpdateEvent e) {
@@ -102,7 +99,19 @@ public final class ItemListener extends CoreListener {
                 final Item item = it.next();
                 if (item != null) {
                     if (item.getItemStack().getType() == Material.ENDER_PEARL) {
-                        if (item.isOnGround()) {
+                        final Location itemLoc = item.getLocation();
+                        itemLoc.setY(itemLoc.getY() - 0.10);
+                        if (itemLoc.getBlock().getType() != Material.AIR || item.getPassenger() == null || item.getLocation().getBlock().isLiquid()) {
+                            if (item.getPassenger() != null) {
+                                if (item.getPassenger() instanceof Player) {
+                                    final Player player = (Player) item.getPassenger();
+                                    getInstance().getTitleManager().sendActionBar(player, " ");
+                                    final Location loc = player.getLocation();
+                                    loc.setY(loc.getY() + 1);
+                                    player.teleport(loc);
+                                    player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 2.0F, 1.0F);
+                                }
+                            }
                             item.remove();
                             it.remove();
                         }

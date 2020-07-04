@@ -8,8 +8,8 @@ public final class Repository {
 
     private static boolean gameEnchantments;
     private final Config config;
-    private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, spawnCommandAdminOnly, clearInventoryCommandAdminOnly, disableTNT, disableMobSpawners;
-    private int gamePvPProtection, maxPlayerSlots, spawnCommandCooldown, announceCommandCooldown, supportCommandCooldown, spawnCommandCountdown;
+    private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, spawnCommandAdminOnly, suicideCommandAdminOnly, clearInventoryCommandAdminOnly, disableTNT, disableMobSpawners;
+    private int gamePvPProtection, maxPlayerSlots, spawnCommandCooldown, announceCommandCooldown, supportCommandCooldown, suicideCommandCooldown, spawnCommandCountdown;
     private String serverName, serverWorld, serverWebsite, serverMOTD;
 
     public Repository(final Main instance) {
@@ -52,6 +52,7 @@ public final class Repository {
                 gameSaturation = config.getConfig().getBoolean("Booleans.Settings.Game.Saturation");
                 gameBreakCrops = config.getConfig().getBoolean("Booleans.Settings.Game.Break-Crops");
                 spawnCommandAdminOnly = config.getConfig().getBoolean("Booleans.Settings.Admin-Commands.Spawn");
+                suicideCommandAdminOnly = config.getConfig().getBoolean("Booleans.Settings.Admin-Commands.Suicide");
                 clearInventoryCommandAdminOnly = config.getConfig().getBoolean("Booleans.Settings.Admin-Commands.Clear-Inventory");
                 disableTNT = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.TNT");
                 disableMobSpawners = config.getConfig().getBoolean("Booleans.Settings.Disable-Blocks.Mob-Spawners");
@@ -60,6 +61,7 @@ public final class Repository {
                 spawnCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Spawn-Command");
                 announceCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Announce-Command");
                 supportCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Support-Command");
+                suicideCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Suicide-Command");
                 spawnCommandCountdown = config.getConfig().getInt("Integers.Countdowns.Spawn-Command");
                 serverName = config.getConfig().getString("Strings.Server.Name");
                 serverWorld = config.getConfig().getString("Strings.Server.World");
@@ -113,6 +115,10 @@ public final class Repository {
         return spawnCommandAdminOnly;
     }
 
+    public final boolean isSuicideCommandAdminOnly() {
+        return suicideCommandAdminOnly;
+    }
+
     public final boolean isClearInventoryCommandAdminOnly() {
         return clearInventoryCommandAdminOnly;
     }
@@ -143,6 +149,10 @@ public final class Repository {
 
     public final int getSupportCommandCooldown() {
         return supportCommandCooldown;
+    }
+
+    public final int getSuicideCommandCooldown() {
+        return suicideCommandCooldown;
     }
 
     public final int getSpawnCommandCountdown() {

@@ -93,7 +93,7 @@ public class SpawnCommand extends Command {
                         timer.remove(player.getUniqueId());
                         getInstance().getTitleManager().sendPlayer(player, "", "", 1);
                         player.teleport(Bukkit.getWorld(getInstance().getRepository().getServerWorld()).getSpawnLocation());
-                        UtilPlayer.sound(player, Sound.ENDERMAN_TELEPORT);
+                        UtilPlayer.sound(player, Sound.ENDERMAN_TELEPORT, 2.0F, 1.0F);
                         UtilMessage.message(player, "Spawn", "You teleported to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + ".");
                         getInstance().getClientUtilities().messageAdmins("Spawn", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + ".", new UUID[]{player.getUniqueId()});
                     }

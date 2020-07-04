@@ -150,6 +150,7 @@ public final class ClientUtilities {
                     UtilPlayer.sound(player, sound);
                 }
             }
+
         }
     }
 

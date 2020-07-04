@@ -141,11 +141,14 @@ public class EffectManager extends CoreListener {
         if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
             for (final Player player : Bukkit.getOnlinePlayers()) {
                 for (final Effect effect : getEffects(player)) {
-                    if (effect.hasExpired()) {
-                        removeEffect(player, effect.getType());
-                        if (effect.getType() == Effect.EffectType.PROTECTION) {
-                            player.getWorld().playSound(player.getLocation(), Sound.VILLAGER_HIT, 1.0F, 1.0F);
-                            UtilMessage.message(player, "Protection", "You no longer have protection, be careful!");
+                    if (effect != null) {
+                        if (effect.hasExpired()) {
+                            UtilMessage.message(player, "Effect", "You no longer have " + ChatColor.GREEN + effect.getType().name());
+                            removeEffect(player, effect.getType());
+                            if (effect.getType() == Effect.EffectType.PROTECTION) {
+                                player.getWorld().playSound(player.getLocation(), Sound.VILLAGER_HIT, 1.0F, 1.0F);
+                                UtilMessage.message(player, "Protection", "You no longer have protection, be careful!");
+                            }
                         }
                     }
                 }

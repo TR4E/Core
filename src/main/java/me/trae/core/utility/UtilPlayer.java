@@ -20,7 +20,7 @@ public final class UtilPlayer {
     }
 
     public static boolean isInventoryEmpty(final Player player) {
-        return (player.getInventory().firstEmpty() == -1);
+        return (player.getInventory().firstEmpty() != -1);
     }
 
     public static void clearInventory(final Player player) {
@@ -30,6 +30,10 @@ public final class UtilPlayer {
 
     public static void sound(final Player player, final Sound sound) {
         player.playSound(player.getLocation(), sound, 1.0F, 1.0F);
+    }
+
+    public static void sound(final Player player, final Sound sound, final float var2, final float var3) {
+        player.playSound(player.getLocation(), sound, var2, var3);
     }
 
     public static void sound(final Sound sound) {

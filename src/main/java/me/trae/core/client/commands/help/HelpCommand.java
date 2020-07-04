@@ -24,9 +24,12 @@ public class HelpCommand extends Command {
         UtilMessage.message(player, ChatColor.AQUA + "/report <player> <reason>" + ChatColor.GRAY + " - " + "Report a Player.");
         UtilMessage.message(player, ChatColor.AQUA + "/ignore <player>" + ChatColor.GRAY + " - " + "Ignore a Player.");
         UtilMessage.message(player, ChatColor.AQUA + "/a <message>" + ChatColor.GRAY + " - " + "Request Staff Assistance.");
+        UtilMessage.message(player, ChatColor.AQUA + "/kdr <player>" + ChatColor.GRAY + " - " + "View Kill Death Ratio.");
+        UtilMessage.message(player, ChatColor.AQUA + "/track <player>" + ChatColor.GRAY + " - " + "Track a Player with Compass.");
+        UtilMessage.message(player, ChatColor.AQUA + "/ping <player>" + ChatColor.GRAY + " - " + "Check Ping of a Player.");
+        UtilMessage.message(player, ChatColor.AQUA + "/dye <color>" + ChatColor.GRAY + " - " + "Dye a Item.");
         UtilMessage.message(player, ChatColor.AQUA + "/list" + ChatColor.GRAY + " - " + "List Online Players.");
         UtilMessage.message(player, ChatColor.AQUA + "/clearinv" + ChatColor.GRAY + " - " + "Clear Inventory.");
         UtilMessage.message(player, ChatColor.AQUA + "/spawn" + ChatColor.GRAY + " - " + "Teleport to Spawn.");
-        UtilMessage.message(player, ChatColor.AQUA + "/kdr <player>" + ChatColor.GRAY + " - " + "View Kill Death Ratio.");
     }
 }

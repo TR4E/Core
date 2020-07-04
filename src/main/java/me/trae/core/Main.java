@@ -29,10 +29,7 @@ import me.trae.core.world.WorldListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -87,6 +84,14 @@ public class Main extends JavaPlugin {
     private void setupServer() {
         for (final World world : Bukkit.getWorlds()) {
             for (final Entity entity : world.getEntities()) {
+                if (entity instanceof Item) {
+                    final Item item = (Item) entity;
+                    if (item.getItemStack().getAmount() < 1000) {
+                        break;
+                    }
+                    item.remove();
+                    continue;
+                }
                 if (entity instanceof Player || entity instanceof ArmorStand || entity instanceof ItemFrame) {
                     continue;
                 }
@@ -98,6 +103,7 @@ public class Main extends JavaPlugin {
     private void registerEvents() {
         new ConnectionListener(this);
         new CommandCenter(this);
+        new EffectManager(this);
         new GamerManager(this);
         new ChatListener(this);
         new ItemListener(this);
@@ -117,11 +123,14 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new BroadcastCommand(this));
         getCommandManager().addCommand(new CheckAltsCommand(this));
         getCommandManager().addCommand(new ClearChatCommand(this));
+        getCommandManager().addCommand(new ClearCooldownsCommand(this));
         getCommandManager().addCommand(new ClientCommand(this));
         getCommandManager().addCommand(new FeedCommand(this));
         getCommandManager().addCommand(new FlyCommand(this));
         getCommandManager().addCommand(new GodCommand(this));
+        getCommandManager().addCommand(new SkullCommand(this));
         getCommandManager().addCommand(new HealCommand(this));
+        getCommandManager().addCommand(new MoreCommand(this));
         getCommandManager().addCommand(new ObserverCommand(this));
         getCommandManager().addCommand(new OpenInvCommand(this));
         getCommandManager().addCommand(new PlayerCountCommand(this));
@@ -136,6 +145,7 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new KDRCommand(this));
         getCommandManager().addCommand(new ListCommand(this));
         getCommandManager().addCommand(new ReportCommand(this));
+        getCommandManager().addCommand(new SuicideCommand(this));
         getCommandManager().addCommand(new SupportCommand(this));
         getCommandManager().addCommand(new TrackCommand(this));
         getCommandManager().addCommand(new ReloadCommand(this));

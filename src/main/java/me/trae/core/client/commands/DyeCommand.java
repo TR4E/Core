@@ -53,11 +53,9 @@ public class DyeCommand extends Command {
         } else if (i.getType().name().toLowerCase().endsWith("_clay")) {
             i.setType(Material.HARD_CLAY);
             i.setDurability(dye.getData());
-        } else if (i.getType() == Material.AIR) {
-            UtilMessage.message(player, "Dye", "You cannot dye Air!");
-            return;
         } else {
             UtilMessage.message(player, "Dye", "You cannot dye this item!");
+            UtilMessage.message(player, "Dye", "Available Items: " + "[" + ChatColor.GREEN + "Wool" + ChatColor.GRAY + ", " + ChatColor.GREEN + "Glass" + ChatColor.GRAY + ", " + ChatColor.GREEN + "Clay" + ChatColor.GRAY + ", " + ChatColor.GREEN + "Leather Armour" + ChatColor.GRAY + "]");
             return;
         }
         UtilMessage.message(player, "Dye", "You dyed " + ChatColor.YELLOW + UtilFormat.cleanString(i.getType().name()) + ChatColor.GRAY + " to " + ChatColor.GREEN + UtilFormat.cleanString(dye.name()) + ChatColor.GRAY + ".");
@@ -75,8 +73,7 @@ public class DyeCommand extends Command {
         if (Arrays.stream(DyeColor.values()).anyMatch(dyeColor -> dyeColor.name().toLowerCase().equals(color.toLowerCase()))) {
             return Arrays.stream(DyeColor.values()).filter(dyeColor -> dyeColor.name().replaceAll("_", "").toLowerCase().equals(color.toLowerCase())).findFirst().get();
         }
-        final List<DyeColor> colors = new ArrayList<>();
-        Arrays.stream(DyeColor.values()).filter(dyeColor -> dyeColor.name().toLowerCase().replaceAll("_", "").contains(color.toLowerCase())).collect(Collectors.toList()).forEach(cc -> colors.add(cc));
+        final List<DyeColor> colors = new ArrayList<>(Arrays.stream(DyeColor.values()).filter(dyeColor -> dyeColor.name().toLowerCase().replaceAll("_", "").contains(color.toLowerCase())).collect(Collectors.toList()));
         if (colors.size() == 1) {
             return colors.get(0);
         } else if (!colors.isEmpty()) {
