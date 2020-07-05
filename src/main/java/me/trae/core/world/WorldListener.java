@@ -62,33 +62,56 @@ public final class WorldListener extends CoreListener {
         }
     }
 
+    // TODO: 5/07/2020 | Gotta fix Spider
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent e) {
         e.setDeathMessage(null);
         final Player player = e.getEntity().getPlayer();
-        if (player == null) {
-            return;
-        }
-        if (player.getLastDamageCause() == null) {
+        if (player.getLastDamageCause() == null || player.getLastDamageCause().getCause() == null) {
             return;
         }
         if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.SUICIDE || player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
             return;
         }
-        final Entity killer = player.getLastDamageCause().getEntity();
-        if (killer == null) {
+        if (player.getLastDamageCause() == null) {
             return;
         }
-        if (killer instanceof Player) {
-            final Player k = player.getKiller();
-            UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " was killed by " + ChatColor.YELLOW + k.getName() + ChatColor.GRAY + " with " + ChatColor.GREEN + ChatColor.stripColor(k.getInventory().getItemInHand().getType() == Material.AIR ? "Air" : UtilItem.updateNames(k.getInventory().getItemInHand()).getItemMeta().getDisplayName()) + ChatColor.GRAY + ".");
+        if (player.getKiller() != null) {
+            if (player == player.getKiller()) {
+                UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " has died.");
+                return;
+            }
+        }
+        String name = "";
+        if (player.getLastDamageCause().getEntityType() != EntityType.PLAYER) {
+            if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+                final EntityDamageByEntityEvent entity = (EntityDamageByEntityEvent) player.getLastDamageCause();
+                name = ChatColor.GRAY + "a " + ChatColor.YELLOW + UtilFormat.cleanString(entity.getDamager().getName());
+            } else if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+                final EntityDamageByEntityEvent entity = (EntityDamageByEntityEvent) player.getLastDamageCause();
+                if (entity.getDamager() instanceof Arrow) {
+                    final Arrow a = (Arrow) entity.getDamager();
+                    if (a.getShooter() instanceof LivingEntity) {
+                        name = ChatColor.GRAY + (a.getShooter() instanceof Player ? "" : "a ") + ChatColor.YELLOW + ((LivingEntity) a.getShooter()).getName();
+                    }
+                }
+            } else if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
+                final EntityDamageByEntityEvent entity = (EntityDamageByEntityEvent) player.getLastDamageCause();
+                name = ChatColor.GRAY + ((entity.getDamager() instanceof Creeper || entity.getDamager() instanceof Wither) ? "a " : "") + ChatColor.YELLOW + UtilFormat.cleanString(entity.getDamager().getName());
+            } else if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+                name = ChatColor.YELLOW + "Fire";
+            } else {
+                name = ChatColor.YELLOW + UtilFormat.cleanString(player.getLastDamageCause().getCause().name());
+            }
+            UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " was killed by " + ChatColor.YELLOW + name + ChatColor.GRAY + ".");
             return;
         }
-        boolean text = false;
-        if (player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            text = true;
+        if (player.getKiller() != null) {
+            final Player killer = player.getKiller();
+            if (killer != player) {
+                UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " was killed by " + ChatColor.YELLOW + killer.getName() + ChatColor.GRAY + " with " + ChatColor.GREEN + UtilFormat.cleanString(killer.getInventory().getItemInHand().getType().name()) + ChatColor.GRAY + ".");
+            }
         }
-        UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + "was killed by " + (text ? "a " : "") + ChatColor.YELLOW + killer.getName() + ChatColor.GRAY + ".");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

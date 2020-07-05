@@ -34,6 +34,11 @@ public class DyeCommand extends Command {
             UtilMessage.message(player, "Dye", "You cannot dye Air!");
             return;
         }
+        if (!(isCorrectItem(i))) {
+            UtilMessage.message(player, "Dye", "You cannot dye this item!");
+            UtilMessage.message(player, "Dye", "Available Items: " + "[" + ChatColor.WHITE + "Wool" + ChatColor.GRAY + ", " + ChatColor.WHITE + "Glass" + ChatColor.GRAY + ", " + ChatColor.WHITE + "Clay" + ChatColor.GRAY + ", " + ChatColor.WHITE + "Leather Armour" + ChatColor.GRAY + "] ");
+            return;
+        }
         final DyeColor dye = searchDye(player, args[0]);
         if (dye == null) {
             return;
@@ -44,7 +49,7 @@ public class DyeCommand extends Command {
             final LeatherArmorMeta m = (LeatherArmorMeta) i.getItemMeta();
             m.setColor(dye.getColor());
             i.setItemMeta(m);
-        } else if (i.getType().name().toLowerCase().contains("glass") && !i.getType().name().toLowerCase().contains("bottle")) {
+        } else if (i.getType().name().toLowerCase().contains("glass") && !(i.getType().name().toLowerCase().contains("bottle"))) {
             i.setType(Material.STAINED_GLASS);
             i.setDurability(dye.getData());
         } else if (i.getType().name().toLowerCase().endsWith("_pane")) {
@@ -53,10 +58,6 @@ public class DyeCommand extends Command {
         } else if (i.getType().name().toLowerCase().endsWith("_clay")) {
             i.setType(Material.HARD_CLAY);
             i.setDurability(dye.getData());
-        } else {
-            UtilMessage.message(player, "Dye", "You cannot dye this item!");
-            UtilMessage.message(player, "Dye", "Available Items: " + "[" + ChatColor.GREEN + "Wool" + ChatColor.GRAY + ", " + ChatColor.GREEN + "Glass" + ChatColor.GRAY + ", " + ChatColor.GREEN + "Clay" + ChatColor.GRAY + ", " + ChatColor.GREEN + "Leather Armour" + ChatColor.GRAY + "]");
-            return;
         }
         UtilMessage.message(player, "Dye", "You dyed " + ChatColor.YELLOW + UtilFormat.cleanString(i.getType().name()) + ChatColor.GRAY + " to " + ChatColor.GREEN + UtilFormat.cleanString(dye.name()) + ChatColor.GRAY + ".");
     }
@@ -82,5 +83,9 @@ public class DyeCommand extends Command {
         }
         UtilMessage.message(player, "Dye Search", ChatColor.YELLOW + "0" + ChatColor.GRAY + " Matches found. [" + ChatColor.YELLOW + color + ChatColor.GRAY + "].");
         return null;
+    }
+
+    private boolean isCorrectItem(final ItemStack item) {
+        return (item.getType() == Material.WOOL || item.getType() == Material.CARPET || item.getType() == Material.STAINED_CLAY || item.getType().name().toLowerCase().startsWith("leather_") || (item.getType().name().toLowerCase().contains("glass") && !(item.getType().name().toLowerCase().contains("bottle"))) || item.getType().name().toLowerCase().endsWith("_pane") || item.getType().name().toLowerCase().endsWith("_clay"));
     }
 }

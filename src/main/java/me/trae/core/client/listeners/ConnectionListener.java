@@ -133,6 +133,9 @@ public class ConnectionListener extends CoreListener {
         getInstance().getClientUtilities().addOnlineClient(client);
         UtilMessage.log("Clients", "Added Online Client: " + ChatColor.YELLOW + client.getName());
         getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (getInstance().getEffectManager().isVanished(player) && Bukkit.getPlayer(c.getUUID()) != null) && !(player.isOp() || getInstance().getClientUtilities().getClient(player.getUniqueId()).getRank().ordinal() >= c.getRank().ordinal())).forEach(c -> player.hidePlayer(Bukkit.getPlayer(c.getUUID())));
+        if (!(player.isOp() || client.hasRank(Rank.ADMIN, false))) {
+            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId().equals(player.getUniqueId())) && getInstance().getEffectManager().isVanished(o)).forEach(player::hidePlayer);
+        }
         updateTab(player);
         if (client.getFirstJoined() == 0) {
             client.setFirstJoined(System.currentTimeMillis());
@@ -155,6 +158,7 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerQuit(final PlayerQuitEvent e) {
         e.setQuitMessage(null);
         final Player player = e.getPlayer();
+        Bukkit.getOnlinePlayers().forEach(o -> player.showPlayer(o));
         Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
         if (player.isInsideVehicle()) {
             player.leaveVehicle();
@@ -165,18 +169,22 @@ public class ConnectionListener extends CoreListener {
         }
         client.setAdministrating(false);
         client.setStaffChat(false);
-        getInstance().getClientUtilities().setVanished(player, false);
         getInstance().getEffectManager().removeEffect(player, Effect.EffectType.GOD_MODE);
         if (client.isObserving()) {
             player.teleport(client.getObserverLocation());
             client.setObserverLocation(null);
             player.setGameMode(GameMode.SURVIVAL);
         }
-        if (client.getRank() == Rank.OWNER) {
-            getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.AQUA + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
+        if (!(getInstance().getEffectManager().isVanished(player))) {
+            if (client.getRank() == Rank.OWNER) {
+                getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.GREEN + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
+            } else {
+                UtilMessage.broadcast(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName());
+            }
         } else {
-            UtilMessage.broadcast(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName());
+            getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.GREEN + "Silent" + ChatColor.GRAY + ")", Rank.ADMIN, null);
         }
+        getInstance().getClientUtilities().setVanished(player, false);
         client.setLastOnline(System.currentTimeMillis());
         getInstance().getClientRepository().updateLastOnline(client);
         getInstance().getClientUtilities().removeOnlineClient(client);

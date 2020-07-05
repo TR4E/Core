@@ -27,7 +27,7 @@ public class VanishCommand extends Command {
             getInstance().getTitleManager().sendActionBar(player, " ");
             getInstance().getClientUtilities().setVanished(player, !(getInstance().getEffectManager().isVanished(player)));
             UtilMessage.message(player, "Vanish", "Vanish Mode: " + (getInstance().getEffectManager().isVanished(player) ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
-            getInstance().getClientUtilities().messageStaff("Vanish", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (getInstance().getEffectManager().isVanished(player) ? " is now Invisible." : " is no longer Invisible."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
+            getInstance().getClientUtilities().messageStaff("Vanish", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (getInstance().getEffectManager().isVanished(player) ? " is now Vanished." : " is no longer Vanished."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
             return;
         }
         if (args.length == 1) {
@@ -39,7 +39,7 @@ public class VanishCommand extends Command {
                 getInstance().getTitleManager().sendActionBar(player, " ");
                 getInstance().getClientUtilities().setVanished(player, !(getInstance().getEffectManager().isVanished(player)));
                 UtilMessage.message(player, "Vanish", "Vanish Mode: " + (getInstance().getEffectManager().isVanished(player) ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
-                getInstance().getClientUtilities().messageStaff("Vanish", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (getInstance().getEffectManager().isVanished(player) ? " is now Invisible." : " is no longer Invisible."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
+                getInstance().getClientUtilities().messageStaff("Vanish", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (getInstance().getEffectManager().isVanished(player) ? " is now Vanished." : " is no longer Vanished."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
                 return;
             }
             final Client targetC = getInstance().getClientUtilities().getOnlineClient(target.getUniqueId());
@@ -55,7 +55,7 @@ public class VanishCommand extends Command {
             getInstance().getTitleManager().sendActionBar(target, " ");
             getInstance().getClientUtilities().setVanished(target, !(getInstance().getEffectManager().isVanished(target)));
             UtilMessage.message(target, "Vanish", "Vanish Mode: " + (getInstance().getEffectManager().isVanished(target) ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
-            getInstance().getClientUtilities().messageStaff("Vanish", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + (getInstance().getEffectManager().isVanished(target) ? " is now Invisible " : " is no longer Invisible ") + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});
+            getInstance().getClientUtilities().messageStaff("Vanish", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + (getInstance().getEffectManager().isVanished(target) ? " is now Vanished" : " is no longer Vanished") + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});
         }
     }
 

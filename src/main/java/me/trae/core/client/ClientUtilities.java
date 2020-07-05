@@ -150,17 +150,16 @@ public final class ClientUtilities {
                     UtilPlayer.sound(player, sound);
                 }
             }
-
         }
     }
 
     public void setVanished(final Player player, final boolean vanished) {
         if (vanished) {
             instance.getEffectManager().addEffect(player, Effect.EffectType.VANISHED);
-            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId().equals(player.getUniqueId()) && (o.isOp() || getOnlineClient(o.getUniqueId()).hasRank(Rank.ADMIN, false)))).forEach(o -> o.hidePlayer(player));
+            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId().equals(player.getUniqueId())) && !(o.isOp() || getOnlineClient(o.getUniqueId()).hasRank(Rank.ADMIN, false))).forEach(o -> o.hidePlayer(player));
         } else {
             instance.getEffectManager().removeEffect(player, Effect.EffectType.VANISHED);
-            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId()).equals(player.getUniqueId())).forEach(o -> o.showPlayer(player));
+            Bukkit.getOnlinePlayers().forEach(o -> o.showPlayer(player));
         }
     }
 

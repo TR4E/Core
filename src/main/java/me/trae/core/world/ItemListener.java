@@ -48,10 +48,8 @@ public final class ItemListener extends CoreListener {
                     e.setCancelled(true);
                     if (getInstance().getRechargeManager().add(player, "Consume Ethereal Pearl", 500L, false)) {
                         for (final PotionEffect effect : player.getActivePotionEffects()) {
-                            if (effect != null) {
-                                if (effect.getType() == PotionEffectType.POISON || effect.getType() == PotionEffectType.BLINDNESS || effect.getType() == PotionEffectType.SLOW || effect.getType() == PotionEffectType.CONFUSION || effect.getType() == PotionEffectType.WEAKNESS || effect.getType() == PotionEffectType.WITHER) {
-                                    player.removePotionEffect(effect.getType());
-                                }
+                            if (effect.getType() == PotionEffectType.POISON || effect.getType() == PotionEffectType.BLINDNESS || effect.getType() == PotionEffectType.SLOW || effect.getType() == PotionEffectType.CONFUSION || effect.getType() == PotionEffectType.WEAKNESS || effect.getType() == PotionEffectType.WITHER) {
+                                player.removePotionEffect(effect.getType());
                             }
                         }
                         player.getWorld().playSound(player.getLocation(), Sound.EAT, 2.0F, 1.0F);

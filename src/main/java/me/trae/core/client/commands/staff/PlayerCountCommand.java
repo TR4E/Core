@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class PlayerCountCommand extends Command {
 
     public PlayerCountCommand(final Main instance) {
-        super(instance, "playercount", new String[]{}, Rank.ADMIN);
+        super(instance, "playercount", new String[]{}, Rank.MOD);
     }
 
     @Override

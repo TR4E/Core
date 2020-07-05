@@ -46,6 +46,6 @@ public final class ChatListener extends CoreListener {
             }
             online.sendMessage(rank + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + ": " + message);
         }
-        UtilMessage.log(rank + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + ": " + message);
+        UtilMessage.log(ChatColor.GRAY + "[Player Chat]: " + rank + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + ": " + message);
     }
 }

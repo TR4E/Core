@@ -46,6 +46,9 @@ public class ClearInvCommand extends Command {
             }.runTaskLater(getInstance(), 1200L);
             return;
         }
+        if (!(player.isOp() || client.hasRank(Rank.ADMIN, true))) {
+            return;
+        }
         if (args.length == 1) {
             final Player target = UtilPlayer.searchPlayer(player, args[0], true);
             if (target == null) {
@@ -62,7 +65,7 @@ public class ClearInvCommand extends Command {
             }
             if (!(player.isOp())) {
                 if (targetC.getRank().ordinal() >= client.getRank().ordinal()) {
-                    UtilMessage.message(player, "Inventory", "You cannot clear Inventory for " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+                    UtilMessage.message(player, "Inventory", "You cannot clear Inventory for this Player!");
                     return;
                 }
             }

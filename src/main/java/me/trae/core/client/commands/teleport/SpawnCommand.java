@@ -72,6 +72,12 @@ public class SpawnCommand extends Command {
             getInstance().getClientUtilities().messageAdmins("Spawn", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + ".", new UUID[]{player.getUniqueId()});
             return;
         }
+        if (!(player.isOp())) {
+            if (getInstance().getClientUtilities().getOnlineClient(target.getUniqueId()).getRank().ordinal() >= client.getRank().ordinal()) {
+                UtilMessage.message(player, "Spawn", "You cannot teleport this Player to Spawn!");
+                return;
+            }
+        }
         target.teleport(Bukkit.getWorld(getInstance().getRepository().getServerWorld()).getSpawnLocation());
         UtilPlayer.sound(target, Sound.ENDERMAN_TELEPORT);
         UtilMessage.message(target, "Spawn", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported you to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + ".");
@@ -124,6 +130,7 @@ public class SpawnCommand extends Command {
         if ((e.getFrom().getBlock().getX() != e.getTo().getBlock().getX()) || (e.getFrom().getBlock().getZ() != e.getTo().getBlock().getZ())) {
             if (timer.containsKey(player.getUniqueId())) {
                 timer.remove(player.getUniqueId());
+                getInstance().getTitleManager().sendPlayer(player, " ", " ", 1);
                 UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to moving.");
             }
         }
@@ -137,6 +144,7 @@ public class SpawnCommand extends Command {
         final Player player = e.getPlayer();
         if (timer.containsKey(player.getUniqueId())) {
             timer.remove(player.getUniqueId());
+            getInstance().getTitleManager().sendPlayer(player, " ", " ", 1);
             UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to block interaction.");
         }
     }
@@ -149,6 +157,7 @@ public class SpawnCommand extends Command {
         final Player player = e.getPlayer();
         if (timer.containsKey(player.getUniqueId())) {
             timer.remove(player.getUniqueId());
+            getInstance().getTitleManager().sendPlayer(player, " ", " ", 1);
             UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to block interaction.");
         }
     }
@@ -162,6 +171,7 @@ public class SpawnCommand extends Command {
             final Player player = (Player) e.getEntity();
             if (timer.containsKey(player.getUniqueId())) {
                 timer.remove(player.getUniqueId());
+                getInstance().getTitleManager().sendPlayer(player, " ", " ", 1);
                 UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to taking damage.");
             }
         }
@@ -176,6 +186,7 @@ public class SpawnCommand extends Command {
             final Player player = (Player) e.getEntity();
             if (timer.containsKey(player.getUniqueId())) {
                 timer.remove(player.getUniqueId());
+                getInstance().getTitleManager().sendPlayer(player, " ", " ", 1);
                 UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to taking damage.");
             }
         }
@@ -183,6 +194,7 @@ public class SpawnCommand extends Command {
             final Player player = (Player) e.getDamager();
             if (timer.containsKey(player.getUniqueId())) {
                 timer.remove(player.getUniqueId());
+                getInstance().getTitleManager().sendPlayer(player, " ", " ", 1);
                 UtilMessage.message(player, "Spawn", "Teleporting to " + ChatColor.WHITE + "Spawn" + ChatColor.GRAY + " got cancelled due to dealing damage.");
             }
         }

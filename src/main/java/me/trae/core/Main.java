@@ -33,6 +33,9 @@ import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Main extends JavaPlugin {
 
     private boolean started, chat;
@@ -82,22 +85,26 @@ public class Main extends JavaPlugin {
     }
 
     private void setupServer() {
+        int entities = 0;
         for (final World world : Bukkit.getWorlds()) {
-            for (final Entity entity : world.getEntities()) {
-                if (entity instanceof Item) {
-                    final Item item = (Item) entity;
-                    if (item.getItemStack().getAmount() < 1000) {
-                        break;
+            UtilMessage.log("World", "Found " + ChatColor.YELLOW + world.getEntities().stream().filter(e -> e instanceof Item).count() + ChatColor.GRAY + " items.");
+            final List<Entity> collect = world.getEntities().stream().filter(e -> e instanceof Item).collect(Collectors.toList());
+            while (collect.size() > 1000) {
+                collect.get(0).remove();
+                collect.remove(0);
+            }
+            if (world.getEntities().size() > 0) {
+                for (final Entity entity : world.getEntities()) {
+                    if (entity instanceof Player || entity instanceof ArmorStand || entity instanceof ItemFrame || entity instanceof Item) {
+                        continue;
                     }
-                    item.remove();
-                    continue;
+                    entities++;
+                    entity.remove();
                 }
-                if (entity instanceof Player || entity instanceof ArmorStand || entity instanceof ItemFrame) {
-                    continue;
-                }
-                entity.remove();
             }
         }
+        UtilMessage.log("World", "Removed " + ChatColor.YELLOW + entities + ChatColor.GRAY + " entities.");
+        entities = 0;
     }
 
     private void registerEvents() {
