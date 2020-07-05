@@ -7,7 +7,6 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
-import me.trae.core.database.Repository;
 import me.trae.core.effect.Effect;
 import me.trae.core.gamer.Gamer;
 import me.trae.core.module.CoreListener;
@@ -23,8 +22,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -70,32 +67,9 @@ public class ConnectionListener extends CoreListener {
         e.setJoinMessage(null);
         final Player player = e.getPlayer();
         Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
+        Arrays.stream(player.getInventory().getArmorContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
         if (!(getInstance().getRepository().isGameSaturation())) {
             player.setFoodLevel(20);
-        }
-        if (!(Repository.isGameEnchantments())) {
-            for (final ItemStack item : player.getInventory().getContents()) {
-                if (item != null) {
-                    final ItemMeta meta = item.getItemMeta();
-                    if (meta != null) {
-                        if (meta.hasEnchants()) {
-                            meta.getEnchants().keySet().forEach(meta::removeEnchant);
-                        }
-                    }
-                    item.setItemMeta(meta);
-                }
-            }
-            for (final ItemStack item : player.getInventory().getArmorContents()) {
-                if (item != null) {
-                    final ItemMeta meta = item.getItemMeta();
-                    if (meta != null) {
-                        if (meta.hasEnchants()) {
-                            meta.getEnchants().keySet().forEach(meta::removeEnchant);
-                        }
-                    }
-                    item.setItemMeta(meta);
-                }
-            }
         }
         Client client = getInstance().getClientUtilities().getClient(player.getUniqueId());
         if (client == null) {
@@ -117,6 +91,8 @@ public class ConnectionListener extends CoreListener {
                 getInstance().getClientRepository().updateOldName(client);
                 client.setName(player.getName());
                 getInstance().getClientRepository().updateName(client);
+                getInstance().getClientUtilities().messageStaff("Client", ChatColor.YELLOW + client.getOldName() + ChatColor.GRAY + " changed their name to " + ChatColor.YELLOW + client.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId()});
+                UtilMessage.log("Client", ChatColor.YELLOW + client.getOldName() + ChatColor.GRAY + " changed their name to " + ChatColor.YELLOW + client.getName() + ChatColor.GRAY + ".");
             }
             if (client.getIPAddresses().stream().noneMatch(c -> c.equals(UtilPlayer.getIP(player)))) {
                 client.getIPAddresses().add(UtilPlayer.getIP(player));
@@ -158,7 +134,6 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerQuit(final PlayerQuitEvent e) {
         e.setQuitMessage(null);
         final Player player = e.getPlayer();
-        Bukkit.getOnlinePlayers().forEach(o -> player.showPlayer(o));
         Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
         if (player.isInsideVehicle()) {
             player.leaveVehicle();
