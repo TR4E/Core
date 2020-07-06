@@ -44,7 +44,7 @@ public class IgnoreCommand extends Command {
                 return;
             }
             if (!(player.isOp())) {
-                if (targetC.getRank().ordinal() >= client.getRank().ordinal()) {
+                if (target.isOp() || targetC.hasRank(Rank.HELPER, false)) {
                     UtilMessage.message(player, "Ignore", "You cannot ignore this Player!");
                     return;
                 }
