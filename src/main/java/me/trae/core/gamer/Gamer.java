@@ -1,8 +1,10 @@
 package me.trae.core.gamer;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public final class Gamer {
 
@@ -11,7 +13,7 @@ public final class Gamer {
     private final Set<UUID> ignored;
     private int kills;
     private int deaths;
-    private UUID invInspecting;
+    private UUID invInspecting, reply;
 
     public Gamer(final UUID uuid) {
         this.uuid = uuid;
@@ -19,6 +21,7 @@ public final class Gamer {
         this.kills = 0;
         this.deaths = 0;
         this.invInspecting = null;
+        this.reply = null;
     }
 
     public final UUID getUUID() {
@@ -27,6 +30,10 @@ public final class Gamer {
 
     public final Set<UUID> getIgnored() {
         return ignored;
+    }
+
+    public final List<String> getIgnoredList() {
+        return ignored.stream().map(UUID::toString).collect(Collectors.toList());
     }
 
     public final int getKills() {
@@ -55,5 +62,13 @@ public final class Gamer {
 
     public void setInvInspecting(final UUID invInspecting) {
         this.invInspecting = invInspecting;
+    }
+
+    public final UUID getReply() {
+        return reply;
+    }
+
+    public void setReply(final UUID reply) {
+        this.reply = reply;
     }
 }

@@ -6,7 +6,6 @@ import me.trae.core.database.ConfigManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 public final class GamerRepository {
@@ -21,7 +20,7 @@ public final class GamerRepository {
 
     public void saveGamer(final Gamer g) {
         config.loadFile();
-        config.getConfig().set(g.getUUID().toString() + ".Ignored", new ArrayList<>(g.getIgnored()));
+        config.getConfig().set(g.getUUID().toString() + ".Ignored", g.getIgnoredList());
         config.getConfig().set(g.getUUID().toString() + ".Kills", g.getKills());
         config.getConfig().set(g.getUUID().toString() + ".Deaths", g.getDeaths());
         config.saveFile();
@@ -29,7 +28,7 @@ public final class GamerRepository {
 
     public void updateIgnored(final Gamer g) {
         config.loadFile();
-        config.getConfig().set(g.getUUID().toString() + ".Ignored", new ArrayList<>(g.getIgnored()));
+        config.getConfig().set(g.getUUID().toString() + ".Ignored", g.getIgnoredList());
         config.saveFile();
     }
 

@@ -66,8 +66,9 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerJoin(final PlayerJoinEvent e) {
         e.setJoinMessage(null);
         final Player player = e.getPlayer();
-        Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
-        Arrays.stream(player.getInventory().getArmorContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
+        if (Arrays.asList(player.getInventory().getContents()).size() > 0) {
+            Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
+        }
         if (!(getInstance().getRepository().isGameSaturation())) {
             player.setFoodLevel(20);
         }
@@ -117,7 +118,6 @@ public class ConnectionListener extends CoreListener {
             client.setFirstJoined(System.currentTimeMillis());
             getInstance().getClientRepository().updateFirstJoined(client);
             getInstance().getEffectManager().addEffect(player, Effect.EffectType.PROTECTION, (getInstance().getRepository().getGamePvPProtection() * 60000L));
-            UtilMessage.broadcast(getInstance().getEffectManager().hasProtection(player) + "");
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -159,6 +159,8 @@ public class ConnectionListener extends CoreListener {
         } else {
             getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.GREEN + "Silent" + ChatColor.GRAY + ")", Rank.ADMIN, null);
         }
+        getInstance().getGamerUtilities().getGamer(player.getUniqueId()).setReply(null);
+        getInstance().getGamerUtilities().getGamers().stream().filter(g -> (g.getReply() != null && g.getReply().equals(player.getUniqueId()))).forEach(g -> g.setReply(null));
         getInstance().getClientUtilities().setVanished(player, false);
         client.setLastOnline(System.currentTimeMillis());
         getInstance().getClientRepository().updateLastOnline(client);

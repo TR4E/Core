@@ -58,8 +58,9 @@ public class IgnoreCommand extends Command {
             } else {
                 gamer.getIgnored().add(target.getUniqueId());
             }
-            UtilMessage.message(player, "Ignore", "You are now ignoring " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
-            getInstance().getClientUtilities().messageAdmins("Ignore", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " is now ignoring " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".", null);
+            getInstance().getGamerRepository().updateIgnored(gamer);
+            UtilMessage.message(player, "Ignore", (gamer.getIgnored().contains(target.getUniqueId()) ? "You are now ignoring " : "You are no longer ignoring ") + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+            getInstance().getClientUtilities().messageAdmins("Ignore", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (gamer.getIgnored().contains(target.getUniqueId()) ? " is now ignoring " : " is no longer ignoring ") + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".", null);
         }
     }
 

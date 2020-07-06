@@ -57,7 +57,7 @@ public final class ClientUtilities {
     public final Set<Client> getOnlineStaffClients(final boolean showVanishPlayers) {
         final Set<Client> result = new HashSet<>();
         for (final Client client : onlineclients) {
-            if (Bukkit.getPlayer(client.getUUID()) != null) {
+            if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (client.hasRank(Rank.HELPER, false)) {
                     if (instance.getEffectManager().isVanished(Bukkit.getPlayer(client.getUUID())) && !(showVanishPlayers)) {
                         continue;
@@ -71,13 +71,15 @@ public final class ClientUtilities {
 
     public void messageStaff(final String prefix, final String message, final Rank minimumRank, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
-                final Player player = Bukkit.getPlayer(client.getUUID());
-                if (player != null) {
-                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
-                        continue;
+            if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
+                if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
+                    final Player player = Bukkit.getPlayer(client.getUUID());
+                    if (player != null) {
+                        if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                            continue;
+                        }
+                        UtilMessage.message(player, prefix, message);
                     }
-                    UtilMessage.message(player, prefix, message);
                 }
             }
         }
@@ -85,13 +87,15 @@ public final class ClientUtilities {
 
     public void messageStaff(final String message, final Rank minimumRank, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
-                final Player player = Bukkit.getPlayer(client.getUUID());
-                if (player != null) {
-                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
-                        continue;
+            if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
+                if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
+                    final Player player = Bukkit.getPlayer(client.getUUID());
+                    if (player != null) {
+                        if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                            continue;
+                        }
+                        UtilMessage.message(player, message);
                     }
-                    UtilMessage.message(player, message);
                 }
             }
         }
@@ -99,13 +103,15 @@ public final class ClientUtilities {
 
     public void messageAdmins(final String prefix, final String message, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (client.isAdministrating()) {
-                final Player player = Bukkit.getPlayer(client.getUUID());
-                if (player != null) {
-                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
-                        continue;
+            if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
+                if (client.isAdministrating()) {
+                    final Player player = Bukkit.getPlayer(client.getUUID());
+                    if (player != null) {
+                        if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                            continue;
+                        }
+                        UtilMessage.message(player, prefix, message);
                     }
-                    UtilMessage.message(player, prefix, message);
                 }
             }
         }
@@ -113,13 +119,15 @@ public final class ClientUtilities {
 
     public void messageAdmins(final String message, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (client.isAdministrating()) {
-                final Player player = Bukkit.getPlayer(client.getUUID());
-                if (player != null) {
-                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
-                        continue;
+            if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
+                if (client.isAdministrating()) {
+                    final Player player = Bukkit.getPlayer(client.getUUID());
+                    if (player != null) {
+                        if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                            continue;
+                        }
+                        UtilMessage.message(player, message);
                     }
-                    UtilMessage.message(player, message);
                 }
             }
         }
@@ -127,13 +135,15 @@ public final class ClientUtilities {
 
     public void soundStaff(final Sound sound, final Rank minimumRank, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
-                final Player player = Bukkit.getPlayer(client.getUUID());
-                if (player != null) {
-                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
-                        continue;
+            if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
+                if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
+                    final Player player = Bukkit.getPlayer(client.getUUID());
+                    if (player != null) {
+                        if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                            continue;
+                        }
+                        UtilPlayer.sound(player, sound);
                     }
-                    UtilPlayer.sound(player, sound);
                 }
             }
         }
@@ -141,13 +151,15 @@ public final class ClientUtilities {
 
     public void soundAdmins(final Sound sound, final UUID[] ignore) {
         for (final Client client : onlineclients) {
-            if (client.isAdministrating()) {
-                final Player player = Bukkit.getPlayer(client.getUUID());
-                if (player != null) {
-                    if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
-                        continue;
+            if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
+                if (client.isAdministrating()) {
+                    final Player player = Bukkit.getPlayer(client.getUUID());
+                    if (player != null) {
+                        if (ignore != null && Arrays.stream(ignore).anyMatch(i -> player.getUniqueId().equals(i))) {
+                            continue;
+                        }
+                        UtilPlayer.sound(player, sound);
                     }
-                    UtilPlayer.sound(player, sound);
                 }
             }
         }

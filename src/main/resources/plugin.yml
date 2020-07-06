@@ -14,6 +14,10 @@ commands:
     aliases: [kills, deaths, ratio]
   list:
     aliases: [onlineplayers, playersonline, online, players]
+  message:
+    aliases: [msg, tell, whisper, pm, m]
+  reply:
+    aliases: [r]
   report:
   spawn:
   clearinventory:

@@ -151,6 +151,8 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new IgnoreCommand(this));
         getCommandManager().addCommand(new KDRCommand(this));
         getCommandManager().addCommand(new ListCommand(this));
+        getCommandManager().addCommand(new MessageCommand(this));
+        getCommandManager().addCommand(new ReplyCommand(this));
         getCommandManager().addCommand(new ReportCommand(this));
         getCommandManager().addCommand(new SuicideCommand(this));
         getCommandManager().addCommand(new SupportCommand(this));
