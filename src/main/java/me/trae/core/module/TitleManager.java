@@ -53,6 +53,11 @@ public final class TitleManager {
         }
     }
 
+    public void reset(final Player player) {
+        sendActionBar(player, " ");
+        sendPlayer(player, " ", " ", 1);
+    }
+
     public void sendActionBar(final Player p, final String msg) {
         final String nmsver = "v1_8_R3";
         try {

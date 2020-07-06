@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.Arrays;
@@ -62,6 +63,16 @@ public class CommandCenter extends CoreListener {
         }
         if (e.getMessage().equalsIgnoreCase("/x")) {
             e.setMessage("/client admin");
+        } else if (e.getMessage().equalsIgnoreCase("/day")) {
+            e.setMessage("/time day");
+        } else if (e.getMessage().equalsIgnoreCase("/night")) {
+            e.setMessage("/time night");
+        } else if (e.getMessage().equalsIgnoreCase("/sunrise")) {
+            e.setMessage("/time sunrise");
+        } else if (e.getMessage().equalsIgnoreCase("/sunset")) {
+            e.setMessage("/time sunset");
+        } else if (e.getMessage().equalsIgnoreCase("/noon")) {
+            e.setMessage("/time noon");
         }
         String cmd = e.getMessage().substring(1);
         String[] args = null;
@@ -114,5 +125,23 @@ public class CommandCenter extends CoreListener {
                 }
             }
         };
+    }
+
+    @EventHandler
+    public void onPlayerChatTabComplete(final PlayerChatTabCompleteEvent e) {
+        final Player player = e.getPlayer();
+        final Client client = getInstance().getClientUtilities().getOnlineClient(player.getUniqueId());
+        if (client == null) {
+            return;
+        }
+        if (!(player.isOp() || client.hasRank(Rank.ADMIN, false))) {
+            return;
+        }
+        for (final Command cmd : getInstance().getCommandManager().getCommands()) {
+            e.getTabCompletions().add(cmd.getCommandName());
+            for (final String alias : cmd.getAliases()) {
+                e.getTabCompletions().add(alias);
+            }
+        }
     }
 }

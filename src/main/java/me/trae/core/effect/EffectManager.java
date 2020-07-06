@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,6 +47,12 @@ public class EffectManager extends CoreListener {
     public void addEffect(final Player player, final Effect.EffectType type, final long duration, final int level) {
         if (hasEffect(player, type)) {
             removeEffect(player, type);
+        }
+        if (type == Effect.EffectType.GOD_MODE) {
+            player.setHealth(player.getMaxHealth());
+            player.setFoodLevel(20);
+        } else if (type == Effect.EffectType.VANISHED) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 2));
         }
         getEffects().add(new Effect(player.getUniqueId(), type, System.currentTimeMillis() + duration, level));
     }

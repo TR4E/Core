@@ -66,6 +66,10 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerJoin(final PlayerJoinEvent e) {
         e.setJoinMessage(null);
         final Player player = e.getPlayer();
+        getInstance().getTitleManager().reset(player);
+        if (getInstance().getRepository().isGameOwnersVanishOnJoin() && getInstance().getClientUtilities().getClient(player.getUniqueId()) != null && getInstance().getClientUtilities().getClient(player.getUniqueId()).getRank() == Rank.OWNER) {
+            getInstance().getClientUtilities().setVanished(player, true);
+        }
         if (Arrays.asList(player.getInventory().getContents()).size() > 0) {
             Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
         }
@@ -134,6 +138,7 @@ public class ConnectionListener extends CoreListener {
     public void onPlayerQuit(final PlayerQuitEvent e) {
         e.setQuitMessage(null);
         final Player player = e.getPlayer();
+        getInstance().getTitleManager().reset(player);
         Arrays.stream(player.getInventory().getContents()).filter(i -> (i != null && !(i.getItemMeta().hasDisplayName()))).forEach(i -> i.setItemMeta(UtilItem.updateNames(i).getItemMeta()));
         if (player.isInsideVehicle()) {
             player.leaveVehicle();
@@ -150,14 +155,14 @@ public class ConnectionListener extends CoreListener {
             client.setObserverLocation(null);
             player.setGameMode(GameMode.SURVIVAL);
         }
-        if (!(getInstance().getEffectManager().isVanished(player))) {
-            if (client.getRank() == Rank.OWNER) {
-                getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.GREEN + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
-            } else {
-                UtilMessage.broadcast(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName());
-            }
+        if (client.getRank() == Rank.OWNER) {
+            getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.GREEN + "Silent" + ChatColor.GRAY + ")", Rank.OWNER, null);
         } else {
-            getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.GREEN + "Silent" + ChatColor.GRAY + ")", Rank.ADMIN, null);
+            if (!(getInstance().getEffectManager().isVanished(player))) {
+                UtilMessage.broadcast(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName());
+            } else {
+                getInstance().getClientUtilities().messageStaff(ChatColor.RED + "Quit> " + ChatColor.GRAY + player.getName() + " (" + ChatColor.GREEN + "Silent" + ChatColor.GRAY + ")", Rank.ADMIN, null);
+            }
         }
         getInstance().getGamerUtilities().getGamer(player.getUniqueId()).setReply(null);
         getInstance().getGamerUtilities().getGamers().stream().filter(g -> (g.getReply() != null && g.getReply().equals(player.getUniqueId()))).forEach(g -> g.setReply(null));

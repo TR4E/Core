@@ -19,7 +19,7 @@ public class ClearInvCommand extends Command {
     private final Set<UUID> confirmation;
 
     public ClearInvCommand(final Main instance) {
-        super(instance, "clearinventory", new String[]{"cleaninventory", "clearinv", "cleaninv", "clear", "ci"}, (instance.getRepository().isClearInventoryCommandAdminOnly() ? Rank.ADMIN : Rank.PLAYER));
+        super(instance, "clearinventory", new String[]{"cleaninventory", "clearinv", "cleaninv", "clear", "ci"}, (instance.getRepository().isClearInvCommandAdminOnly() ? Rank.ADMIN : Rank.PLAYER));
         this.confirmation = new HashSet<>();
     }
 
@@ -36,14 +36,17 @@ public class ClearInvCommand extends Command {
                 UtilMessage.message(player, "Inventory", "Your Inventory has been cleared.");
                 return;
             }
-            confirmation.add(player.getUniqueId());
-            UtilMessage.message(player, "Inventory", ChatColor.GOLD + "Repeat the command again if you want to clear your Inventory.");
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    confirmation.remove(player.getUniqueId());
-                }
-            }.runTaskLater(getInstance(), 1200L);
+            if (getInstance().getRechargeManager().add(player, "Clear Inventory Command", (getInstance().getRepository().getClearInvCommandCooldown() * 1000L), true)) {
+                confirmation.add(player.getUniqueId());
+                UtilMessage.message(player, "Inventory", ChatColor.GOLD + "Repeat the command again if you want to clear your Inventory.");
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        confirmation.remove(player.getUniqueId());
+                    }
+                }.runTaskLater(getInstance(), 1200L);
+                return;
+            }
             return;
         }
         if (!(player.isOp() || client.hasRank(Rank.ADMIN, true))) {

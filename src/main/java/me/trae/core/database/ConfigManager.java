@@ -24,9 +24,10 @@ public final class ConfigManager {
                     config.getConfig().set("Booleans.Settings.Game.Weather", true);
                     config.getConfig().set("Booleans.Settings.Game.Saturation", true);
                     config.getConfig().set("Booleans.Settings.Game.Break-Crops", true);
+                    config.getConfig().set("Booleans.Settings.Game.Owners-Vanish-On-Join", true);
                     config.getConfig().set("Booleans.Settings.Admin-Commands.Spawn", true);
                     config.getConfig().set("Booleans.Settings.Admin-Commands.Suicide", true);
-                    config.getConfig().set("Booleans.Settings.Admin-Commands.Clear-Inventory", true);
+                    config.getConfig().set("Booleans.Settings.Admin-Commands.Clear-Inv", true);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.TNT", false);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.Mob-Spawners", false);
                     config.getConfig().set("Integers.Server.Max-Player-Slots", 100);
@@ -35,6 +36,7 @@ public final class ConfigManager {
                     config.getConfig().set("Integers.Cooldowns.Announce-Command", 300);
                     config.getConfig().set("Integers.Cooldowns.Support-Command", 120);
                     config.getConfig().set("Integers.Cooldowns.Suicide-Command", 120);
+                    config.getConfig().set("Integers.Cooldowns.ClearInv-Command", 120);
                     config.getConfig().set("Integers.Countdowns.Spawn-Command", 10);
                     config.getConfig().set("Strings.Server.Name", "Trae's Server");
                     config.getConfig().set("Strings.Server.World", "world");

@@ -33,6 +33,7 @@ public class ObserverCommand extends Command {
                 client.setObserverLocation(player.getLocation());
                 player.setGameMode(GameMode.SPECTATOR);
             }
+            getInstance().getTitleManager().sendActionBar(player, " ");
             UtilMessage.message(player, "Observer", "Observer Mode: " + (client.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
             getInstance().getClientUtilities().messageStaff("Observer", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (client.isObserving() ? " is now Observing." : "is no longer Observing.") + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId()});
             return;
@@ -55,6 +56,7 @@ public class ObserverCommand extends Command {
                     client.setObserverLocation(player.getLocation());
                     player.setGameMode(GameMode.SPECTATOR);
                 }
+                getInstance().getTitleManager().sendActionBar(player, " ");
                 UtilMessage.message(player, "Observer", "Observer Mode: " + (client.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
                 getInstance().getClientUtilities().messageStaff("Observer", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (client.isObserving() ? " is now Observing." : "is no longer Observing.") + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId()});
                 return;
@@ -73,6 +75,7 @@ public class ObserverCommand extends Command {
                 targetC.setObserverLocation(target.getLocation());
                 target.setGameMode(GameMode.SPECTATOR);
             }
+            getInstance().getTitleManager().sendActionBar(target, " ");
             UtilMessage.message(target, "Observer", "Observer Mode: " + (targetC.isObserving() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
             getInstance().getClientUtilities().messageStaff("Observer", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (targetC.isObserving() ? " is now Observing" : "is no longer Observing") + ChatColor.GRAY + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});
         }

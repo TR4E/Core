@@ -15,6 +15,7 @@ import me.trae.core.database.Repository;
 import me.trae.core.database.commands.ReloadCommand;
 import me.trae.core.effect.EffectManager;
 import me.trae.core.effect.commands.ProtectionCommand;
+import me.trae.core.fishing.FishingListener;
 import me.trae.core.gamer.GamerManager;
 import me.trae.core.gamer.GamerRepository;
 import me.trae.core.gamer.GamerUtilities;
@@ -111,6 +112,7 @@ public class Main extends JavaPlugin {
         new ConnectionListener(this);
         new CommandCenter(this);
         new EffectManager(this);
+        new FishingListener(this);
         new GamerManager(this);
         new ChatListener(this);
         new ItemListener(this);
@@ -142,6 +144,7 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new OpenInvCommand(this));
         getCommandManager().addCommand(new PlayerCountCommand(this));
         getCommandManager().addCommand(new StaffChatCommand(this));
+        getCommandManager().addCommand(new TimeCommand(this));
         getCommandManager().addCommand(new ToggleChatCommand(this));
         getCommandManager().addCommand(new VanishCommand(this));
         getCommandManager().addCommand(new SpawnCommand(this));

@@ -34,6 +34,7 @@ public class GodCommand extends Command {
             } else {
                 getInstance().getEffectManager().addEffect(player, Effect.EffectType.GOD_MODE);
             }
+            getInstance().getTitleManager().sendActionBar(player, " ");
             UtilMessage.message(player, "God", "God Mode: " + (getInstance().getEffectManager().hasGodMode(player) ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
             getInstance().getClientUtilities().messageStaff("God", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (getInstance().getEffectManager().hasGodMode(player) ? " is now Invincible." : " is no longer Invincible."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
             return;
@@ -49,6 +50,7 @@ public class GodCommand extends Command {
                 } else {
                     getInstance().getEffectManager().addEffect(player, Effect.EffectType.GOD_MODE);
                 }
+                getInstance().getTitleManager().sendActionBar(player, " ");
                 UtilMessage.message(player, "God", "God Mode: " + (getInstance().getEffectManager().hasGodMode(player) ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
                 getInstance().getClientUtilities().messageStaff("God", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (getInstance().getEffectManager().hasGodMode(player) ? " is now Invincible." : " is no longer Invincible."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
                 return;
@@ -68,6 +70,7 @@ public class GodCommand extends Command {
             } else {
                 getInstance().getEffectManager().addEffect(target, Effect.EffectType.GOD_MODE);
             }
+            getInstance().getTitleManager().sendActionBar(target, " ");
             UtilMessage.message(target, "God", "God Mode: " + (getInstance().getEffectManager().hasGodMode(target) ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
             getInstance().getClientUtilities().messageStaff("God", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + (getInstance().getEffectManager().hasGodMode(target) ? " is now Invincible " : " is no longer Invincible ") + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});
         }
@@ -92,8 +95,20 @@ public class GodCommand extends Command {
     public void onPlayerDamageByPlayer(final EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player) {
             final Player player = (Player) e.getEntity();
-            if (getInstance().getEffectManager().hasGodMode(player)) {
-                e.setCancelled(true);
+            if (player != null) {
+                if (getInstance().getEffectManager().hasGodMode(player)) {
+                    e.setCancelled(true);
+                    if (e.getDamager() instanceof Player) {
+                        final Player damager = (Player) e.getDamager();
+                        if (damager != null) {
+                            if (damager != player) {
+                                if (getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating()) {
+                                    UtilMessage.message(damager, "God", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " is in God Mode.");
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

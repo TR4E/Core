@@ -40,23 +40,33 @@ public final class WorldListener extends CoreListener {
     @EventHandler
     public void onUpdate(final UpdateEvent e) {
         if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
-            Bukkit.getOnlinePlayers().stream().filter(o -> getInstance().getEffectManager().isVanished(o)).forEach(o -> getInstance().getTitleManager().sendActionBar(o, ChatColor.GREEN + "You are invisible to other players!"));
-            final World world = Bukkit.getWorld(getInstance().getRepository().getServerWorld());
-            if (world != null) {
-                if (world.hasStorm()) {
-                    world.setStorm(false);
+            for (final Player player : Bukkit.getOnlinePlayers()) {
+                if (getInstance().getEffectManager().isVanished(player)) {
+                    getInstance().getTitleManager().sendActionBar(player, ChatColor.GREEN.toString() + ChatColor.BOLD + "You are invisible to other players!");
+                } else if (getInstance().getEffectManager().hasGodMode(player)) {
+                    getInstance().getTitleManager().sendActionBar(player, ChatColor.GOLD.toString() + ChatColor.BOLD + "You are currently in God Mode!");
+                } else if (getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isObserving()) {
+                    getInstance().getTitleManager().sendActionBar(player, ChatColor.AQUA.toString() + ChatColor.BOLD + "You are currently in Observer Mode!");
+                } else if (getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating()) {
+                    getInstance().getTitleManager().sendActionBar(player, ChatColor.RED.toString() + ChatColor.BOLD + "You are currently in Client Admin!");
                 }
-                if (world.isThundering()) {
-                    world.setThundering(false);
+            }
+        }
+        final World world = Bukkit.getWorld(getInstance().getRepository().getServerWorld());
+        if (world != null) {
+            if (world.hasStorm()) {
+                world.setStorm(false);
+            }
+            if (world.isThundering()) {
+                world.setThundering(false);
+            }
+            if (getInstance().getRepository().isGameAlwaysDay()) {
+                if (world.getTime() != 1000L) {
+                    world.setTime(1000L);
                 }
-                if (getInstance().getRepository().isGameAlwaysDay()) {
-                    if (world.getTime() != 1000L) {
-                        world.setTime(1000L);
-                    }
-                } else if (getInstance().getRepository().isGameAlwaysNight()) {
-                    if (world.getTime() != 13000L) {
-                        world.setTime(13000L);
-                    }
+            } else if (getInstance().getRepository().isGameAlwaysNight()) {
+                if (world.getTime() != 13000L) {
+                    world.setTime(13000L);
                 }
             }
         }
@@ -281,13 +291,19 @@ public final class WorldListener extends CoreListener {
     public void onFoodLevelChange(final FoodLevelChangeEvent e) {
         if (e.getEntity() instanceof Player) {
             final Player player = (Player) e.getEntity();
-            final int num = UtilMath.randomInt(0, 100);
-            if (num < 75) {
-                e.setCancelled(true);
-            }
             if (!(getInstance().getRepository().isGameSaturation())) {
                 e.setCancelled(true);
-                e.setFoodLevel(20);
+                player.setFoodLevel(20);
+                return;
+            }
+            if (getInstance().getEffectManager().hasGodMode(player) || getInstance().getEffectManager().isVanished(player)) {
+                e.setCancelled(true);
+                player.setFoodLevel(20);
+                return;
+            }
+            final int num = UtilMath.randomInt(0, 100);
+            if (!(num > 50 && num < 60)) {
+                e.setCancelled(true);
             }
         }
     }

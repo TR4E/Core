@@ -24,6 +24,7 @@ public class FlyCommand extends Command {
             return;
         }
         if (args == null || args.length == 0) {
+            getInstance().getTitleManager().sendActionBar(player, " ");
             player.setAllowFlight(!(player.getAllowFlight()));
             UtilMessage.message(player, "Fly", "Fly Mode: " + (player.getAllowFlight() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
             getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (player.getAllowFlight() ? " is now Flying." : " is no longer Flying."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
@@ -35,6 +36,7 @@ public class FlyCommand extends Command {
                 return;
             }
             if (target == player) {
+                getInstance().getTitleManager().sendActionBar(player, " ");
                 player.setAllowFlight(!(player.getAllowFlight()));
                 UtilMessage.message(player, "Fly", "Fly Mode: " + (player.getAllowFlight() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
                 getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (player.getAllowFlight() ? " is now Flying." : " is no longer Flying."), Rank.ADMIN, new UUID[]{player.getUniqueId()});
@@ -50,6 +52,7 @@ public class FlyCommand extends Command {
                     return;
                 }
             }
+            getInstance().getTitleManager().sendActionBar(target, " ");
             target.setAllowFlight(!(target.getAllowFlight()));
             UtilMessage.message(target, "Fly", "Fly Mode: " + (target.getAllowFlight() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
             getInstance().getClientUtilities().messageStaff("Fly", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + (target.getAllowFlight() ? " is now Flying" : " is no longer Flying") + " by " + ChatColor.YELLOW + player.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{target.getUniqueId()});

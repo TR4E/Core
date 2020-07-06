@@ -22,8 +22,10 @@ public class HelpCommand extends Command {
     public void help(final Player player) {
         UtilMessage.message(player, ChatColor.YELLOW + "----- Help -----");
         UtilMessage.message(player, ChatColor.AQUA + "/report <player> <reason>" + ChatColor.GRAY + " - " + "Report a Player.");
+        UtilMessage.message(player, ChatColor.AQUA + "/msg <player> <message>" + ChatColor.GRAY + " - " + "Message a Player.");
         UtilMessage.message(player, ChatColor.AQUA + "/ignore <player>" + ChatColor.GRAY + " - " + "Ignore a Player.");
         UtilMessage.message(player, ChatColor.AQUA + "/a <message>" + ChatColor.GRAY + " - " + "Request Staff Assistance.");
+        UtilMessage.message(player, ChatColor.AQUA + "/r <message>" + ChatColor.GRAY + " - " + "Reply to a Player.");
         UtilMessage.message(player, ChatColor.AQUA + "/kdr <player>" + ChatColor.GRAY + " - " + "View Kill Death Ratio.");
         UtilMessage.message(player, ChatColor.AQUA + "/track <player>" + ChatColor.GRAY + " - " + "Track a Player with Compass.");
         UtilMessage.message(player, ChatColor.AQUA + "/ping <player>" + ChatColor.GRAY + " - " + "Check Ping of a Player.");

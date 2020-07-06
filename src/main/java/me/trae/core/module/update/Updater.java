@@ -50,6 +50,7 @@ public class Updater extends BukkitRunnable {
         SEC_45(45000L),
         MIN_01(60000L),
         MIN_02(120000L),
+        MIN_10(600000L),
         MIN_15(960000L),
         MIN_30(1920000L),
         MIN_60(3840000L),

@@ -26,6 +26,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public final class ItemListener extends CoreListener {
 
@@ -75,16 +76,22 @@ public final class ItemListener extends CoreListener {
                         }
                     }
                 }
-            }
         } else if (player.getInventory().getItemInHand().getType() == Material.TNT) {
-            if (!(getInstance().getRepository().isFunThrowingTNT())) {
-                return;
-            }
-            if (getInstance().getRechargeManager().add(player, "Throwing TNT", 20000, true)) {
-                final TNTPrimed tnt = player.getWorld().spawn(player.getEyeLocation().add(0.0D, 0.5D, 0.0D), TNTPrimed.class);
-                UtilItem.remove(player, Material.TNT, (byte) 0, 1);
-                tnt.setFuseTicks(100);
-                tnt.setVelocity(player.getLocation().getDirection().multiply(2));
+                if (!(getInstance().getRepository().isFunThrowingTNT())) {
+                    return;
+                }
+                if (getInstance().getRechargeManager().add(player, "Throwing TNT", 20000, true)) {
+                    final TNTPrimed tnt = player.getWorld().spawn(player.getEyeLocation().add(0.0D, 0.5D, 0.0D), TNTPrimed.class);
+                    UtilItem.remove(player, Material.TNT, (byte) 0, 1);
+                    tnt.setFuseTicks(100);
+                    tnt.setVelocity(player.getLocation().getDirection().multiply(2));
+                }
+            } else if (player.getInventory().getItemInHand().getType() == Material.WATCH) {
+                if (getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating()) {
+                    player.getWorld().setTime((player.getWorld().getTime() > 13000L ? 1000L : 16000L));
+                    UtilMessage.message(player, "Time", "You changed the time to " + ChatColor.GREEN + (player.getWorld().getTime() > 13000L ? "Night" : "Day") + ChatColor.GRAY + " in " + ChatColor.YELLOW + player.getWorld().getName() + ChatColor.GRAY + ".");
+                    UtilMessage.broadcast("Time", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " changed the time to " + ChatColor.GREEN + (player.getWorld().getTime() > 13000L ? "Night" : "Day") + ChatColor.GRAY + ".", new UUID[]{player.getUniqueId()});
+                }
             }
         }
     }

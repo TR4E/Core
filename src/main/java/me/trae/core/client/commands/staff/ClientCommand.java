@@ -79,6 +79,7 @@ public class ClientCommand extends Command {
         if (client == null) {
             return;
         }
+        getInstance().getTitleManager().sendActionBar(player, " ");
         client.setAdministrating(!(client.isAdministrating()));
         UtilMessage.message(player, "Client", "Admin Mode: " + (client.isAdministrating() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled"));
         getInstance().getClientUtilities().messageStaff("Client", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + (client.isAdministrating() ? " is now Administrating" : "is no longer Administrating") + ".", Rank.ADMIN, new UUID[]{player.getUniqueId()});
