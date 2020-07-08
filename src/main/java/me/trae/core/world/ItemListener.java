@@ -76,7 +76,7 @@ public final class ItemListener extends CoreListener {
                         }
                     }
                 }
-        } else if (player.getInventory().getItemInHand().getType() == Material.TNT) {
+            } else if (player.getInventory().getItemInHand().getType() == Material.TNT) {
                 if (e.getAction() == Action.LEFT_CLICK_AIR) {
                     if (!(getInstance().getRepository().isFunThrowingTNT())) {
                         return;
