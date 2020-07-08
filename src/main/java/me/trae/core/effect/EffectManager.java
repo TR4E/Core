@@ -69,10 +69,6 @@ public class EffectManager extends CoreListener {
         return effects.stream().filter(e -> e.getUUID().equals(player.getUniqueId())).collect(Collectors.toSet());
     }
 
-    public final Set<Effect> getEffect(final Player player) {
-        return getEffects(player).stream().filter(e -> e.getUUID().equals(player.getUniqueId())).collect(Collectors.toSet());
-    }
-
     public final Effect getEffect(final Player player, final Effect.EffectType type) {
         return getEffects(player).stream().filter(e -> e.getType() == type).findFirst().orElse(null);
     }
@@ -151,7 +147,6 @@ public class EffectManager extends CoreListener {
                 for (final Effect effect : getEffects(player)) {
                     if (effect != null) {
                         if (effect.hasExpired()) {
-                            UtilMessage.message(player, "Effect", "You no longer have " + ChatColor.GREEN + effect.getType().name());
                             removeEffect(player, effect.getType());
                             if (effect.getType() == Effect.EffectType.PROTECTION) {
                                 player.getWorld().playSound(player.getLocation(), Sound.VILLAGER_HIT, 1.0F, 1.0F);

@@ -11,8 +11,7 @@ public final class Gamer {
     private final UUID uuid;
 
     private final Set<UUID> ignored;
-    private int kills;
-    private int deaths;
+    private int kills, deaths, blocksBroken, blocksPlaced;
     private UUID invInspecting, reply;
 
     public Gamer(final UUID uuid) {
@@ -20,6 +19,8 @@ public final class Gamer {
         this.ignored = new HashSet<>();
         this.kills = 0;
         this.deaths = 0;
+        this.blocksBroken = 0;
+        this.blocksPlaced = 0;
         this.invInspecting = null;
         this.reply = null;
     }
@@ -54,6 +55,22 @@ public final class Gamer {
 
     public final String getKDR() {
         return (kills == 0 && deaths == 0 ? "0.0" : (double) kills / deaths + "");
+    }
+
+    public final int getBlocksBroken() {
+        return blocksBroken;
+    }
+
+    public void setBlocksBroken(final int blocksBroken) {
+        this.blocksBroken = blocksBroken;
+    }
+
+    public final int getBlocksPlaced() {
+        return blocksPlaced;
+    }
+
+    public void setBlocksPlaced(final int blocksPlaced) {
+        this.blocksPlaced = blocksPlaced;
     }
 
     public final UUID getInvInspecting() {

@@ -8,7 +8,7 @@ public final class Repository {
 
     private static boolean gameEnchantments;
     private final Config config;
-    private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, gameOwnersVanishOnJoin, spawnCommandAdminOnly, suicideCommandAdminOnly, clearInvCommandAdminOnly, disableTNT, disableMobSpawners;
+    private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gamePvP, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, gameOwnersVanishOnJoin, spawnCommandAdminOnly, suicideCommandAdminOnly, clearInvCommandAdminOnly, disableTNT, disableHopper, disableAnvil, disableDroppers, disableDispensers, disableBrewingStands, disableEnderChests, disableTrappedChests, disableMobSpawners;
     private int gamePvPProtection, maxPlayerSlots, spawnCommandCooldown, announceCommandCooldown, supportCommandCooldown, suicideCommandCooldown, clearInvCommandCooldown, spawnCommandCountdown;
     private String serverName, serverWorld, serverWebsite, serverMOTD;
 
@@ -46,6 +46,7 @@ public final class Repository {
                 funThrowingPearl = config.getConfig().getBoolean("Booleans.Settings.Fun-Features.Throwing-Pearl");
                 gamePortals = config.getConfig().getBoolean("Booleans.Settings.Game.Portals");
                 gameMobs = config.getConfig().getBoolean("Booleans.Settings.Game.Mobs");
+                gamePvP = config.getConfig().getBoolean("Booleans.Settings.Game.PvP");
                 gameAlwaysDay = config.getConfig().getBoolean("Booleans.Settings.Game.Always-Day");
                 gameAlwaysNight = config.getConfig().getBoolean("Booleans.Settings.Always-Night");
                 gameWeather = config.getConfig().getBoolean("Booleans.Settings.Game.Weather");
@@ -56,7 +57,14 @@ public final class Repository {
                 suicideCommandAdminOnly = config.getConfig().getBoolean("Booleans.Settings.Admin-Commands.Suicide");
                 clearInvCommandAdminOnly = config.getConfig().getBoolean("Booleans.Settings.Admin-Commands.Clear-Inventory");
                 disableTNT = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.TNT");
-                disableMobSpawners = config.getConfig().getBoolean("Booleans.Settings.Disable-Blocks.Mob-Spawners");
+                disableHopper = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.Hopper");
+                disableAnvil = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.Anvil");
+                disableDroppers = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.Dropper");
+                disableDispensers = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.Dispenser");
+                disableBrewingStands = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.Brewing-Stand");
+                disableEnderChests = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.Ender-Chest");
+                disableTrappedChests = config.getConfig().getBoolean("Booleans.Settings.Disabled-Blocks.Trapped-Chest");
+                disableMobSpawners = config.getConfig().getBoolean("Booleans.Settings.Disable-Blocks.Mob-Spawner");
                 gamePvPProtection = config.getConfig().getInt("Integers.Game.PvP-Protection");
                 maxPlayerSlots = config.getConfig().getInt("Integers.Server.Max-Player-Slots");
                 spawnCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Spawn-Command");
@@ -91,6 +99,10 @@ public final class Repository {
 
     public final boolean isGameMobs() {
         return gameMobs;
+    }
+
+    public final boolean isGamePvP() {
+        return gamePvP;
     }
 
     public final boolean isGameAlwaysDay() {
@@ -131,6 +143,34 @@ public final class Repository {
 
     public final boolean isDisableTNT() {
         return disableTNT;
+    }
+
+    public final boolean isDisableHopper() {
+        return disableHopper;
+    }
+
+    public final boolean isDisableAnvil() {
+        return disableAnvil;
+    }
+
+    public final boolean isDisableDroppers() {
+        return disableDroppers;
+    }
+
+    public final boolean isDisableDispensers() {
+        return disableDispensers;
+    }
+
+    public final boolean isDisableBrewingStands() {
+        return disableBrewingStands;
+    }
+
+    public final boolean isDisableEnderChests() {
+        return disableEnderChests;
+    }
+
+    public final boolean isDisableTrappedChests() {
+        return disableTrappedChests;
     }
 
     public final boolean isDisableMobSpawners() {

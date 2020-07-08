@@ -29,6 +29,7 @@ public final class ClientRepository {
         config.getConfig().set(client.getUUID().toString() + ".Rank", client.getRank().name());
         config.getConfig().set(client.getUUID().toString() + ".First-Joined", client.getFirstJoined());
         config.getConfig().set(client.getUUID().toString() + ".Last-Online", client.getLastOnline());
+        config.getConfig().set(client.getUUID().toString() + ".Joined-Amount", client.getJoinedAmount());
         config.saveFile();
     }
 
@@ -68,6 +69,12 @@ public final class ClientRepository {
         config.saveFile();
     }
 
+    public void updateJoinedAmount(final Client client) {
+        config.loadFile();
+        config.getConfig().set(client.getUUID().toString() + ".Joined-Amount", client.getJoinedAmount());
+        config.saveFile();
+    }
+
     public void loadClients(final Main instance) {
         config.loadFile();
         final YamlConfiguration yml = config.getConfig();
@@ -82,6 +89,7 @@ public final class ClientRepository {
                     client.setRank(Rank.valueOf(yml.getString(str + ".Rank")));
                     client.setFirstJoined(yml.getLong(str + ".First-Joined"));
                     client.setLastOnline(yml.getLong(str + ".Last-Online"));
+                    client.setJoinedAmount(yml.getInt(str + ".Joined-Amount"));
                     instance.getClientUtilities().addClient(client);
                 }
                 UtilMessage.log("Database", "Loaded: " + ChatColor.YELLOW + instance.getClientUtilities().getClients().size() + ChatColor.GRAY + " Clients.");

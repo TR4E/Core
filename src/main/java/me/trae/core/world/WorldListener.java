@@ -3,6 +3,7 @@ package me.trae.core.world;
 import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
+import me.trae.core.database.Repository;
 import me.trae.core.module.CoreListener;
 import me.trae.core.module.update.UpdateEvent;
 import me.trae.core.module.update.Updater;
@@ -23,6 +24,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +42,7 @@ public final class WorldListener extends CoreListener {
 
     @EventHandler
     public void onUpdate(final UpdateEvent e) {
-        if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
+        if (e.getUpdateType() == Updater.UpdateType.TICK) {
             for (final Player player : Bukkit.getOnlinePlayers()) {
                 if (getInstance().getEffectManager().isVanished(player)) {
                     getInstance().getTitleManager().sendActionBar(player, ChatColor.GREEN.toString() + ChatColor.BOLD + "You are invisible to other players!");
@@ -51,22 +54,22 @@ public final class WorldListener extends CoreListener {
                     getInstance().getTitleManager().sendActionBar(player, ChatColor.RED.toString() + ChatColor.BOLD + "You are currently in Client Admin!");
                 }
             }
-        }
-        final World world = Bukkit.getWorld(getInstance().getRepository().getServerWorld());
-        if (world != null) {
-            if (world.hasStorm()) {
-                world.setStorm(false);
-            }
-            if (world.isThundering()) {
-                world.setThundering(false);
-            }
-            if (getInstance().getRepository().isGameAlwaysDay()) {
-                if (world.getTime() != 1000L) {
-                    world.setTime(1000L);
+            final World world = Bukkit.getWorld(getInstance().getRepository().getServerWorld());
+            if (world != null) {
+                if (world.hasStorm()) {
+                    world.setStorm(false);
                 }
-            } else if (getInstance().getRepository().isGameAlwaysNight()) {
-                if (world.getTime() != 13000L) {
-                    world.setTime(13000L);
+                if (world.isThundering()) {
+                    world.setThundering(false);
+                }
+                if (getInstance().getRepository().isGameAlwaysDay()) {
+                    if (world.getTime() != 1000L) {
+                        world.setTime(1000L);
+                    }
+                } else if (getInstance().getRepository().isGameAlwaysNight()) {
+                    if (world.getTime() != 13000L) {
+                        world.setTime(13000L);
+                    }
                 }
             }
         }
@@ -119,6 +122,16 @@ public final class WorldListener extends CoreListener {
         if (player.getKiller() != null) {
             final Player killer = player.getKiller();
             if (killer != player) {
+                if (getInstance().getGamerUtilities().getGamer(player.getUniqueId()) != null) {
+                    if (!(player.getGameMode() == GameMode.CREATIVE || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating() || getInstance().getEffectManager().isVanished(player))) {
+                        getInstance().getGamerUtilities().getGamer(player.getUniqueId()).setDeaths(getInstance().getGamerUtilities().getGamer(player.getUniqueId()).getDeaths() + 1);
+                    }
+                }
+                if (getInstance().getGamerUtilities().getGamer(killer.getUniqueId()) != null) {
+                    if (!(killer.getGameMode() == GameMode.CREATIVE || getInstance().getClientUtilities().getOnlineClient(killer.getUniqueId()).isAdministrating() || getInstance().getEffectManager().isVanished(killer))) {
+                        getInstance().getGamerUtilities().getGamer(killer.getUniqueId()).setKills(getInstance().getGamerUtilities().getGamer(killer.getUniqueId()).getKills() + 1);
+                    }
+                }
                 UtilMessage.broadcast("Death", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " was killed by " + ChatColor.YELLOW + killer.getName() + ChatColor.GRAY + " with " + ChatColor.GREEN + UtilFormat.cleanString(killer.getInventory().getItemInHand().getType().name()) + ChatColor.GRAY + ".");
             }
         }
@@ -185,10 +198,80 @@ public final class WorldListener extends CoreListener {
                     e.setCancelled(true);
                     UtilMessage.message(player, "Game", ChatColor.YELLOW + "TNT" + ChatColor.GRAY + " is currently disabled.");
                 }
+            } else if (block.getType() == Material.ENCHANTMENT_TABLE) {
+                if (Repository.isGameEnchantments()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Enchanting" + ChatColor.GRAY + " is currently disabled.");
+                }
+            } else if (block.getType() == Material.HOPPER) {
+                if (getInstance().getRepository().isDisableHopper()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Hoppers" + ChatColor.GRAY + " are currently disabled.");
+                }
+            } else if (block.getType() == Material.ANVIL) {
+                if (getInstance().getRepository().isDisableAnvil()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Anvils" + ChatColor.GRAY + " are currently disabled.");
+                }
+            } else if (block.getType() == Material.DROPPER) {
+                if (getInstance().getRepository().isDisableDroppers()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Droppers" + ChatColor.GRAY + " are currently disabled.");
+                }
+            } else if (block.getType() == Material.DISPENSER) {
+                if (getInstance().getRepository().isDisableDispensers()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Dispensers" + ChatColor.GRAY + " are currently disabled.");
+                }
+            } else if (block.getType() == Material.BREWING_STAND || block.getType() == Material.BREWING_STAND_ITEM) {
+                if (getInstance().getRepository().isDisableBrewingStands()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Brewing Stands" + ChatColor.GRAY + " are currently disabled.");
+                }
+            } else if (block.getType() == Material.ENDER_CHEST) {
+                if (getInstance().getRepository().isDisableEnderChests()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Ender Chests" + ChatColor.GRAY + " are currently disabled.");
+                }
+            } else if (block.getType() == Material.TRAPPED_CHEST) {
+                if (getInstance().getRepository().isDisableTrappedChests()) {
+                    e.setCancelled(true);
+                    UtilMessage.message(player, "Game", ChatColor.YELLOW + "Trapped Chests" + ChatColor.GRAY + " are currently disabled.");
+                }
             } else if (block.getType() == Material.MOB_SPAWNER) {
                 if (getInstance().getRepository().isDisableMobSpawners()) {
                     e.setCancelled(true);
                     UtilMessage.message(player, "Game", ChatColor.YELLOW + "Mob Spawners" + ChatColor.GRAY + " is currently disabled.");
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void addBlockBreakToGamer(final BlockBreakEvent e) {
+        if (!(e.isCancelled())) {
+            final Player player = e.getPlayer();
+            if (player != null) {
+                if (!(player.getGameMode() == GameMode.CREATIVE || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating() || getInstance().getEffectManager().isVanished(player))) {
+                    if (getInstance().getGamerUtilities().getGamer(player.getUniqueId()) != null) {
+                        getInstance().getGamerUtilities().getGamer(player.getUniqueId()).setBlocksBroken(getInstance().getGamerUtilities().getGamer(player.getUniqueId()).getBlocksBroken() + 1);
+                        getInstance().getGamerRepository().updateBlocksBroken(getInstance().getGamerUtilities().getGamer(player.getUniqueId()));
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void addBlockPlaceToGamer(final BlockPlaceEvent e) {
+        if (!(e.isCancelled())) {
+            final Player player = e.getPlayer();
+            if (player != null) {
+                if (!(player.getGameMode() == GameMode.CREATIVE || getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating() || getInstance().getEffectManager().isVanished(player))) {
+                    if (getInstance().getGamerUtilities().getGamer(player.getUniqueId()) != null) {
+                        getInstance().getGamerUtilities().getGamer(player.getUniqueId()).setBlocksPlaced(getInstance().getGamerUtilities().getGamer(player.getUniqueId()).getBlocksPlaced() + 1);
+                        getInstance().getGamerRepository().updateBlocksPlaced(getInstance().getGamerUtilities().getGamer(player.getUniqueId()));
+                    }
                 }
             }
         }
@@ -209,6 +292,56 @@ public final class WorldListener extends CoreListener {
             if (block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) {
                 e.setCancelled(true);
                 UtilMessage.message(player, "Game", "You cannot break " + ChatColor.YELLOW + UtilFormat.cleanString(block.getType().name()) + ChatColor.GRAY + ".");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryOpen(final InventoryOpenEvent e) {
+        if (e.getPlayer() instanceof Player) {
+            final Player player = (Player) e.getPlayer();
+            if (player != null) {
+                final Client client = getInstance().getClientUtilities().getOnlineClient(player.getUniqueId());
+                if (client != null) {
+                    if (!(client.isAdministrating())) {
+                        if (e.getInventory().getType() == InventoryType.ENCHANTING) {
+                            if (!(Repository.isGameEnchantments())) {
+                                e.setCancelled(true);
+                                UtilMessage.message(player, "Game", ChatColor.YELLOW + "Enchanting" + ChatColor.GRAY + " is currently disabled.");
+                            }
+                        } else if (e.getInventory().getType() == InventoryType.ANVIL) {
+                            if (getInstance().getRepository().isDisableAnvil()) {
+                                e.setCancelled(true);
+                                UtilMessage.message(player, "Game", ChatColor.YELLOW + "Anvils" + ChatColor.GRAY + " are currently disabled.");
+                            }
+                        } else if (e.getInventory().getType() == InventoryType.HOPPER) {
+                            if (getInstance().getRepository().isDisableHopper()) {
+                                e.setCancelled(true);
+                                UtilMessage.message(player, "Game", ChatColor.YELLOW + "Hoppers" + ChatColor.GRAY + " are currently disabled.");
+                            }
+                        } else if (e.getInventory().getType() == InventoryType.DROPPER) {
+                            if (getInstance().getRepository().isDisableDroppers()) {
+                                e.setCancelled(true);
+                                UtilMessage.message(player, "Game", ChatColor.YELLOW + "Droppers" + ChatColor.GRAY + " are currently disabled.");
+                            }
+                        } else if (e.getInventory().getType() == InventoryType.DISPENSER) {
+                            if (getInstance().getRepository().isDisableDispensers()) {
+                                e.setCancelled(true);
+                                UtilMessage.message(player, "Game", ChatColor.YELLOW + "Dispensers" + ChatColor.GRAY + " are currently disabled.");
+                            }
+                        } else if (e.getInventory().getType() == InventoryType.BREWING) {
+                            if (getInstance().getRepository().isDisableBrewingStands()) {
+                                e.setCancelled(true);
+                                UtilMessage.message(player, "Game", ChatColor.YELLOW + "Brewing Stands" + ChatColor.GRAY + " are currently disabled.");
+                            }
+                        } else if (e.getInventory().getType() == InventoryType.ENDER_CHEST) {
+                            if (getInstance().getRepository().isDisableEnderChests()) {
+                                e.setCancelled(true);
+                                UtilMessage.message(player, "Game", ChatColor.YELLOW + "Ender Chests" + ChatColor.GRAY + " are currently disabled.");
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -267,10 +400,10 @@ public final class WorldListener extends CoreListener {
         if (block == null) {
             return;
         }
-        if (!(getInstance().getRepository().isGameBreakCrops()) && e.getAction() == Action.PHYSICAL && block.getType() == Material.SOIL) {
+        if (!(getInstance().getRepository().isGameBreakCrops()) && e.getAction() == Action.PHYSICAL && (block.getType() == Material.SOIL || block.getType() == Material.CROPS || block.getType().name().toLowerCase().contains("seed"))) {
             e.setCancelled(true);
         }
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && block.getType() == Material.TNT && !(getInstance().getRepository().isDisableTNT() && getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating())) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && block.getType() == Material.TNT && getInstance().getRepository().isDisableTNT() && !(getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating())) {
             e.setCancelled(true);
         }
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK && block.getType() == Material.ITEM_FRAME || block.getType() == Material.ARMOR_STAND) {
@@ -315,7 +448,7 @@ public final class WorldListener extends CoreListener {
                 final Player player = e.getPlayer();
                 if (!(UtilMath.offset(player.getLocation(), e.getClickedBlock().getLocation().add(0.5D, 1.5D, 0.5D)) > 0.6D)) {
                     if (getInstance().getRechargeManager().add(player, "Sponge", (8 * 100), false)) {
-                        player.setVelocity(new Vector(0.0D, 1.8D, 0.0D));
+                        player.setVelocity(new Vector(0.0D, (getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating() ? 2.4D : 1.8D), 0.0D));
                         player.getWorld().playEffect(player.getLocation(), Effect.BLAZE_SHOOT, 0, 15);
                         player.getWorld().playEffect(player.getLocation(), Effect.STEP_SOUND, 19, 15);
                         player.getWorld().playEffect(player.getLocation(), Effect.STEP_SOUND, 19, 15);
@@ -378,10 +511,19 @@ public final class WorldListener extends CoreListener {
 
     @EventHandler
     public void onArmorStandDeath(final EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Player) {
-            final Player player = (Player) e.getDamager();
-            if (player.getGameMode() == GameMode.ADVENTURE) {
+        if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+            if (!(getInstance().getRepository().isGamePvP())) {
                 e.setCancelled(true);
+                UtilMessage.message((Player) e.getDamager(), "Game", "You cannot harm " + ChatColor.YELLOW + e.getEntity().getName() + ChatColor.GRAY + ".");
+                return;
+            }
+        }
+        if (e.getDamager() instanceof Player && (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof ItemFrame)) {
+            final Player player = (Player) e.getDamager();
+            if (player != null) {
+                if (player.getGameMode() == GameMode.ADVENTURE) {
+                    e.setCancelled(true);
+                }
             }
         }
     }

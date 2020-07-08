@@ -88,8 +88,12 @@ public class Main extends JavaPlugin {
     private void setupServer() {
         int entities = 0;
         for (final World world : Bukkit.getWorlds()) {
-            UtilMessage.log("World", "Found " + ChatColor.YELLOW + world.getEntities().stream().filter(e -> e instanceof Item).count() + ChatColor.GRAY + " items.");
             final List<Entity> collect = world.getEntities().stream().filter(e -> e instanceof Item).collect(Collectors.toList());
+            if (collect.size() > 1000) {
+                UtilMessage.log("World", "Removed " + ChatColor.YELLOW + collect.size() + ChatColor.GRAY + " items.");
+            } else if (collect.size() > 0) {
+                UtilMessage.log("World", "Found " + ChatColor.YELLOW + collect.size() + ChatColor.GRAY + " items.");
+            }
             while (collect.size() > 1000) {
                 collect.get(0).remove();
                 collect.remove(0);
@@ -152,6 +156,7 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new ClearInvCommand(this));
         getCommandManager().addCommand(new DyeCommand(this));
         getCommandManager().addCommand(new IgnoreCommand(this));
+        getCommandManager().addCommand(new InfoCommand(this));
         getCommandManager().addCommand(new KDRCommand(this));
         getCommandManager().addCommand(new ListCommand(this));
         getCommandManager().addCommand(new MessageCommand(this));

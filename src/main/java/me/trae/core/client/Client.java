@@ -16,6 +16,7 @@ public final class Client {
     private String name, oldName;
     private Rank rank;
     private long firstJoined, lastOnline;
+    private int joinedAmount;
     private Location observer;
     private boolean administrating, staffchat;
 
@@ -24,6 +25,8 @@ public final class Client {
         this.ipAddresses = new HashSet<>();
         this.rank = Rank.PLAYER;
         this.firstJoined = 0;
+        this.lastOnline = 0;
+        this.joinedAmount = 1;
         this.administrating = false;
         this.staffchat = false;
     }
@@ -86,6 +89,14 @@ public final class Client {
 
     public void setLastOnline(final long lastOnline) {
         this.lastOnline = lastOnline;
+    }
+
+    public final int getJoinedAmount() {
+        return joinedAmount;
+    }
+
+    public void setJoinedAmount(final int joinedAmount) {
+        this.joinedAmount = joinedAmount;
     }
 
     public final Location getObserverLocation() {

@@ -62,7 +62,7 @@ public class ConnectionListener extends CoreListener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(final PlayerJoinEvent e) {
         e.setJoinMessage(null);
         final Player player = e.getPlayer();
@@ -110,8 +110,12 @@ public class ConnectionListener extends CoreListener {
             }
             getInstance().getGamerRepository().loadGamer(player.getUniqueId(), getInstance());
         }
-        getInstance().getClientUtilities().addClient(client);
-        getInstance().getClientUtilities().addOnlineClient(client);
+        if (getInstance().getClientUtilities().getClient(player.getUniqueId()) == null) {
+            getInstance().getClientUtilities().addClient(client);
+        }
+        if (getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()) == null) {
+            getInstance().getClientUtilities().addOnlineClient(client);
+        }
         UtilMessage.log("Clients", "Added Online Client: " + ChatColor.YELLOW + client.getName());
         getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (getInstance().getEffectManager().isVanished(player) && Bukkit.getPlayer(c.getUUID()) != null) && !(player.isOp() || getInstance().getClientUtilities().getClient(player.getUniqueId()).getRank().ordinal() >= c.getRank().ordinal())).forEach(c -> player.hidePlayer(Bukkit.getPlayer(c.getUUID())));
         if (!(player.isOp() || client.hasRank(Rank.ADMIN, false))) {
@@ -132,9 +136,11 @@ public class ConnectionListener extends CoreListener {
                 }
             }.runTaskLater(getInstance(), 10L);
         }
+        client.setJoinedAmount(client.getJoinedAmount() + 1);
+        getInstance().getClientRepository().updateJoinedAmount(client);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(final PlayerQuitEvent e) {
         e.setQuitMessage(null);
         final Player player = e.getPlayer();

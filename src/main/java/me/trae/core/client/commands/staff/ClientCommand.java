@@ -5,23 +5,25 @@ import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
 import me.trae.core.command.Command;
 import me.trae.core.effect.Effect;
-import me.trae.core.utility.UtilFormat;
-import me.trae.core.utility.UtilMessage;
-import me.trae.core.utility.UtilPlayer;
-import me.trae.core.utility.UtilTime;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
+import me.trae.core.module.update.UpdateEvent;
+import me.trae.core.module.update.Updater;
+import me.trae.core.utility.*;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ClientCommand extends Command {
 
+    private final Set<UUID> falling;
+
     public ClientCommand(final Main instance) {
         super(instance, "client", new String[]{}, Rank.PLAYER);
+        this.falling = new HashSet<>();
     }
 
     @Override
@@ -140,6 +142,7 @@ public class ClientCommand extends Command {
         }
     }
 
+
     private void promoteCommand(final Player player, final String[] args) {
         if (args.length == 1) {
             UtilMessage.message(player, "Client", "Usage: " + ChatColor.AQUA + "/client promote <client>");
@@ -159,6 +162,11 @@ public class ClientCommand extends Command {
         }
         target.setRank(Rank.getRank(target.getRank().ordinal() + 1));
         getInstance().getClientRepository().updateRank(target);
+        if (target.getRank() == Rank.ADMIN || target.getRank() == Rank.OWNER) {
+            if (Bukkit.getPlayer(target.getUUID()) != null) {
+                Bukkit.getOnlinePlayers().stream().filter(o -> getInstance().getEffectManager().isVanished(o)).forEach(o -> Bukkit.getPlayer(target.getUUID()).showPlayer(o));
+            }
+        }
         UtilMessage.broadcast("Client", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " promoted " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + target.getRank().getTag(true) + ChatColor.GRAY + ".");
     }
 
@@ -181,23 +189,83 @@ public class ClientCommand extends Command {
         }
         target.setRank(Rank.getRank(target.getRank().ordinal() - 1));
         getInstance().getClientRepository().updateRank(target);
-        if (target.getRank() == Rank.HEADMOD) {
-            target.setAdministrating(false);
-            if (Bukkit.getPlayer(target.getUUID()) != null) {
-                getInstance().getClientUtilities().setVanished(Bukkit.getPlayer(target.getUUID()), false);
-                getInstance().getEffectManager().removeEffect(Bukkit.getPlayer(target.getUUID()), Effect.EffectType.GOD_MODE);
-            }
-        } else if (target.getRank() == Rank.MOD) {
-            if (target.isObserving()) {
-                if (Bukkit.getPlayer(target.getUUID()) != null) {
-                    Bukkit.getPlayer(target.getUUID()).teleport(target.getObserverLocation());
-                    target.setObserverLocation(null);
+        if (!(Bukkit.getPlayer(target.getUUID()).isOp())) {
+            if (target.getRank() == Rank.HEADMOD) {
+                if (Bukkit.getPlayer(target.getUUID()).getGameMode() == GameMode.CREATIVE) {
                     Bukkit.getPlayer(target.getUUID()).setGameMode(GameMode.SURVIVAL);
+                    Bukkit.getPlayer(target.getUUID()).setAllowFlight(false);
+                    Bukkit.getPlayer(target.getUUID()).setFlying(false);
+                    falling.add(target.getUUID());
+                } else if (Bukkit.getPlayer(target.getUUID()).getGameMode() == GameMode.SPECTATOR) {
+                    if (!(target.isObserving())) {
+                        Bukkit.getPlayer(target.getUUID()).teleport(Bukkit.getPlayer(target.getUUID()).getWorld().getHighestBlockAt(Bukkit.getPlayer(target.getUUID()).getLocation()).getLocation().add(0.0D, 1.0D, 0.0D));
+                        Bukkit.getPlayer(target.getUUID()).setGameMode(GameMode.SURVIVAL);
+                        Bukkit.getPlayer(target.getUUID()).setAllowFlight(false);
+                        Bukkit.getPlayer(target.getUUID()).setFlying(false);
+                    }
                 }
+                target.setAdministrating(false);
+                if (Bukkit.getPlayer(target.getUUID()) != null) {
+                    getInstance().getClientUtilities().setVanished(Bukkit.getPlayer(target.getUUID()), false);
+                    Bukkit.getOnlinePlayers().stream().filter(o -> getInstance().getEffectManager().isVanished(o)).forEach(o -> Bukkit.getPlayer(target.getUUID()).hidePlayer(o));
+                    getInstance().getEffectManager().removeEffect(Bukkit.getPlayer(target.getUUID()), Effect.EffectType.GOD_MODE);
+                    getInstance().getTitleManager().sendActionBar(Bukkit.getPlayer(target.getUUID()), " ");
+                }
+            } else if (target.getRank() == Rank.MOD) {
+                if (Bukkit.getPlayer(target.getUUID()) != null) {
+                    Bukkit.getPlayer(target.getUUID()).setAllowFlight(false);
+                    Bukkit.getPlayer(target.getUUID()).setFlying(false);
+                    if (target.isObserving()) {
+                        Bukkit.getPlayer(target.getUUID()).teleport(target.getObserverLocation());
+                        target.setObserverLocation(null);
+                        getInstance().getTitleManager().sendActionBar(Bukkit.getPlayer(target.getUUID()), " ");
+                        Bukkit.getPlayer(target.getUUID()).setGameMode(GameMode.SURVIVAL);
+                        return;
+                    }
+                    if (UtilBlock.getBlockUnder(Bukkit.getPlayer(target.getUUID()).getLocation()).getType() == Material.AIR) {
+                        falling.add(target.getUUID());
+                    }
+                }
+            } else if (!(target.hasRank(Rank.HELPER, false))) {
+                target.setStaffChat(false);
             }
-        } else if (target.getRank() == Rank.HELPER) {
-            target.setStaffChat(false);
         }
         UtilMessage.broadcast("Client", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " demoted " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + target.getRank().getTag(true) + ChatColor.GRAY + ".");
+    }
+
+    @EventHandler
+    public void onUpdate(final UpdateEvent e) {
+        if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
+            final Iterator<UUID> it = falling.iterator();
+            if (it.hasNext()) {
+                final UUID next = it.next();
+                if (Bukkit.getPlayer(next) != null) {
+                    final Player player = Bukkit.getPlayer(next);
+                    if (player != null) {
+                        final Location loc = player.getLocation();
+                        loc.setY(loc.getY() - 5);
+                        if (loc.getBlock().getType() != Material.AIR) {
+                            getInstance().getEffectManager().addEffect(player, Effect.EffectType.NO_FALL, 1000L);
+                            it.remove();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(final PlayerQuitEvent e) {
+        falling.remove(e.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onPlayerDeath(final PlayerDeathEvent e) {
+        falling.remove(e.getEntity().getUniqueId());
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(final PlayerTeleportEvent e) {
+        falling.remove(e.getPlayer().getUniqueId());
     }
 }

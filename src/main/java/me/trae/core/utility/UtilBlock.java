@@ -12,6 +12,11 @@ public final class UtilBlock {
         return loc.getBlock();
     }
 
+    public static Block getBlockUnder(final Location loc, final int amount) {
+        loc.setY(loc.getY() - amount);
+        return loc.getBlock();
+    }
+
     public static boolean isInWater(final Player player) {
         final Location loc = player.getLocation();
         loc.setY(loc.getY() - 1);

@@ -19,6 +19,7 @@ public final class ConfigManager {
                     config.getConfig().set("Booleans.Settings.Game.Enchantments", true);
                     config.getConfig().set("Booleans.Settings.Game.Portals", true);
                     config.getConfig().set("Booleans.Settings.Game.Mobs", true);
+                    config.getConfig().set("Booleans.Settings.Game.PvP", true);
                     config.getConfig().set("Booleans.Settings.Game.Always-Day", false);
                     config.getConfig().set("Booleans.Settings.Game.Always-Night", false);
                     config.getConfig().set("Booleans.Settings.Game.Weather", true);
@@ -29,7 +30,14 @@ public final class ConfigManager {
                     config.getConfig().set("Booleans.Settings.Admin-Commands.Suicide", true);
                     config.getConfig().set("Booleans.Settings.Admin-Commands.Clear-Inv", true);
                     config.getConfig().set("Booleans.Settings.Disable-Blocks.TNT", false);
-                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Mob-Spawners", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Hopper", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Anvil", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Dropper", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Dispenser", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Brewing-Stand", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Ender-Chest", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Trapped-Chest", false);
+                    config.getConfig().set("Booleans.Settings.Disable-Blocks.Mob-Spawner", false);
                     config.getConfig().set("Integers.Server.Max-Player-Slots", 100);
                     config.getConfig().set("Integers.Game.PvP-Protection", 60);
                     config.getConfig().set("Integers.Cooldowns.Spawn-Command", 300);

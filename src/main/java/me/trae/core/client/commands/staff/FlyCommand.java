@@ -14,7 +14,7 @@ import java.util.UUID;
 public class FlyCommand extends Command {
 
     public FlyCommand(final Main instance) {
-        super(instance, "flymode", new String[]{"fly"}, Rank.ADMIN);
+        super(instance, "flymode", new String[]{"fly"}, Rank.HEADMOD);
     }
 
     @Override

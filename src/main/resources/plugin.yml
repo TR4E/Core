@@ -10,6 +10,8 @@ commands:
   help:
     aliases: [discord, vote, website, store, ping]
   ignore:
+  information:
+    aliases: [info]
   kdr:
     aliases: [kills, deaths, ratio]
   list:

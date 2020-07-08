@@ -23,6 +23,8 @@ public final class GamerRepository {
         config.getConfig().set(g.getUUID().toString() + ".Ignored", g.getIgnoredList());
         config.getConfig().set(g.getUUID().toString() + ".Kills", g.getKills());
         config.getConfig().set(g.getUUID().toString() + ".Deaths", g.getDeaths());
+        config.getConfig().set(g.getUUID().toString() + ".Blocks-Broken", g.getBlocksBroken());
+        config.getConfig().set(g.getUUID().toString() + ".Blocks-Placed", g.getBlocksPlaced());
         config.saveFile();
     }
 
@@ -44,6 +46,18 @@ public final class GamerRepository {
         config.saveFile();
     }
 
+    public void updateBlocksBroken(final Gamer g) {
+        config.loadFile();
+        config.getConfig().set(g.getUUID().toString() + ".Blocks-Broken", g.getBlocksBroken());
+        config.saveFile();
+    }
+
+    public void updateBlocksPlaced(final Gamer g) {
+        config.loadFile();
+        config.getConfig().set(g.getUUID().toString() + ".Blocks-Placed", g.getBlocksPlaced());
+        config.saveFile();
+    }
+
     public void loadGamer(final UUID uuid, final Main instance) {
         config.loadFile();
         final YamlConfiguration yml = this.config.getConfig();
@@ -58,6 +72,8 @@ public final class GamerRepository {
                     yml.getStringList(str + ".Ignored").forEach(i -> gamer.getIgnored().add(UUID.fromString(i)));
                     gamer.setKills(yml.getInt(str + ".Kills"));
                     gamer.setDeaths(yml.getInt(str + ".Deaths"));
+                    gamer.setBlocksBroken(yml.getInt(str + ".Blocks-Broken"));
+                    gamer.setBlocksPlaced(yml.getInt(str + ".Blocks-Placed"));
                     instance.getGamerUtilities().addGamer(gamer);
                 }
             }
