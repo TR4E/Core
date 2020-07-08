@@ -55,13 +55,14 @@ public class InfoCommand extends Command {
             return;
         }
         UtilMessage.message(player, "Info", (player != target ? ChatColor.YELLOW + target.getName() + ChatColor.GRAY + "'s " : "Your ") + ChatColor.GRAY + "Information:");
-        UtilMessage.message(player, ChatColor.DARK_GREEN + "Time Played: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getFirstJoined(), UtilTime.TimeUnit.BEST, 1));
+        UtilMessage.message(player, ChatColor.GREEN + "Time Played (Total): " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getFirstJoined(), UtilTime.TimeUnit.BEST, 1));
+        UtilMessage.message(player, ChatColor.GREEN + "Time Played (Today): " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getLastJoined(), UtilTime.TimeUnit.BEST, 1));
         if (targetC.getLastOnline() != 0) {
-            UtilMessage.message(player, ChatColor.DARK_GREEN + "Last Played: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getLastOnline(), UtilTime.TimeUnit.BEST, 1));
+            UtilMessage.message(player, ChatColor.GREEN + "Last Played: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getLastOnline(), UtilTime.TimeUnit.BEST, 1));
         }
-        UtilMessage.message(player, ChatColor.DARK_GREEN + "Joined Amount: " + ChatColor.WHITE + targetC.getJoinedAmount());
-        UtilMessage.message(player, ChatColor.DARK_GREEN + "Blocks Broken: " + ChatColor.WHITE + targetG.getBlocksBroken());
-        UtilMessage.message(player, ChatColor.DARK_GREEN + "Blocks Placed: " + ChatColor.WHITE + targetG.getBlocksPlaced());
-        UtilMessage.message(player, ChatColor.DARK_GREEN + "K/D/R: " + ChatColor.WHITE + targetG.getKills() + " / " + targetG.getDeaths() + " / " + targetG.getKDR());
+        UtilMessage.message(player, ChatColor.GREEN + "Joined Amount: " + ChatColor.WHITE + targetC.getJoinedAmount());
+        UtilMessage.message(player, ChatColor.GREEN + "Blocks Broken: " + ChatColor.WHITE + targetG.getBlocksBroken());
+        UtilMessage.message(player, ChatColor.GREEN + "Blocks Placed: " + ChatColor.WHITE + targetG.getBlocksPlaced());
+        UtilMessage.message(player, ChatColor.GREEN + "KDR: " + ChatColor.WHITE + targetG.getKills() + " / " + targetG.getDeaths() + " / " + targetG.getKDR());
     }
 }

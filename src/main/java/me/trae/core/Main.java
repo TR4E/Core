@@ -126,6 +126,7 @@ public class Main extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
+        getCommandManager().addCommand(new CMDsCommand(this));
         getCommandManager().addCommand(new DiscordCommand(this));
         getCommandManager().addCommand(new HelpCommand(this));
         getCommandManager().addCommand(new PingCommand(this));

@@ -7,6 +7,8 @@ description: Core is a standalone Minecraft Plugin made by Trae with the Spigot 
 commands:
   gamemode:
     aliases: [gm, gms, gmc, gma, gmsp]
+  commands:
+    aliases: [cmds]
   help:
     aliases: [discord, vote, website, store, ping]
   ignore:

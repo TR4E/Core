@@ -138,6 +138,7 @@ public class ConnectionListener extends CoreListener {
         }
         client.setJoinedAmount(client.getJoinedAmount() + 1);
         getInstance().getClientRepository().updateJoinedAmount(client);
+        client.setLastJoined(System.currentTimeMillis());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
