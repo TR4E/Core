@@ -27,7 +27,7 @@ public final class Client {
         this.firstJoined = 0;
         this.lastJoined = 0;
         this.lastOnline = 0;
-        this.joinedAmount = 1;
+        this.joinedAmount = 0;
         this.administrating = false;
         this.staffchat = false;
     }
