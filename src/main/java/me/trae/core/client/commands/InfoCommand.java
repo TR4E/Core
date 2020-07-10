@@ -63,6 +63,6 @@ public class InfoCommand extends Command {
         UtilMessage.message(player, ChatColor.GREEN + "Joined Amount: " + ChatColor.WHITE + targetC.getJoinedAmount());
         UtilMessage.message(player, ChatColor.GREEN + "Blocks Broken: " + ChatColor.WHITE + targetG.getBlocksBroken());
         UtilMessage.message(player, ChatColor.GREEN + "Blocks Placed: " + ChatColor.WHITE + targetG.getBlocksPlaced());
-        UtilMessage.message(player, ChatColor.GREEN + "KDR: " + ChatColor.WHITE + targetG.getKills() + " / " + targetG.getDeaths() + " / " + targetG.getKDR());
+        UtilMessage.message(player, ChatColor.GREEN + "KDR: " + ChatColor.WHITE + targetG.getKills() + ":" + targetG.getDeaths() + ":" + targetG.getKDR());
     }
 }
