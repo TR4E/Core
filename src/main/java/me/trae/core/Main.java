@@ -115,7 +115,7 @@ public class Main extends JavaPlugin {
                 if (world.getName() != null) {
                     UtilMessage.log("Server", "Failed to save World: " + ChatColor.RED + world.getName());
                 } else {
-                    UtilMessage.log("Server", ChatColor.RED + (Bukkit.getWorlds().size() > 0 ? "Some " : "A ") + "world did not save propley.");
+                    UtilMessage.log("Server", ChatColor.RED + (Bukkit.getWorlds().size() > 1 ? "Some Worlds" : "A World") + " did not save propley.");
                 }
             }
         }
