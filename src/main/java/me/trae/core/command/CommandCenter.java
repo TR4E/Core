@@ -19,10 +19,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CommandCenter extends CoreListener {
 
-    private final String[] allowedCommands = new String[]{"gamemode", "gm", "gms", "gmc", "gma", "gmsp"};
+    private final String[] allowedCommands = new String[]{"gamemode", "gm", "gms", "gmc", "gma", "gmsp", "teleport", "tp", "tppos", "tphere", "tpall"};
 
     public CommandCenter(final Main instance) {
         super(instance);
@@ -139,9 +140,7 @@ public class CommandCenter extends CoreListener {
         }
         for (final Command cmd : getInstance().getCommandManager().getCommands()) {
             e.getTabCompletions().add(cmd.getCommandName());
-            for (final String alias : cmd.getAliases()) {
-                e.getTabCompletions().add(alias);
-            }
+            e.getTabCompletions().addAll(Arrays.stream(cmd.getAliases()).collect(Collectors.toList()));
         }
     }
 }

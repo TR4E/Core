@@ -86,7 +86,6 @@ public class Main extends JavaPlugin {
     }
 
     private void setupServer() {
-        int entities = 0;
         for (final World world : Bukkit.getWorlds()) {
             final List<Entity> collect = world.getEntities().stream().filter(e -> e instanceof Item).collect(Collectors.toList());
             if (collect.size() > 1000) {
@@ -99,17 +98,15 @@ public class Main extends JavaPlugin {
                 collect.remove(0);
             }
             if (world.getEntities().size() > 0) {
+                UtilMessage.log("World", "Removed " + ChatColor.YELLOW + world.getEntities().stream().filter(e -> !(e instanceof Player || e instanceof ArmorStand || e instanceof ItemFrame || e instanceof Item)).count() + ChatColor.GRAY + " entities.");
                 for (final Entity entity : world.getEntities()) {
                     if (entity instanceof Player || entity instanceof ArmorStand || entity instanceof ItemFrame || entity instanceof Item) {
                         continue;
                     }
-                    entities++;
                     entity.remove();
                 }
             }
         }
-        UtilMessage.log("World", "Removed " + ChatColor.YELLOW + entities + ChatColor.GRAY + " entities.");
-        entities = 0;
     }
 
     private void registerEvents() {
@@ -126,6 +123,7 @@ public class Main extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
+        getCommand("teleport").setExecutor(new TeleportCommand(this));
         getCommandManager().addCommand(new CMDsCommand(this));
         getCommandManager().addCommand(new DiscordCommand(this));
         getCommandManager().addCommand(new HelpCommand(this));

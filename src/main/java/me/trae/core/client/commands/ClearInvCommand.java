@@ -30,7 +30,7 @@ public class ClearInvCommand extends Command {
             return;
         }
         if (args == null || args.length == 0) {
-            if (confirmation.contains(player.getUniqueId())) {
+            if (client.isAdministrating() || confirmation.contains(player.getUniqueId())) {
                 confirmation.remove(player.getUniqueId());
                 UtilPlayer.clearInventory(player);
                 UtilMessage.message(player, "Inventory", "Your Inventory has been cleared.");
