@@ -39,6 +39,10 @@ public class TeleportCommand implements CommandExecutor {
             if (player.isOp() || client.hasRank(Rank.HEADMOD, true)) {
                 tpCommand(player, args);
             }
+        } else if (label.equalsIgnoreCase("tpo")) {
+            if (player.isOp() || client.hasRank(Rank.ADMIN, true)) {
+                tpoCommand(player, args);
+            }
         } else if (label.equalsIgnoreCase("tppos")) {
             if (player.isOp() || client.hasRank(Rank.ADMIN, true)) {
                 tpPosCommand(player, args);
@@ -55,52 +59,8 @@ public class TeleportCommand implements CommandExecutor {
         return false;
     }
 
-    private void tpCommand(final Player player, final String[] args) {
-        if (args == null || args.length == 0) {
-            UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tp <player> <target>");
-            UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tp <player>");
-            return;
-        }
-        if (args.length == 1) {
-            final Player target = UtilPlayer.searchPlayer(player, args[0], true);
-            if (target == null) {
-                return;
-            }
-            player.teleport(target);
-            UtilMessage.message(player, "Teleport", "You teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
-            if (target != player && (target.isOp() || instance.getClientUtilities().getOnlineClient(target.getUniqueId()).hasRank(Rank.ADMIN, false))) {
-                UtilMessage.message(target, "Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to You.");
-            }
-            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId(), target.getUniqueId()});
-            return;
-        }
-        if (args.length == 2) {
-            final Player target = UtilPlayer.searchPlayer(player, args[0], true);
-            if (target == null) {
-                return;
-            }
-            final Player target2 = UtilPlayer.searchPlayer(player, args[1], true);
-            if (target2 == null) {
-                return;
-            }
-            target.teleport(target2);
-            UtilMessage.message(player, "Teleport", "You teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".");
-            if (player != target && player != target2) {
-                UtilMessage.message(target, "Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported you to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".");
-                if ((target.isOp() || instance.getClientUtilities().getOnlineClient(target.getUniqueId()).hasRank(Rank.ADMIN, false))) {
-                    UtilMessage.message(target2, "Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to You.");
-                }
-            }
-            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId(), target.getUniqueId(), target2.getUniqueId()});
-        }
-    }
-
     private void tpPosCommand(final Player player, final String[] args) {
-        if (args == null || args.length == 0) {
-            UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tppos <x> <y> <z>");
-            return;
-        }
-        if (args.length <= 2) {
+        if (args == null || args.length <= 2) {
             UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tppos <x> <y> <z>");
             return;
         }
@@ -142,6 +102,84 @@ public class TeleportCommand implements CommandExecutor {
             }
             Bukkit.getOnlinePlayers().forEach(o -> o.teleport(target));
             UtilMessage.broadcast("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported everyone to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+        }
+    }
+
+    private void tpCommand(final Player player, final String[] args) {
+        if (args == null || args.length == 0) {
+            UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tp <player> <target>");
+            UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tp <player>");
+            return;
+        }
+        if (args.length == 1) {
+            final Player target = UtilPlayer.searchPlayer(player, args[0], true);
+            if (target == null) {
+                return;
+            }
+            player.teleport(target);
+            UtilMessage.message(player, "Teleport", "You teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+            if (target != player && (target.isOp() || instance.getClientUtilities().getOnlineClient(target.getUniqueId()).hasRank(Rank.ADMIN, false))) {
+                UtilMessage.message(target, "Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to You.");
+            }
+            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId(), target.getUniqueId()});
+            return;
+        }
+        if (!(player.isOp() || instance.getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.ADMIN, true))) {
+            return;
+        }
+        if (args.length == 2) {
+            final Player target = UtilPlayer.searchPlayer(player, args[0], true);
+            if (target == null) {
+                return;
+            }
+            final Player target2 = UtilPlayer.searchPlayer(player, args[1], true);
+            if (target2 == null) {
+                return;
+            }
+            target.teleport(target2);
+            UtilMessage.message(player, "Teleport", "You teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".");
+            if (player != target && player != target2) {
+                UtilMessage.message(target, "Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported you to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".");
+                if ((target.isOp() || instance.getClientUtilities().getOnlineClient(target.getUniqueId()).hasRank(Rank.ADMIN, false))) {
+                    UtilMessage.message(target2, "Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to You.");
+                }
+            }
+            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".", Rank.ADMIN, new UUID[]{player.getUniqueId(), target.getUniqueId(), target2.getUniqueId()});
+        }
+    }
+
+
+    private void tpoCommand(final Player player, final String[] args) {
+        if (args == null || args.length == 0) {
+            UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tpo <player> <target>");
+            UtilMessage.message(player, "Teleport", "Usage: " + ChatColor.AQUA + "/tpo <player>");
+            return;
+        }
+        if (args.length == 1) {
+            final Player target = UtilPlayer.searchPlayer(player, args[0], true);
+            if (target == null) {
+                return;
+            }
+            player.teleport(target);
+            UtilMessage.message(player, "Teleport", "You teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".", Rank.OWNER, new UUID[]{player.getUniqueId()});
+            return;
+        }
+        if (!(player.isOp() || instance.getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.ADMIN, true))) {
+            return;
+        }
+        if (args.length == 2) {
+            final Player target = UtilPlayer.searchPlayer(player, args[0], true);
+            if (target == null) {
+                return;
+            }
+            final Player target2 = UtilPlayer.searchPlayer(player, args[1], true);
+            if (target2 == null) {
+                return;
+            }
+            target.teleport(target2);
+            UtilMessage.message(player, "Teleport", "You teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".");
+            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".", Rank.OWNER, new UUID[]{player.getUniqueId()});
         }
     }
 }

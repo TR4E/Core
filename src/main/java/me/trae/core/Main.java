@@ -87,6 +87,8 @@ public class Main extends JavaPlugin {
 
     private void setupServer() {
         for (final World world : Bukkit.getWorlds()) {
+            world.setThundering(false);
+            world.setStorm(false);
             final List<Entity> collect = world.getEntities().stream().filter(e -> e instanceof Item).collect(Collectors.toList());
             if (collect.size() > 1000) {
                 UtilMessage.log("World", "Removed " + ChatColor.YELLOW + collect.size() + ChatColor.GRAY + " items.");
@@ -104,6 +106,16 @@ public class Main extends JavaPlugin {
                         continue;
                     }
                     entity.remove();
+                }
+            }
+            try {
+                world.save();
+                UtilMessage.log("Server", "Saved World: " + ChatColor.GREEN + world.getName());
+            } catch (final Exception e) {
+                if (world.getName() != null) {
+                    UtilMessage.log("Server", "Failed to save World: " + ChatColor.RED + world.getName());
+                } else {
+                    UtilMessage.log("Server", ChatColor.RED + (Bukkit.getWorlds().size() > 0 ? "Some " : "A ") + "world did not save propley.");
                 }
             }
         }

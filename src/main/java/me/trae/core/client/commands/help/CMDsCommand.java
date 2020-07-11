@@ -43,6 +43,7 @@ public class CMDsCommand extends Command {
                 UtilMessage.message(player, ChatColor.AQUA + "/checkalts" + ChatColor.GRAY + " - " + "Check a Player's Alts.");
                 UtilMessage.message(player, ChatColor.AQUA + "/observer" + ChatColor.GRAY + " - " + "Toggle Observer Mode.");
                 UtilMessage.message(player, ChatColor.AQUA + "/fly" + ChatColor.GRAY + " - " + "Toggle Fly Mode.");
+                UtilMessage.message(player, ChatColor.AQUA + "/tp" + ChatColor.GRAY + " - " + "Teleport to a Player.");
             }
             if (client.hasRank(Rank.ADMIN, false)) {
                 UtilMessage.message(player, ChatColor.RED + "/clearchat" + ChatColor.GRAY + " - " + "Clears the Chat.");
@@ -57,12 +58,17 @@ public class CMDsCommand extends Command {
                 UtilMessage.message(player, ChatColor.RED + "/time" + ChatColor.GRAY + " - " + "Change the Time.");
                 UtilMessage.message(player, ChatColor.RED + "/togglechat" + ChatColor.GRAY + " - " + "Toggle Server Chat.");
                 UtilMessage.message(player, ChatColor.RED + "/vanish" + ChatColor.GRAY + " - " + "Toggle Vanish Mode.");
+                UtilMessage.message(player, ChatColor.RED + "/tp" + ChatColor.GRAY + " - " + "Teleport to a Player.");
+                UtilMessage.message(player, ChatColor.RED + "/tpo" + ChatColor.GRAY + " - " + "Teleport to a Player (Silent).");
+                UtilMessage.message(player, ChatColor.RED + "/tphere" + ChatColor.GRAY + " - " + "Teleport a Player to You.");
+                UtilMessage.message(player, ChatColor.RED + "/tpall" + ChatColor.GRAY + " - " + "Teleport everyone to You.");
             }
             if (client.hasRank(Rank.OWNER, false)) {
                 UtilMessage.message(player, ChatColor.DARK_RED + "/broadcast" + ChatColor.GRAY + " - " + "Broadcast Raw Text.");
                 UtilMessage.message(player, ChatColor.DARK_RED + "/clearcd" + ChatColor.GRAY + " - " + "Clear a Player's Cooldowns.");
                 UtilMessage.message(player, ChatColor.DARK_RED + "/setspawn" + ChatColor.GRAY + " - " + "Set World Spawn.");
                 UtilMessage.message(player, ChatColor.DARK_RED + "/creload" + ChatColor.GRAY + " - " + "Reload Databases.");
+                UtilMessage.message(player, ChatColor.DARK_RED + "/tppos" + ChatColor.GRAY + " - " + "Teleport to a Location.");
             }
         }
     }

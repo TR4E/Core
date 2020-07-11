@@ -8,7 +8,7 @@ commands:
   gamemode:
     aliases: [gm, gms, gmc, gma, gmsp]
   teleport:
-    aliases: [tp, tppos, tphere, tpall]
+    aliases: [tp, tpo, tppos, tphere, tpall]
   commands:
     aliases: [cmds]
   help:
