@@ -34,7 +34,7 @@ public class GiveCommand extends Command {
         if (material == null) {
             material = Bukkit.getUnsafe().getMaterialFromInternalName(args[1]);
         }
-        if (material == Material.AIR || material == Material.WATER || material == Material.STATIONARY_WATER || material == Material.LAVA || material == Material.STATIONARY_LAVA || material == Material.PORTAL || material == Material.ENDER_PORTAL) {
+        if (material == null || material == Material.AIR || material == Material.WATER || material == Material.STATIONARY_WATER || material == Material.LAVA || material == Material.STATIONARY_LAVA || material == Material.PORTAL || material == Material.ENDER_PORTAL) {
             UtilMessage.message(player, "Give", "There is no Item called " + ChatColor.YELLOW + args[1] + ChatColor.GRAY + ".");
             return;
         }
