@@ -7,6 +7,7 @@ import me.trae.core.client.commands.help.*;
 import me.trae.core.client.commands.staff.*;
 import me.trae.core.client.commands.teleport.SetSpawnCommand;
 import me.trae.core.client.commands.teleport.SpawnCommand;
+import me.trae.core.client.commands.teleport.TeleportCommand;
 import me.trae.core.client.listeners.ConnectionListener;
 import me.trae.core.command.CommandCenter;
 import me.trae.core.command.CommandManager;
@@ -151,6 +152,8 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new ClientCommand(this));
         getCommandManager().addCommand(new FeedCommand(this));
         getCommandManager().addCommand(new FlyCommand(this));
+        getCommandManager().addCommand(new GiveAllCommand(this));
+        getCommandManager().addCommand(new GiveCommand(this));
         getCommandManager().addCommand(new GodCommand(this));
         getCommandManager().addCommand(new SkullCommand(this));
         getCommandManager().addCommand(new HealCommand(this));

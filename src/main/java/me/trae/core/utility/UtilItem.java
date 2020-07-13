@@ -133,6 +133,14 @@ public final class UtilItem {
         return true;
     }
 
+    public static void insert(final Player player, final ItemStack item) {
+        if (UtilPlayer.isInventoryEmpty(player)) {
+            player.getInventory().addItem(UtilItem.updateNames(item));
+        } else {
+            player.getWorld().dropItemNaturally(player.getLocation(), UtilItem.updateNames(item));
+        }
+    }
+
     public static ItemStack getSkull(final String name) {
         final ItemStack skull = new ItemStack(Material.SKULL_ITEM);
         skull.setDurability((short) 3);

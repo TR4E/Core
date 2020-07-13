@@ -18,4 +18,9 @@ public final class UtilFormat {
         }
         return bldr.toString();
     }
+
+
+    public static boolean isNumeric(final String string) {
+        return (string != null && string.matches("[-+]?\\d*\\.?\\d+"));
+    }
 }
