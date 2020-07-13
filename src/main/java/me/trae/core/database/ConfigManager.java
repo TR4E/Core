@@ -41,6 +41,7 @@ public final class ConfigManager {
                     config.getConfig().set("Integers.Server.Max-Player-Slots", 100);
                     config.getConfig().set("Integers.Game.PvP-Protection", 60);
                     config.getConfig().set("Integers.Cooldowns.Spawn-Command", 300);
+                    config.getConfig().set("Integers.Cooldowns.Back-Command", 300);
                     config.getConfig().set("Integers.Cooldowns.Announce-Command", 300);
                     config.getConfig().set("Integers.Cooldowns.Support-Command", 120);
                     config.getConfig().set("Integers.Cooldowns.Suicide-Command", 120);

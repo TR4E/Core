@@ -5,6 +5,7 @@ import me.trae.core.client.ClientUtilities;
 import me.trae.core.client.commands.*;
 import me.trae.core.client.commands.help.*;
 import me.trae.core.client.commands.staff.*;
+import me.trae.core.client.commands.teleport.BackCommand;
 import me.trae.core.client.commands.teleport.SetSpawnCommand;
 import me.trae.core.client.commands.teleport.SpawnCommand;
 import me.trae.core.client.commands.teleport.TeleportCommand;
@@ -165,8 +166,9 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new TimeCommand(this));
         getCommandManager().addCommand(new ToggleChatCommand(this));
         getCommandManager().addCommand(new VanishCommand(this));
-        getCommandManager().addCommand(new SpawnCommand(this));
+        getCommandManager().addCommand(new BackCommand(this));
         getCommandManager().addCommand(new SetSpawnCommand(this));
+        getCommandManager().addCommand(new SpawnCommand(this));
         getCommandManager().addCommand(new ClearInvCommand(this));
         getCommandManager().addCommand(new DyeCommand(this));
         getCommandManager().addCommand(new IgnoreCommand(this));

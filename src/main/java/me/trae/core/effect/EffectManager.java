@@ -136,7 +136,12 @@ public class EffectManager extends CoreListener {
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent e) {
         if (getEffects(e.getEntity()) != null) {
-            clearEffects(e.getEntity());
+            for (final Effect effect : getEffects(e.getEntity())) {
+                if (effect.getType() == Effect.EffectType.GOD_MODE || effect.getType() == Effect.EffectType.VANISHED) {
+                    continue;
+                }
+                removeEffect(e.getEntity(), effect.getType());
+            }
         }
     }
 

@@ -25,6 +25,7 @@ commands:
   reply:
     aliases: [r]
   report:
+  back:
   spawn:
   clearinventory:
     aliases: [cleaninventory, clearinv, cleaninv, clear, ci]

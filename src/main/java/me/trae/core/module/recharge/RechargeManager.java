@@ -47,9 +47,6 @@ public final class RechargeManager {
         if (instance.getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating()) {
             return true;
         }
-        if (Objects.requireNonNull(instance.getClientUtilities().getClient(player.getUniqueId())).isAdministrating()) {
-            return true;
-        }
         if (!(cooldown.containsKey(player.getUniqueId()))) {
             cooldown.put(player.getUniqueId(), new ArrayList<>());
             cooldown.get(player.getUniqueId()).add(new Recharge(ability, duration));

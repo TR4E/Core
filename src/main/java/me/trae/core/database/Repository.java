@@ -9,7 +9,7 @@ public final class Repository {
     private static boolean gameEnchantments;
     private final Config config;
     private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gamePvP, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, gameOwnersVanishOnJoin, spawnCommandAdminOnly, suicideCommandAdminOnly, clearInvCommandAdminOnly, disableTNT, disableHopper, disableAnvil, disableDroppers, disableDispensers, disableBrewingStands, disableEnderChests, disableTrappedChests, disableMobSpawners;
-    private int gamePvPProtection, maxPlayerSlots, spawnCommandCooldown, announceCommandCooldown, supportCommandCooldown, suicideCommandCooldown, clearInvCommandCooldown, spawnCommandCountdown;
+    private int gamePvPProtection, maxPlayerSlots, spawnCommandCooldown, backCommandCooldown, announceCommandCooldown, supportCommandCooldown, suicideCommandCooldown, clearInvCommandCooldown, spawnCommandCountdown;
     private String serverName, serverWorld, serverWebsite, serverMOTD;
 
     public Repository(final Main instance) {
@@ -68,6 +68,7 @@ public final class Repository {
                 gamePvPProtection = config.getConfig().getInt("Integers.Game.PvP-Protection");
                 maxPlayerSlots = config.getConfig().getInt("Integers.Server.Max-Player-Slots");
                 spawnCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Spawn-Command");
+                backCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Back-Command");
                 announceCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Announce-Command");
                 supportCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Support-Command");
                 suicideCommandCooldown = config.getConfig().getInt("Integers.Cooldowns.Suicide-Command");
@@ -187,6 +188,10 @@ public final class Repository {
 
     public final int getSpawnCommandCooldown() {
         return spawnCommandCooldown;
+    }
+
+    public final int getBackCommandCooldown() {
+        return backCommandCooldown;
     }
 
     public final int getAnnounceCommandCooldown() {
