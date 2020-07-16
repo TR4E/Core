@@ -39,7 +39,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class Main extends JavaPlugin {
+public class Main extends JavaPlugin {
 
     private boolean started, chat;
 
