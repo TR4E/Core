@@ -12,10 +12,6 @@ public final class UtilProxy {
             final Scanner s = new Scanner(url.openStream());
             final String result = s.nextLine();
             return result.contains("true");
-
-
-//            final String result = s.nextLine().replaceAll("\\{\"result\":\"", "").replaceAll("\"}", "").trim();
-//            return Boolean.parseBoolean(result);
         } catch (final IOException e) {
             System.out.println("[Error]: Proxy Checker Failed");
         }
