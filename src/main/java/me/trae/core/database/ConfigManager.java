@@ -2,6 +2,7 @@ package me.trae.core.database;
 
 import me.trae.core.Main;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public final class ConfigManager {
@@ -51,6 +52,9 @@ public final class ConfigManager {
                     config.getConfig().set("Strings.Server.World", "world");
                     config.getConfig().set("Strings.Server.Website", "https://example.com");
                     config.getConfig().set("Strings.Server.MOTD", "&6&lTrae's Server &8» &aAustralian Minecraft Server &7[1.8]\n&fVisit our Website at &ehttps://example.com");
+                } else if (configType.equals(ConfigType.RULES_DATA)) {
+                    final String[] rules = new String[]{"&7Do not advertise!", "&7Do not use cheats/hacks!", "&7Do not exploit bugs/glitches!"};
+                    config.getConfig().set("Rules", Arrays.asList(rules));
                 }
                 config.getConfig().options().copyDefaults(true);
                 config.createFile();
@@ -67,6 +71,7 @@ public final class ConfigManager {
 
     public enum ConfigType {
         MAIN_CONFIG("config"),
+        RULES_DATA("rules"),
         CLIENTS_DATA("clients"),
         GAMERS_DATA("gamers");
         String name;

@@ -142,6 +142,7 @@ public class Main extends JavaPlugin {
         getCommandManager().addCommand(new DiscordCommand(this));
         getCommandManager().addCommand(new HelpCommand(this));
         getCommandManager().addCommand(new PingCommand(this));
+        getCommandManager().addCommand(new RulesCommand(this));
         getCommandManager().addCommand(new StoreCommand(this));
         getCommandManager().addCommand(new VoteCommand(this));
         getCommandManager().addCommand(new WebsiteCommand(this));

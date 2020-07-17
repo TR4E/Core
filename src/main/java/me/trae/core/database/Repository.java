@@ -4,6 +4,8 @@ import me.trae.core.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+
 public final class Repository {
 
     private static boolean gameEnchantments;
@@ -11,6 +13,7 @@ public final class Repository {
     private boolean funThrowingTNT, funThrowingWeb, funThrowingPearl, gamePortals, gameMobs, gamePvP, gameAlwaysDay, gameAlwaysNight, gameWeather, gameSaturation, gameBreakCrops, gameOwnersVanishOnJoin, spawnCommandAdminOnly, suicideCommandAdminOnly, clearInvCommandAdminOnly, disableTNT, disableHopper, disableAnvil, disableDroppers, disableDispensers, disableBrewingStands, disableEnderChests, disableTrappedChests, disableMobSpawners;
     private int gamePvPProtection, maxPlayerSlots, spawnCommandCooldown, backCommandCooldown, announceCommandCooldown, supportCommandCooldown, suicideCommandCooldown, clearInvCommandCooldown, spawnCommandCountdown;
     private String serverName, serverWorld, serverWebsite, serverMOTD;
+    private List<String> rules;
 
     public Repository(final Main instance) {
         this.config = instance.getConfigManager().getConfig(ConfigManager.ConfigType.MAIN_CONFIG);
@@ -78,6 +81,7 @@ public final class Repository {
                 serverWorld = config.getConfig().getString("Strings.Server.World");
                 serverWebsite = config.getConfig().getString("Strings.Server.Website");
                 serverMOTD = config.getConfig().getString("Strings.Server.MOTD");
+                rules = instance.getConfigManager().getConfig(ConfigManager.ConfigType.RULES_DATA).getConfig().getStringList("Rules");
             }
         }.runTaskAsynchronously(instance);
     }
@@ -228,5 +232,9 @@ public final class Repository {
 
     public final String getServerMOTD() {
         return serverMOTD;
+    }
+
+    public final List<String> getRules() {
+        return rules;
     }
 }

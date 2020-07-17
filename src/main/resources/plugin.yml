@@ -12,7 +12,7 @@ commands:
   commands:
     aliases: [cmds]
   help:
-    aliases: [discord, vote, website, store, ping]
+    aliases: [discord, vote, website, store, ping, rules]
   ignore:
   information:
     aliases: [info]
