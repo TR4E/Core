@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 public class Main extends JavaPlugin {
 
-    private boolean started, chat, j;
+    private boolean started, chat;
 
     private ConfigManager configManager;
     private Repository repository;
