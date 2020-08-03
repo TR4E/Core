@@ -13,11 +13,14 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.WeakHashMap;
 
 public class ReportCommand extends Command {
 
-    private final Map<UUID, Data> map;
+    private final Map<UUID, Map<UUID, Long>> map;
 
     public ReportCommand(final Main instance) {
         super(instance, "report", new String[]{}, Rank.PLAYER);
@@ -57,12 +60,14 @@ public class ReportCommand extends Command {
             return;
         }
         if (map.containsKey(player.getUniqueId())) {
-            if (map.get(player.getUniqueId()).getReported().contains(target.getUniqueId())) {
+            if (map.get(player.getUniqueId()).containsKey(target.getUniqueId())) {
                 UtilMessage.message(player, "Report", "You have already reported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
                 return;
             }
         }
-        map.put(player.getUniqueId(), new Data(new HashSet<>(Collections.singleton(target.getUniqueId())), (System.currentTimeMillis() + 10000L)));
+        final Map<UUID, Long> map2 = new WeakHashMap<>();
+        map2.put(target.getUniqueId(), (System.currentTimeMillis() + 10000L));
+        map.put(player.getUniqueId(), map2);
         UtilMessage.message(player, "Report", "You reported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + UtilFormat.getFinalArg(args, 1) + ChatColor.GRAY + ".");
         getInstance().getClientUtilities().messageStaff("Report", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " reported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + UtilFormat.getFinalArg(args, 1) + ChatColor.GRAY + ".", Rank.HELPER, new UUID[]{player.getUniqueId()});
         getInstance().getClientUtilities().soundStaff(Sound.NOTE_PLING, Rank.HELPER, new UUID[]{player.getUniqueId()});
@@ -76,38 +81,19 @@ public class ReportCommand extends Command {
     @EventHandler
     public void onUpdate(final UpdateEvent e) {
         if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
-            final Iterator<UUID> it = map.keySet().iterator();
-            if (it.hasNext()) {
-                final UUID next = it.next();
-                if (map.get(next).getReported() != null) {
-                    if (map.get(next).hasExpired()) {
-                        it.remove();
+            if (map != null) {
+                for (final UUID player : map.keySet()) {
+                    if (player != null) {
+                        for (final UUID target : map.get(player).keySet()) {
+                            if (target != null) {
+                                if (map.get(player).get(target) >= System.currentTimeMillis()) {
+                                    map.get(player).remove(target);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-class Data {
-
-    private final Set<UUID> reported;
-    private final long duration;
-
-    public Data(final Set<UUID> reported, final long duration) {
-        this.reported = reported;
-        this.duration = duration;
-    }
-
-    public final Set<UUID> getReported() {
-        return reported;
-    }
-
-    public final long getDuration() {
-        return duration;
-    }
-
-    public final boolean hasExpired() {
-        return duration <= System.currentTimeMillis();
     }
 }

@@ -58,7 +58,10 @@ public class EffectManager extends CoreListener {
     }
 
     public void removeEffect(final Player player, final Effect.EffectType type) {
-        effects.removeIf(e -> (e.getUUID().equals(player.getUniqueId()) && e.getType() == type));
+        if (type == Effect.EffectType.VANISHED) {
+            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        }
+        getEffects().removeIf(e -> (e.getUUID().equals(player.getUniqueId()) && e.getType() == type));
     }
 
     public void clearEffects(final Player player) {

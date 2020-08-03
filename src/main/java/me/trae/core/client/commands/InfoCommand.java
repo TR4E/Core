@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class InfoCommand extends Command {
 
     public InfoCommand(final Main instance) {
-        super(instance, "information", new String[]{"info"}, Rank.PLAYER);
+        super(instance, "information", new String[]{"info", "statistics", "stats"}, Rank.PLAYER);
     }
 
     @Override
@@ -54,15 +54,15 @@ public class InfoCommand extends Command {
         if (targetG == null) {
             return;
         }
-        UtilMessage.message(player, "Info", (player != target ? ChatColor.YELLOW + target.getName() + ChatColor.GRAY + "'s " : "Your ") + ChatColor.GRAY + "Information:");
-        UtilMessage.message(player, ChatColor.GREEN + "Time Played (Total): " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getFirstJoined(), UtilTime.TimeUnit.BEST, 1));
-        UtilMessage.message(player, ChatColor.GREEN + "Time Played (Today): " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getLastJoined(), UtilTime.TimeUnit.BEST, 1));
+        UtilMessage.message(player, "Statistics", "Viewing " + (player != target ? ChatColor.YELLOW + target.getName() + ChatColor.GRAY + "'s " : "your ") + ChatColor.GRAY + "Statistics:");
+        UtilMessage.message(player, ChatColor.DARK_GREEN + "Time Played (Total): " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getFirstJoined(), UtilTime.TimeUnit.BEST, 1));
+        UtilMessage.message(player, ChatColor.DARK_GREEN + "Time Played (Today): " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getLastJoined(), UtilTime.TimeUnit.BEST, 1));
         if (targetC.getLastOnline() != 0) {
-            UtilMessage.message(player, ChatColor.GREEN + "Last Played: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getLastOnline(), UtilTime.TimeUnit.BEST, 1));
+            UtilMessage.message(player, ChatColor.DARK_GREEN + "Last Played: " + ChatColor.WHITE + UtilTime.getTime(System.currentTimeMillis() - targetC.getLastOnline(), UtilTime.TimeUnit.BEST, 1));
         }
-        UtilMessage.message(player, ChatColor.GREEN + "Joined Amount: " + ChatColor.WHITE + targetC.getJoinedAmount());
-        UtilMessage.message(player, ChatColor.GREEN + "Blocks Broken: " + ChatColor.WHITE + targetG.getBlocksBroken());
-        UtilMessage.message(player, ChatColor.GREEN + "Blocks Placed: " + ChatColor.WHITE + targetG.getBlocksPlaced());
-        UtilMessage.message(player, ChatColor.GREEN + "KDR: " + ChatColor.WHITE + targetG.getKills() + ":" + targetG.getDeaths() + ":" + targetG.getKDR());
+        UtilMessage.message(player, ChatColor.DARK_GREEN + "Joined Amount: " + ChatColor.WHITE + targetC.getJoinedAmount());
+        UtilMessage.message(player, ChatColor.DARK_GREEN + "Blocks Broken: " + ChatColor.WHITE + targetG.getBlocksBroken());
+        UtilMessage.message(player, ChatColor.DARK_GREEN + "Blocks Placed: " + ChatColor.WHITE + targetG.getBlocksPlaced());
+        UtilMessage.message(player, ChatColor.DARK_GREEN + "KDR: " + ChatColor.WHITE + targetG.getKills() + ChatColor.GRAY + ", " + ChatColor.DARK_GREEN + "Deaths: " + ChatColor.WHITE + targetG.getDeaths() + ChatColor.GRAY + ", " + ChatColor.DARK_GREEN + "Ratio: " + ChatColor.WHITE + targetG.getRatio());
     }
 }

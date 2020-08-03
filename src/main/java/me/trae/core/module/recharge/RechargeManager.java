@@ -101,18 +101,22 @@ public final class RechargeManager {
         return cooldown.get(player.getUniqueId()).stream().filter(rechargeData -> rechargeData.getAbility().equals(ability)).anyMatch(rechargeData -> rechargeData.getRemaining() > 0);
     }
 
-    public final boolean removeCooldowns(final Player player) {
-        if (cooldown.containsKey(player.getUniqueId())) {
+    public final boolean hasCooldowns(final Player player) {
+        return cooldown.containsKey(player.getUniqueId());
+    }
+
+    public void removeCooldowns(final Player player) {
+        if (hasCooldowns(player)) {
             cooldown.keySet().remove(player.getUniqueId());
-            return true;
         }
-        return false;
     }
 
     public final List<Recharge> getRecharges(final Player player) {
         if (!(cooldown.isEmpty())) {
             if (cooldown.containsKey(player.getUniqueId())) {
-                return cooldown.get(player.getUniqueId());
+                if (cooldown.get(player.getUniqueId()) != null) {
+                    return cooldown.get(player.getUniqueId());
+                }
             }
         }
         return null;

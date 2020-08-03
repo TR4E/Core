@@ -53,7 +53,7 @@ public final class Gamer {
         this.deaths = deaths;
     }
 
-    public final String getKDR() {
+    public final String getRatio() {
         return (kills == 0 && deaths == 0 ? "0.0" : (double) kills / deaths + "");
     }
 

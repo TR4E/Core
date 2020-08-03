@@ -25,7 +25,7 @@ public class KDRCommand extends Command {
             UtilMessage.message(player, "KDR", "Your Statistics:");
             UtilMessage.message(player, ChatColor.GREEN + "Kills: " + ChatColor.WHITE + gamer.getKills());
             UtilMessage.message(player, ChatColor.GREEN + "Deaths: " + ChatColor.WHITE + gamer.getDeaths());
-            UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getKDR());
+            UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getRatio());
             return;
         }
         if (args.length == 1) {
@@ -41,17 +41,10 @@ public class KDRCommand extends Command {
             if (gamer == null) {
                 return;
             }
-            if (target == player) {
-                UtilMessage.message(player, "KDR", "Your Statistics:");
-                UtilMessage.message(player, ChatColor.GREEN + "Kills: " + ChatColor.WHITE + gamer.getKills());
-                UtilMessage.message(player, ChatColor.GREEN + "Deaths: " + ChatColor.WHITE + gamer.getDeaths());
-                UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getKDR());
-                return;
-            }
-            UtilMessage.message(player, "KDR", ChatColor.YELLOW + target.getName() + ChatColor.GRAY + "'s Statistics:");
+            UtilMessage.message(player, "KDR", ((player != target) ? ChatColor.YELLOW + target.getName() + ChatColor.GRAY + "'s" : "Your") + " KDR Stats:");
             UtilMessage.message(player, ChatColor.GREEN + "Kills: " + ChatColor.WHITE + gamer.getKills());
             UtilMessage.message(player, ChatColor.GREEN + "Deaths: " + ChatColor.WHITE + gamer.getDeaths());
-            UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getKDR());
+            UtilMessage.message(player, ChatColor.GREEN + "Ratio: " + ChatColor.WHITE + gamer.getRatio());
         }
     }
 

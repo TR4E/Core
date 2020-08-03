@@ -3,11 +3,13 @@ package me.trae.core.world;
 import me.trae.core.Main;
 import me.trae.core.client.Client;
 import me.trae.core.client.Rank;
-import me.trae.core.database.Repository;
 import me.trae.core.module.CoreListener;
 import me.trae.core.module.update.UpdateEvent;
 import me.trae.core.module.update.Updater;
-import me.trae.core.utility.*;
+import me.trae.core.utility.UtilBlock;
+import me.trae.core.utility.UtilFormat;
+import me.trae.core.utility.UtilMath;
+import me.trae.core.utility.UtilMessage;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
 import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
@@ -66,7 +68,8 @@ public final class WorldListener extends CoreListener {
                     if (world.getTime() != 1000L) {
                         world.setTime(1000L);
                     }
-                } else if (getInstance().getRepository().isGameAlwaysNight()) {
+                }
+                if (getInstance().getRepository().isGameAlwaysNight()) {
                     if (world.getTime() != 13000L) {
                         world.setTime(13000L);
                     }
@@ -178,11 +181,11 @@ public final class WorldListener extends CoreListener {
                     || block.getType() == Material.JUNGLE_DOOR
                     || block.getType() == Material.DARK_OAK_DOOR) {
                 e.setCancelled(true);
-                player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_DOOR, player.getInventory().getItemInHand().getAmount())));
+                player.getInventory().setItemInHand(getInstance().getItemManager().updateNames(new ItemStack(Material.IRON_DOOR, player.getInventory().getItemInHand().getAmount())));
                 UtilMessage.message(player, "Game", "Please use " + ChatColor.YELLOW + "Iron Doors" + ChatColor.GRAY + " (You can right click to open them).");
             } else if (block.getType() == Material.TRAP_DOOR) {
                 e.setCancelled(true);
-                player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_TRAPDOOR, player.getInventory().getItemInHand().getAmount())));
+                player.getInventory().setItemInHand(getInstance().getItemManager().updateNames(new ItemStack(Material.IRON_TRAPDOOR, player.getInventory().getItemInHand().getAmount())));
                 UtilMessage.message(player, "Game", "Please use " + ChatColor.YELLOW + "Iron Trap Doors" + ChatColor.GRAY + " (You can right click to open them).");
             } else if (block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) {
                 e.setCancelled(true);
@@ -199,7 +202,7 @@ public final class WorldListener extends CoreListener {
                     UtilMessage.message(player, "Game", ChatColor.YELLOW + "TNT" + ChatColor.GRAY + " is currently disabled.");
                 }
             } else if (block.getType() == Material.ENCHANTMENT_TABLE) {
-                if (Repository.isGameEnchantments()) {
+                if (getInstance().getRepository().isGameEnchantments()) {
                     e.setCancelled(true);
                     UtilMessage.message(player, "Game", ChatColor.YELLOW + "Enchanting" + ChatColor.GRAY + " is currently disabled.");
                 }
@@ -305,7 +308,7 @@ public final class WorldListener extends CoreListener {
                 if (client != null) {
                     if (!(client.isAdministrating())) {
                         if (e.getInventory().getType() == InventoryType.ENCHANTING) {
-                            if (!(Repository.isGameEnchantments())) {
+                            if (!(getInstance().getRepository().isGameEnchantments())) {
                                 e.setCancelled(true);
                                 UtilMessage.message(player, "Game", ChatColor.YELLOW + "Enchanting" + ChatColor.GRAY + " is currently disabled.");
                             }
@@ -385,12 +388,12 @@ public final class WorldListener extends CoreListener {
 
     @EventHandler
     public void onItemPickup(final PlayerPickupItemEvent e) {
-        e.getItem().getItemStack().setItemMeta(UtilItem.updateNames(e.getItem().getItemStack()).getItemMeta());
+        e.getItem().getItemStack().setItemMeta(getInstance().getItemManager().updateNames(e.getItem().getItemStack()).getItemMeta());
     }
 
     @EventHandler
     public void onItemCraft(final PrepareItemCraftEvent e) {
-        e.getInventory().setResult(UtilItem.updateNames(e.getRecipe().getResult()));
+        e.getInventory().setResult(getInstance().getItemManager().updateNames(e.getRecipe().getResult()));
     }
 
     @EventHandler
@@ -551,7 +554,7 @@ public final class WorldListener extends CoreListener {
         final Player player = e.getPlayer();
         if (!(getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating())) {
             e.setCancelled(true);
-            player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_INGOT, player.getInventory().getItemInHand().getAmount() * 3)));
+            player.getInventory().setItemInHand(getInstance().getItemManager().updateNames(new ItemStack(Material.IRON_INGOT, player.getInventory().getItemInHand().getAmount() * 3)));
             UtilMessage.message(player, "Game", "Your " + ChatColor.YELLOW + "Bucket" + ChatColor.GRAY + " broke!");
         }
     }
@@ -561,13 +564,13 @@ public final class WorldListener extends CoreListener {
         final Player player = e.getPlayer();
         if (!(getInstance().getClientUtilities().getOnlineClient(player.getUniqueId()).isAdministrating())) {
             e.setCancelled(true);
-            player.getInventory().setItemInHand(UtilItem.updateNames(new ItemStack(Material.IRON_INGOT, player.getInventory().getItemInHand().getAmount() * 3)));
+            player.getInventory().setItemInHand(getInstance().getItemManager().updateNames(new ItemStack(Material.IRON_INGOT, player.getInventory().getItemInHand().getAmount() * 3)));
             UtilMessage.message(player, "Game", "Your " + ChatColor.YELLOW + "Bucket" + ChatColor.GRAY + " broke!");
         }
     }
 
     @EventHandler
     public void onItemSmelt(final FurnaceSmeltEvent e) {
-        e.setResult(UtilItem.updateNames(e.getResult()));
+        e.setResult(getInstance().getItemManager().updateNames(e.getResult()));
     }
 }

@@ -48,7 +48,7 @@ public final class UtilPlayer {
         if (playerList.size() == 1) {
             return playerList.get(0);
         } else if (inform) {
-            UtilMessage.message(player, "Player Search", ChatColor.YELLOW.toString() + playerList.size() + ChatColor.GRAY + " matches found [" + ((playerList.size() == 0) ? ChatColor.YELLOW + name : playerList.stream().map(p -> ChatColor.YELLOW + p.getName()).collect(Collectors.joining(ChatColor.GRAY + ", "))) + ChatColor.GRAY + "]");
+            UtilMessage.message(player, "Player Search", ChatColor.YELLOW.toString() + playerList.size() + ChatColor.GRAY + " matches found [" + ((playerList.size() == 0) ? ChatColor.YELLOW + name : playerList.stream().map(p -> ChatColor.YELLOW + p.getName()).collect(Collectors.joining(ChatColor.GRAY + ", "))) + ChatColor.GRAY + "].");
         }
         return null;
     }

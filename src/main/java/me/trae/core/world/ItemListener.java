@@ -6,7 +6,6 @@ import me.trae.core.module.CoreListener;
 import me.trae.core.module.update.UpdateEvent;
 import me.trae.core.module.update.Updater;
 import me.trae.core.utility.UtilBlock;
-import me.trae.core.utility.UtilItem;
 import me.trae.core.utility.UtilMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -54,7 +53,7 @@ public final class ItemListener extends CoreListener {
                             }
                         }
                         player.getWorld().playSound(player.getLocation(), Sound.EAT, 2.0F, 1.0F);
-                        UtilItem.remove(player, Material.ENDER_PEARL, (byte) 0, 1);
+                        getInstance().getItemManager().remove(player, Material.ENDER_PEARL, (byte) 0, 1);
                         UtilMessage.message(player, "Ethereal Pearl", "You removed all negative effects!");
                     }
                     return;
@@ -67,7 +66,7 @@ public final class ItemListener extends CoreListener {
                     if (player.getVehicle() == null) {
                         if (getInstance().getRechargeManager().add(player, "Ethereal Pearl", 15000, true)) {
                             final Item item = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(Material.ENDER_PEARL));
-                            UtilItem.remove(player, Material.ENDER_PEARL, (byte) 0, 1);
+                            getInstance().getItemManager().remove(player, Material.ENDER_PEARL, (byte) 0, 1);
                             item.setPickupDelay(Integer.MAX_VALUE);
                             item.setVelocity(player.getLocation().getDirection().multiply(1.8D));
                             item.setPassenger(player);
@@ -83,7 +82,7 @@ public final class ItemListener extends CoreListener {
                     }
                     if (getInstance().getRechargeManager().add(player, "Throwing TNT", 20000, true)) {
                         final TNTPrimed tnt = player.getWorld().spawn(player.getEyeLocation().add(0.0D, 0.5D, 0.0D), TNTPrimed.class);
-                        UtilItem.remove(player, Material.TNT, (byte) 0, 1);
+                        getInstance().getItemManager().remove(player, Material.TNT, (byte) 0, 1);
                         tnt.setFuseTicks(100);
                         tnt.setVelocity(player.getLocation().getDirection().multiply(2));
                     }

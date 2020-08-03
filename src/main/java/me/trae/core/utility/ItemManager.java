@@ -1,29 +1,36 @@
 package me.trae.core.utility;
 
-import me.trae.core.database.Repository;
+import me.trae.core.Main;
+import net.minecraft.server.v1_8_R3.EntityFishingHook;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class UtilItem {
+public final class ItemManager {
 
-    public static ItemStack updateNames(final ItemStack item) {
+    private final Main instance;
+
+    public ItemManager(final Main instance) {
+        this.instance = instance;
+    }
+
+    public final ItemStack updateNames(final ItemStack item) {
         final ItemMeta meta = item.getItemMeta();
-        if (!(Repository.isGameEnchantments())) {
-            if (meta.hasEnchants()) {
-                meta.getEnchants().keySet().forEach(meta::removeEnchant);
-                item.setItemMeta(meta);
-            }
-        }
         if (meta.hasDisplayName() || (item.hasItemMeta() && meta.hasLore() && !(meta.getLore().isEmpty()))) {
             return item;
+        }
+        if (meta.hasEnchants()) {
+            meta.getEnchants().keySet().forEach(meta::removeEnchant);
         }
         final List<String> lore = new ArrayList<>();
         if (item.getType() == Material.LAPIS_BLOCK) {
@@ -51,7 +58,7 @@ public final class UtilItem {
         } else if (item.getType() == Material.SKULL_ITEM) {
             if (item.getDurability() == 3) {
                 final SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
-                meta.setDisplayName(ChatColor.YELLOW + "Skull of " + skullMeta.getOwner());
+                meta.setDisplayName(ChatColor.YELLOW + "Skull of " + ChatColor.GREEN + skullMeta.getOwner());
             }
         } else if (item.getType() == Material.INK_SACK) {
             if (item.getDurability() == 0) {
@@ -95,7 +102,7 @@ public final class UtilItem {
         return item;
     }
 
-    public static boolean contains(final Player player, final Material item, final byte data, int required) {
+    public final boolean contains(final Player player, final Material item, final byte data, int required) {
         for (final int i : player.getInventory().all(item).keySet()) {
             if (required <= 0) {
                 return true;
@@ -108,7 +115,7 @@ public final class UtilItem {
         return (required <= 0);
     }
 
-    public static boolean remove(final Player player, final Material item, final byte data, int toRemove) {
+    public final boolean remove(final Player player, final Material item, final byte data, int toRemove) {
         if (player.getGameMode() == GameMode.CREATIVE || !(contains(player, item, data, toRemove))) {
             return false;
         }
@@ -133,20 +140,38 @@ public final class UtilItem {
         return true;
     }
 
-    public static void insert(final Player player, final ItemStack item) {
+    public final void insert(final Player player, final ItemStack item) {
         if (UtilPlayer.isInventoryEmpty(player)) {
-            player.getInventory().addItem(UtilItem.updateNames(item));
+            player.getInventory().addItem(updateNames(item));
         } else {
-            player.getWorld().dropItemNaturally(player.getLocation(), UtilItem.updateNames(item));
+            player.getWorld().dropItemNaturally(player.getLocation(), updateNames(item));
         }
     }
 
-    public static ItemStack getSkull(final String name) {
+    public final ItemStack getSkull(final String name) {
         final ItemStack skull = new ItemStack(Material.SKULL_ITEM);
         skull.setDurability((short) 3);
         final SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwner(name);
         skull.setItemMeta(meta);
-        return UtilItem.updateNames(skull);
+        return updateNames(skull);
+    }
+
+    public void setBiteTime(final FishHook hook, final int time) {
+        final net.minecraft.server.v1_8_R3.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
+        Field fishCatchTime = null;
+        try {
+            fishCatchTime = net.minecraft.server.v1_8_R3.EntityFishingHook.class.getDeclaredField("aw");
+        } catch (final NoSuchFieldException | SecurityException e) {
+            e.printStackTrace();
+        }
+        assert fishCatchTime != null;
+        fishCatchTime.setAccessible(true);
+        try {
+            fishCatchTime.setInt(hookCopy, time);
+        } catch (final IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        fishCatchTime.setAccessible(false);
     }
 }

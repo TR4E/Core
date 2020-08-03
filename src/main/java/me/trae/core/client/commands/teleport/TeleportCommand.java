@@ -162,7 +162,7 @@ public class TeleportCommand implements CommandExecutor {
             }
             player.teleport(target);
             UtilMessage.message(player, "Teleport", "You teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
-            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".", Rank.OWNER, new UUID[]{player.getUniqueId()});
+            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported to " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".", Rank.OWNER, new UUID[]{player.getUniqueId(), target.getUniqueId()});
             return;
         }
         if (!(player.isOp() || instance.getClientUtilities().getOnlineClient(player.getUniqueId()).hasRank(Rank.ADMIN, true))) {
@@ -179,7 +179,7 @@ public class TeleportCommand implements CommandExecutor {
             }
             target.teleport(target2);
             UtilMessage.message(player, "Teleport", "You teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".");
-            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".", Rank.OWNER, new UUID[]{player.getUniqueId()});
+            instance.getClientUtilities().messageStaff("Teleport", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " teleported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + ChatColor.YELLOW + target2.getName() + ChatColor.GRAY + ".", Rank.OWNER, new UUID[]{player.getUniqueId(), target.getUniqueId(), target2.getUniqueId()});
         }
     }
 }

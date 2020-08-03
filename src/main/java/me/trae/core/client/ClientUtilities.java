@@ -190,7 +190,7 @@ public final class ClientUtilities {
         if (clientList.size() == 1) {
             return clientList.get(0);
         } else if (inform) {
-            UtilMessage.message(player, "Client Search", ChatColor.YELLOW.toString() + clientList.size() + ChatColor.GRAY + " matches found [" + ((clientList.size() == 0) ? ChatColor.YELLOW + name : clientList.stream().map(client -> ChatColor.YELLOW + client.getName()).collect(Collectors.joining(ChatColor.GRAY + ", "))) + ChatColor.GRAY + "]");
+            UtilMessage.message(player, "Client Search", ChatColor.YELLOW.toString() + clientList.size() + ChatColor.GRAY + " matches found [" + ((clientList.size() == 0) ? ChatColor.YELLOW + name : clientList.stream().map(client -> ChatColor.YELLOW + client.getName()).collect(Collectors.joining(ChatColor.GRAY + ", "))) + ChatColor.GRAY + "].");
         }
         return null;
     }

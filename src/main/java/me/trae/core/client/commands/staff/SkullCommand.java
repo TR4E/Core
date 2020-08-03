@@ -3,7 +3,6 @@ package me.trae.core.client.commands.staff;
 import me.trae.core.Main;
 import me.trae.core.client.Rank;
 import me.trae.core.command.Command;
-import me.trae.core.utility.UtilItem;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
 import org.bukkit.ChatColor;
@@ -22,9 +21,9 @@ public class SkullCommand extends Command {
     public void execute(final Player player, final String[] args) {
         if (args == null || args.length == 0) {
             if (!(UtilPlayer.isInventoryEmpty(player))) {
-                player.getWorld().dropItemNaturally(player.getLocation(), UtilItem.getSkull(player.getName()));
+                player.getWorld().dropItemNaturally(player.getLocation(), getInstance().getItemManager().getSkull(player.getName()));
             } else {
-                player.getInventory().addItem(UtilItem.getSkull(player.getName()));
+                player.getInventory().addItem(getInstance().getItemManager().getSkull(player.getName()));
                 player.updateInventory();
             }
             UtilMessage.message(player, "Skull", "You received a Skull of your Player Skin.");
@@ -32,9 +31,9 @@ public class SkullCommand extends Command {
         }
         if (args.length == 1) {
             if (!(UtilPlayer.isInventoryEmpty(player))) {
-                player.getWorld().dropItemNaturally(player.getLocation(), UtilItem.getSkull(args[0]));
+                player.getWorld().dropItemNaturally(player.getLocation(), getInstance().getItemManager().getSkull(args[0]));
             } else {
-                player.getInventory().addItem(UtilItem.getSkull(args[0]));
+                player.getInventory().addItem(getInstance().getItemManager().getSkull(args[0]));
                 player.updateInventory();
             }
             UtilMessage.message(player, "Skull", "You received a Skull of " + ChatColor.GREEN + args[0] + ChatColor.GRAY + ".");
@@ -49,7 +48,7 @@ public class SkullCommand extends Command {
             if (args.length == 3) {
                 amount = Integer.parseInt(args[2]);
             }
-            final ItemStack skull = UtilItem.getSkull(args[0]);
+            final ItemStack skull = getInstance().getItemManager().getSkull(args[0]);
             skull.setAmount(amount);
             if (!(UtilPlayer.isInventoryEmpty(target))) {
                 target.getWorld().dropItemNaturally(target.getLocation(), skull);

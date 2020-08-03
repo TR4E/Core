@@ -24,6 +24,7 @@ import me.trae.core.gamer.GamerUtilities;
 import me.trae.core.module.TitleManager;
 import me.trae.core.module.recharge.RechargeManager;
 import me.trae.core.module.update.Updater;
+import me.trae.core.utility.ItemManager;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.world.ChatListener;
 import me.trae.core.world.ItemListener;
@@ -53,6 +54,7 @@ public class Main extends JavaPlugin {
     private RechargeManager rechargeManager;
     private EffectManager effectManager;
     private TitleManager titleManager;
+    private ItemManager itemManager;
 
     @Override
     public void onEnable() {
@@ -68,6 +70,7 @@ public class Main extends JavaPlugin {
         this.rechargeManager = new RechargeManager(this);
         this.effectManager = new EffectManager(this);
         this.titleManager = new TitleManager(this);
+        this.itemManager = new ItemManager(this);
         new Updater(this);
         setupServer();
         registerEvents();
@@ -112,12 +115,12 @@ public class Main extends JavaPlugin {
             }
             try {
                 world.save();
-                UtilMessage.log("Server", "Saved World: " + ChatColor.GREEN + world.getName());
+                UtilMessage.log("Server", "Saved World: " + ChatColor.YELLOW + world.getName());
             } catch (final Exception e) {
                 if (world.getName() != null) {
                     UtilMessage.log("Server", "Failed to save World: " + ChatColor.RED + world.getName());
                 } else {
-                    UtilMessage.log("Server", ChatColor.RED + (Bukkit.getWorlds().size() > 1 ? "Some Worlds" : "A World") + " did not save propley.");
+                    UtilMessage.log("Server", ChatColor.RED + (Bukkit.getWorlds().size() > 1 ? "Some Worlds" : "A World") + " did not save properly.");
                 }
             }
         }
@@ -138,7 +141,7 @@ public class Main extends JavaPlugin {
     private void registerCommands() {
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
         getCommand("teleport").setExecutor(new TeleportCommand(this));
-        getCommandManager().addCommand(new CMDsCommand(this));
+        getCommandManager().addCommand(new StaffHelpCommand(this));
         getCommandManager().addCommand(new DiscordCommand(this));
         getCommandManager().addCommand(new HelpCommand(this));
         getCommandManager().addCommand(new PingCommand(this));
@@ -236,5 +239,9 @@ public class Main extends JavaPlugin {
 
     public final TitleManager getTitleManager() {
         return titleManager;
+    }
+
+    public final ItemManager getItemManager() {
+        return itemManager;
     }
 }

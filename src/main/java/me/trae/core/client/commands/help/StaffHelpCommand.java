@@ -8,10 +8,10 @@ import me.trae.core.utility.UtilMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class CMDsCommand extends Command {
+public class StaffHelpCommand extends Command {
 
-    public CMDsCommand(final Main instance) {
-        super(instance, "commands", new String[]{"cmds"}, Rank.PLAYER);
+    public StaffHelpCommand(final Main instance) {
+        super(instance, "commands", new String[]{"cmds", "staffhelp", "staffcmds", "staffcommands"}, Rank.PLAYER);
     }
 
     @Override

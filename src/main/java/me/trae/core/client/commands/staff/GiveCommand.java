@@ -4,7 +4,6 @@ import me.trae.core.Main;
 import me.trae.core.client.Rank;
 import me.trae.core.command.Command;
 import me.trae.core.utility.UtilFormat;
-import me.trae.core.utility.UtilItem;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
 import org.bukkit.Bukkit;
@@ -55,7 +54,7 @@ public class GiveCommand extends Command {
             }
         }
         final ItemStack item = new ItemStack(material, amount, data);
-        UtilItem.insert(player, item);
+        getInstance().getItemManager().insert(player, item);
         UtilPlayer.sound(player, Sound.ITEM_PICKUP);
         UtilMessage.broadcast("Give", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " gave " + ChatColor.YELLOW + target.getName() + " " + ChatColor.GREEN + amount + "x" + ChatColor.GRAY + " of " + ChatColor.GREEN + UtilFormat.cleanString(item.getType().name()) + ChatColor.GRAY + ".");
     }

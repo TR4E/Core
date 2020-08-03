@@ -30,6 +30,13 @@ public class ClearInvCommand extends Command {
             return;
         }
         if (args == null || args.length == 0) {
+            if (!(getInstance().getRepository().isClearInvCommandConfirmation())) {
+                if (getInstance().getRechargeManager().add(player, "Clear Inventory Command", (getInstance().getRepository().getClearInvCommandCooldown() * 1000L), true)) {
+                    UtilPlayer.clearInventory(player);
+                    UtilMessage.message(player, "Inventory", "Your Inventory has been cleared.");
+                }
+                return;
+            }
             if (client.isAdministrating() || confirmation.contains(player.getUniqueId())) {
                 confirmation.remove(player.getUniqueId());
                 UtilPlayer.clearInventory(player);

@@ -18,7 +18,7 @@ public final class ClientRepository {
 
     public ClientRepository(final Main instance) {
         this.config = instance.getConfigManager().getConfig(ConfigManager.ConfigType.CLIENTS_DATA);
-        loadClients(instance);
+        loadClients(instance, true);
     }
 
     public void saveClient(final Client client) {
@@ -75,7 +75,7 @@ public final class ClientRepository {
         config.saveFile();
     }
 
-    public void loadClients(final Main instance) {
+    public void loadClients(final Main instance, final boolean inform) {
         config.loadFile();
         final YamlConfiguration yml = config.getConfig();
         new BukkitRunnable() {
@@ -92,7 +92,9 @@ public final class ClientRepository {
                     client.setJoinedAmount(yml.getInt(str + ".Joined-Amount"));
                     instance.getClientUtilities().addClient(client);
                 }
-                UtilMessage.log("Database", "Loaded: " + ChatColor.YELLOW + instance.getClientUtilities().getClients().size() + ChatColor.GRAY + " Clients.");
+                if (inform) {
+                    UtilMessage.log("Database", "Loaded: " + ChatColor.YELLOW + instance.getClientUtilities().getClients().size() + ChatColor.GRAY + " Clients.");
+                }
             }
         }.runTaskAsynchronously(instance);
     }
