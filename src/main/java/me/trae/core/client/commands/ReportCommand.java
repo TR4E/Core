@@ -3,15 +3,12 @@ package me.trae.core.client.commands;
 import me.trae.core.Main;
 import me.trae.core.client.Rank;
 import me.trae.core.command.Command;
-import me.trae.core.module.update.UpdateEvent;
-import me.trae.core.module.update.Updater;
 import me.trae.core.utility.UtilFormat;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,11 +56,9 @@ public class ReportCommand extends Command {
             UtilMessage.message(player, "Report", "There are currently no staff online to receive this message.");
             return;
         }
-        if (map.containsKey(player.getUniqueId())) {
-            if (map.get(player.getUniqueId()).containsKey(target.getUniqueId())) {
-                UtilMessage.message(player, "Report", "You have already reported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
-                return;
-            }
+        if (map.containsKey(player.getUniqueId()) && map.get(player.getUniqueId()).containsKey(target.getUniqueId()) && (map.get(player.getUniqueId()).get(target.getUniqueId()) > System.currentTimeMillis())) {
+            UtilMessage.message(player, "Report", "You have already reported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + ".");
+            return;
         }
         final Map<UUID, Long> map2 = new WeakHashMap<>();
         map2.put(target.getUniqueId(), (System.currentTimeMillis() + 300000L));
@@ -76,24 +71,5 @@ public class ReportCommand extends Command {
     @Override
     public void help(final Player player) {
         UtilMessage.message(player, "Report", "Usage: " + ChatColor.AQUA + "/report <player> <reason>");
-    }
-
-    @EventHandler
-    public void onUpdate(final UpdateEvent e) {
-        if (e.getUpdateType() == Updater.UpdateType.TICK_50) {
-            if (map != null) {
-                for (final UUID player : map.keySet()) {
-                    if (player != null) {
-                        for (final UUID target : map.get(player).keySet()) {
-                            if (target != null) {
-                                if (map.get(player).get(target) <= System.currentTimeMillis()) {
-                                    map.get(player).remove(target);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
