@@ -18,6 +18,7 @@ import me.trae.core.database.commands.ReloadCommand;
 import me.trae.core.effect.EffectManager;
 import me.trae.core.effect.commands.ProtectionCommand;
 import me.trae.core.fishing.FishingListener;
+import me.trae.core.fun.FunListener;
 import me.trae.core.gamer.GamerManager;
 import me.trae.core.gamer.GamerRepository;
 import me.trae.core.gamer.GamerUtilities;
@@ -131,6 +132,9 @@ public class Main extends JavaPlugin {
         new CommandCenter(this);
         new EffectManager(this);
         new FishingListener(this);
+
+        new FunListener(this);
+
         new GamerManager(this);
         new ChatListener(this);
         new ItemListener(this);

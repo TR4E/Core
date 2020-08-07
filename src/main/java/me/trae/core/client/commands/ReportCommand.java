@@ -66,8 +66,8 @@ public class ReportCommand extends Command {
             }
         }
         final Map<UUID, Long> map2 = new WeakHashMap<>();
-        map2.put(target.getUniqueId(), (System.currentTimeMillis() + 10000L));
-        map.put(player.getUniqueId(), map2);
+        map2.put(target.getUniqueId(), (System.currentTimeMillis() + 300000L));
+        map.put(target.getUniqueId(), map2);
         UtilMessage.message(player, "Report", "You reported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + UtilFormat.getFinalArg(args, 1) + ChatColor.GRAY + ".");
         getInstance().getClientUtilities().messageStaff("Report", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " reported " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + UtilFormat.getFinalArg(args, 1) + ChatColor.GRAY + ".", Rank.HELPER, new UUID[]{player.getUniqueId()});
         getInstance().getClientUtilities().soundStaff(Sound.NOTE_PLING, Rank.HELPER, new UUID[]{player.getUniqueId()});
@@ -86,7 +86,7 @@ public class ReportCommand extends Command {
                     if (player != null) {
                         for (final UUID target : map.get(player).keySet()) {
                             if (target != null) {
-                                if (map.get(player).get(target) >= System.currentTimeMillis()) {
+                                if (map.get(player).get(target) <= System.currentTimeMillis()) {
                                     map.get(player).remove(target);
                                 }
                             }

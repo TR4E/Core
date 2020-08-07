@@ -31,7 +31,7 @@ public final class ClientUtilities {
     }
 
     public final Client getClient(final UUID uuid) {
-        return clients.stream().filter(c -> c.getUUID().equals(uuid)).findFirst().orElse(null);
+        return getClients().stream().filter(c -> c.getUUID().equals(uuid)).findFirst().orElse(null);
     }
 
     public final Set<Client> getClients() {
@@ -47,7 +47,7 @@ public final class ClientUtilities {
     }
 
     public final Client getOnlineClient(final UUID uuid) {
-        return onlineclients.stream().filter(o -> o.getUUID().equals(uuid)).findFirst().orElse(null);
+        return getOnlineClients().stream().filter(o -> o.getUUID().equals(uuid)).findFirst().orElse(null);
     }
 
     public final Set<Client> getOnlineClients() {
@@ -56,7 +56,7 @@ public final class ClientUtilities {
 
     public final Set<Client> getOnlineStaffClients(final boolean showVanishPlayers) {
         final Set<Client> result = new HashSet<>();
-        for (final Client client : onlineclients) {
+        for (final Client client : getOnlineClients()) {
             if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (client.hasRank(Rank.HELPER, false)) {
                     if (instance.getEffectManager().isVanished(Bukkit.getPlayer(client.getUUID())) && !(showVanishPlayers)) {
@@ -102,7 +102,7 @@ public final class ClientUtilities {
     }
 
     public void messageAdmins(final String prefix, final String message, final UUID[] ignore) {
-        for (final Client client : onlineclients) {
+        for (final Client client : getOnlineClients()) {
             if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (client.isAdministrating()) {
                     final Player player = Bukkit.getPlayer(client.getUUID());
@@ -118,7 +118,7 @@ public final class ClientUtilities {
     }
 
     public void messageAdmins(final String message, final UUID[] ignore) {
-        for (final Client client : onlineclients) {
+        for (final Client client : getOnlineClients()) {
             if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (client.isAdministrating()) {
                     final Player player = Bukkit.getPlayer(client.getUUID());
@@ -134,7 +134,7 @@ public final class ClientUtilities {
     }
 
     public void soundStaff(final Sound sound, final Rank minimumRank, final UUID[] ignore) {
-        for (final Client client : onlineclients) {
+        for (final Client client : getOnlineClients()) {
             if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
                     final Player player = Bukkit.getPlayer(client.getUUID());
@@ -150,7 +150,7 @@ public final class ClientUtilities {
     }
 
     public void soundAdmins(final Sound sound, final UUID[] ignore) {
-        for (final Client client : onlineclients) {
+        for (final Client client : getOnlineClients()) {
             if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (client.isAdministrating()) {
                     final Player player = Bukkit.getPlayer(client.getUUID());
@@ -176,10 +176,10 @@ public final class ClientUtilities {
     }
 
     public final Client searchClient(final Player player, final String name, final boolean inform) {
-        if (clients.stream().anyMatch(client -> client.getName().toLowerCase().equals(name.toLowerCase()))) {
-            return clients.stream().filter(client -> client.getName().toLowerCase().equals(name.toLowerCase())).findFirst().get();
+        if (getClients().stream().anyMatch(client -> client.getName().toLowerCase().equals(name.toLowerCase()))) {
+            return getClients().stream().filter(client -> client.getName().toLowerCase().equals(name.toLowerCase())).findFirst().get();
         }
-        final List<Client> clientList = clients.parallelStream().filter(client -> client.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
+        final List<Client> clientList = getClients().parallelStream().filter(client -> client.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
         if (UtilPlayer.searchPlayer(player, name, false) != null) {
             if (getClient(Objects.requireNonNull(UtilPlayer.searchPlayer(player, name, false)).getUniqueId()) != null) {
                 if (!clientList.contains(getClient(Objects.requireNonNull(UtilPlayer.searchPlayer(player, name, false)).getUniqueId()))) {
@@ -196,11 +196,11 @@ public final class ClientUtilities {
     }
 
     public final boolean isStaffOnline(final boolean includeOps) {
-        return (onlineclients.stream().anyMatch(c -> c.hasRank(Rank.HELPER, false)) || (includeOps && Bukkit.getOnlinePlayers().stream().anyMatch(Player::isOp)));
+        return (getOnlineClients().stream().anyMatch(c -> c.hasRank(Rank.HELPER, false)) || (includeOps && Bukkit.getOnlinePlayers().stream().anyMatch(Player::isOp)));
     }
 
     public final Set<Client> getAltsOfClient(final Client client) {
-        return clients.stream().filter(a -> !(a.getUUID().equals(client.getUUID())) && a.getIPAddresses().stream().anyMatch(i -> client.getIPAddresses().contains(i))).collect(Collectors.toSet());
+        return getClients().stream().filter(a -> !(a.getUUID().equals(client.getUUID())) && a.getIPAddresses().stream().anyMatch(i -> client.getIPAddresses().contains(i))).collect(Collectors.toSet());
     }
 
     public final Set<String> getIgnoredNames(final Client client) {
