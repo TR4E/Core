@@ -18,7 +18,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class EffectManager extends CoreListener {
 
@@ -69,15 +68,33 @@ public class EffectManager extends CoreListener {
     }
 
     public final Set<Effect> getEffects(final Player player) {
-        return effects.stream().filter(e -> e.getUUID().equals(player.getUniqueId())).collect(Collectors.toSet());
+        final Set<Effect> result = new HashSet<>();
+        for (final Effect effect : getEffects()) {
+            if (effect.getUUID().equals(player.getUniqueId())) {
+                result.add(effect);
+            }
+        }
+        return result;
     }
 
     public final Effect getEffect(final Player player, final Effect.EffectType type) {
-        return getEffects(player).stream().filter(e -> e.getType() == type).findFirst().orElse(null);
+        for (final Effect effect : getEffects(player)) {
+            if (effect.getType().equals(type)) {
+                return effect;
+            }
+        }
+        return null;
     }
 
     public final boolean hasEffect(final Player player, final Effect.EffectType type) {
-        return effects.stream().anyMatch(e -> e.getUUID().equals(player.getUniqueId()) && e.getType() == type);
+        if (getEffects(player).size() > 0) {
+            for (final Effect effect : getEffects(player)) {
+                if (effect.getType().equals(type)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public final boolean hasNoFall(final Player player) {

@@ -2,11 +2,7 @@ package me.trae.core.gamer;
 
 import me.trae.core.Main;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public final class GamerUtilities {
 
@@ -30,6 +26,6 @@ public final class GamerUtilities {
     }
 
     public final Set<Gamer> getGamers() {
-        return gamers.keySet().stream().map(gamers::get).collect(Collectors.toSet());
+        return new HashSet<>(gamers.values());
     }
 }

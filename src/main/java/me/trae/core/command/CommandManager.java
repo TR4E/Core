@@ -2,28 +2,31 @@ package me.trae.core.command;
 
 import me.trae.core.Main;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public final class CommandManager {
 
     private final Main instance;
-    private final Set<Command> commands = new HashSet<>();
+    private final Map<String, Command> commands = new HashMap<>();
 
     public CommandManager(final Main instance) {
         this.instance = instance;
     }
 
     public void addCommand(final Command command) {
-        commands.add(command);
+        this.commands.put(command.getCommandName(), command);
     }
 
     public final Command getCommand(final String cmd) {
-        return commands.stream().filter(c -> c.getCommandName().equalsIgnoreCase(cmd) || Arrays.stream(c.getAliases()).anyMatch(a -> a.equalsIgnoreCase(cmd))).findFirst().orElse(null);
+        for (final Command command : getCommands()) {
+            if (command.getCommandName().equalsIgnoreCase(cmd) || Arrays.asList(command.getAliases()).contains(cmd)) {
+                return command;
+            }
+        }
+        return null;
     }
 
     public final Set<Command> getCommands() {
-        return commands;
+        return new HashSet<>(commands.values());
     }
 }

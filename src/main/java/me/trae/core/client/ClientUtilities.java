@@ -2,6 +2,7 @@ package me.trae.core.client;
 
 import me.trae.core.Main;
 import me.trae.core.effect.Effect;
+import me.trae.core.gamer.Gamer;
 import me.trae.core.utility.UtilMessage;
 import me.trae.core.utility.UtilPlayer;
 import org.bukkit.Bukkit;
@@ -15,43 +16,43 @@ import java.util.stream.Collectors;
 public final class ClientUtilities {
 
     private final Main instance;
-    private final Set<Client> clients = new HashSet<>();
-    private final Set<Client> onlineclients = new HashSet<>();
+    private final Map<UUID, Client> clients = new HashMap<>();
+    private final Map<UUID, Client> onlineclients = new HashMap<>();
 
     public ClientUtilities(final Main instance) {
         this.instance = instance;
     }
 
     public void addClient(final Client c) {
-        clients.add(c);
+        clients.put(c.getUUID(), c);
     }
 
     public void removeClient(final Client c) {
-        clients.remove(c);
+        clients.remove(c.getUUID());
     }
 
     public final Client getClient(final UUID uuid) {
-        return getClients().stream().filter(c -> c.getUUID().equals(uuid)).findFirst().orElse(null);
+        return clients.get(uuid);
     }
 
     public final Set<Client> getClients() {
-        return clients;
+        return new HashSet<>(clients.values());
     }
 
     public void addOnlineClient(final Client c) {
-        onlineclients.add(c);
+        onlineclients.put(c.getUUID(), c);
     }
 
     public void removeOnlineClient(final Client c) {
-        onlineclients.remove(c);
+        onlineclients.remove(c.getUUID());
     }
 
     public final Client getOnlineClient(final UUID uuid) {
-        return getOnlineClients().stream().filter(o -> o.getUUID().equals(uuid)).findFirst().orElse(null);
+        return onlineclients.get(uuid);
     }
 
     public final Set<Client> getOnlineClients() {
-        return onlineclients;
+        return new HashSet<>(onlineclients.values());
     }
 
     public final Set<Client> getOnlineStaffClients(final boolean showVanishPlayers) {
@@ -70,7 +71,7 @@ public final class ClientUtilities {
     }
 
     public void messageStaff(final String prefix, final String message, final Rank minimumRank, final UUID[] ignore) {
-        for (final Client client : onlineclients) {
+        for (final Client client : getOnlineClients()) {
             if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
                     final Player player = Bukkit.getPlayer(client.getUUID());
@@ -86,7 +87,7 @@ public final class ClientUtilities {
     }
 
     public void messageStaff(final String message, final Rank minimumRank, final UUID[] ignore) {
-        for (final Client client : onlineclients) {
+        for (final Client client : getOnlineClients()) {
             if (client != null && Bukkit.getPlayer(client.getUUID()) != null) {
                 if (Bukkit.getPlayer(client.getUUID()).isOp() || client.hasRank(minimumRank, false)) {
                     final Player player = Bukkit.getPlayer(client.getUUID());
@@ -168,7 +169,15 @@ public final class ClientUtilities {
     public void setVanished(final Player player, final boolean vanished) {
         if (vanished) {
             instance.getEffectManager().addEffect(player, Effect.EffectType.VANISHED);
-            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId().equals(player.getUniqueId())) && !(o.isOp() || getOnlineClient(o.getUniqueId()).hasRank(Rank.ADMIN, false))).forEach(o -> o.hidePlayer(player));
+            for (final Player online : Bukkit.getOnlinePlayers()) {
+                final Client client = getOnlineClient(online.getUniqueId());
+                if (client != null) {
+                    if (online.getUniqueId().equals(player.getUniqueId()) || (online.isOp() || client.hasRank(Rank.ADMIN, false))) {
+                        continue;
+                    }
+                    online.hidePlayer(player);
+                }
+            }
         } else {
             instance.getEffectManager().removeEffect(player, Effect.EffectType.VANISHED);
             Bukkit.getOnlinePlayers().forEach(o -> o.showPlayer(player));
@@ -196,14 +205,48 @@ public final class ClientUtilities {
     }
 
     public final boolean isStaffOnline(final boolean includeOps) {
-        return (getOnlineClients().stream().anyMatch(c -> c.hasRank(Rank.HELPER, false)) || (includeOps && Bukkit.getOnlinePlayers().stream().anyMatch(Player::isOp)));
+        for (final Client client : getOnlineClients()) {
+            if (includeOps) {
+                final Player player = Bukkit.getPlayer(client.getUUID());
+                if (player != null && player.isOp()) {
+                    return true;
+                }
+            }
+            if (client.hasRank(Rank.HELPER, false)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public final Set<Client> getAltsOfClient(final Client client) {
-        return getClients().stream().filter(a -> !(a.getUUID().equals(client.getUUID())) && a.getIPAddresses().stream().anyMatch(i -> client.getIPAddresses().contains(i))).collect(Collectors.toSet());
+        final Set<Client> result = new HashSet<>();
+        for (final Client alt : getClients()) {
+            if (alt.getUUID().equals(client.getUUID())) {
+                continue;
+            }
+            for (final String ip : client.getIPAddresses()) {
+                if (alt.getIPAddresses().contains(ip)) {
+                    result.add(alt);
+                }
+            }
+        }
+        return result;
     }
 
     public final Set<String> getIgnoredNames(final Client client) {
-        return instance.getGamerUtilities().getGamer(client.getUUID()).getIgnored().stream().map(i -> getClient(i).getName()).collect(Collectors.toSet());
+        final Set<String> result = new HashSet<>();
+        final Gamer gamer = instance.getGamerUtilities().getGamer(client.getUUID());
+        if (gamer != null) {
+            if (gamer.getIgnored().size() > 0) {
+                for (final UUID uuid : gamer.getIgnored()) {
+                    final Client target = getClient(uuid);
+                    if (target != null) {
+                        result.add(target.getName());
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

@@ -2,8 +2,6 @@ package me.trae.core.client;
 
 import org.bukkit.ChatColor;
 
-import java.util.Arrays;
-
 public enum Rank {
 
     PLAYER("Player", ChatColor.YELLOW),
@@ -23,7 +21,12 @@ public enum Rank {
     }
 
     public static Rank getRank(final int ordinal) {
-        return Arrays.stream(values()).filter(r -> r.ordinal() == ordinal).findFirst().orElse(null);
+        for (final Rank rank : values()) {
+            if (rank.ordinal() == ordinal) {
+                return rank;
+            }
+        }
+        return null;
     }
 
     public final String getPrefix() {

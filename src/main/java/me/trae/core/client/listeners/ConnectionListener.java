@@ -129,7 +129,14 @@ public class ConnectionListener extends CoreListener {
         }
         getInstance().getClientUtilities().getOnlineClients().stream().filter(c -> (getInstance().getEffectManager().isVanished(player) && Bukkit.getPlayer(c.getUUID()) != null) && !(player.isOp() || getInstance().getClientUtilities().getClient(player.getUniqueId()).getRank().ordinal() >= c.getRank().ordinal())).forEach(c -> player.hidePlayer(Bukkit.getPlayer(c.getUUID())));
         if (!(player.isOp() || client.hasRank(Rank.ADMIN, false))) {
-            Bukkit.getOnlinePlayers().stream().filter(o -> !(o.getUniqueId().equals(player.getUniqueId())) && getInstance().getEffectManager().isVanished(o)).forEach(player::hidePlayer);
+            for (final Player online : Bukkit.getOnlinePlayers()) {
+                if (online.getUniqueId().equals(player.getUniqueId())) {
+                    continue;
+                }
+                if (getInstance().getEffectManager().isVanished(online)) {
+                    player.hidePlayer(online);
+                }
+            }
         }
         updateTab(player);
         if (client.getFirstJoined() == 0) {
@@ -182,7 +189,11 @@ public class ConnectionListener extends CoreListener {
             }
         }
         getInstance().getGamerUtilities().getGamer(player.getUniqueId()).setReply(null);
-        getInstance().getGamerUtilities().getGamers().stream().filter(g -> (g.getReply() != null && g.getReply().equals(player.getUniqueId()))).forEach(g -> g.setReply(null));
+        for (final Gamer gamer : getInstance().getGamerUtilities().getGamers()) {
+            if (gamer.getReply() != null && gamer.getReply().equals(player.getUniqueId())) {
+                gamer.setReply(null);
+            }
+        }
         getInstance().getClientUtilities().setVanished(player, false);
         client.setLastOnline(System.currentTimeMillis());
         getInstance().getClientRepository().updateLastOnline(client);

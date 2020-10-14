@@ -162,8 +162,13 @@ public class ClientCommand extends Command {
         target.setRank(Rank.getRank(target.getRank().ordinal() + 1));
         getInstance().getClientRepository().updateRank(target);
         if (target.getRank() == Rank.ADMIN || target.getRank() == Rank.OWNER) {
-            if (Bukkit.getPlayer(target.getUUID()) != null) {
-                Bukkit.getOnlinePlayers().stream().filter(o -> getInstance().getEffectManager().isVanished(o)).forEach(o -> Bukkit.getPlayer(target.getUUID()).showPlayer(o));
+            final Player targetP = Bukkit.getPlayer(target.getUUID());
+            if (targetP != null) {
+                for (final Player online : Bukkit.getOnlinePlayers()) {
+                    if (getInstance().getEffectManager().isVanished(online)) {
+                        targetP.showPlayer(online);
+                    }
+                }
             }
         }
         UtilMessage.broadcast("Client", ChatColor.YELLOW + player.getName() + ChatColor.GRAY + " promoted " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " to " + target.getRank().getTag(true) + ChatColor.GRAY + ".");
